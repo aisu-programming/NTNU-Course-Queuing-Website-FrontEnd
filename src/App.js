@@ -1,12 +1,13 @@
 import React from "react";
-import { useRoutes } from 'react-router-dom'
-import './App.css';
-import { colors } from './styles'
-import styled from 'styled-components'
+import { useRoutes } from "react-router-dom";
+import "./App.css";
+import { colors } from "./styles";
+import styled from "styled-components";
 // import Home from './pages/Home'
-import { Login }  from './pages'
-import { LoginV2 }  from './pages'
-import { Home }  from './pages'
+import { Login } from "./pages";
+import { LoginV2 } from "./pages";
+import { Home } from "./pages";
+import { Navigation } from "./components";
 
 const BodyContainer = styled.div`
   width: 100%;
@@ -14,29 +15,38 @@ const BodyContainer = styled.div`
   height: 100%;
   min-height: 100vh;
   background: ${colors.background};
-`
+  display: flex;
+`;
+const RightWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
 const App = () => {
   const element = useRoutes([
     {
-      path: '/',
-      element: <Home/>,
-      children: [
-        { path: ':id', element: <Login /> },
-      ]
+      path: "/",
+      element: <Home />,
+      children: [{ path: ":id", element: <Login /> }],
     },
     {
-      path: '/login',
-      element: <Login/>,
+      path: "/login",
+      element: <Login />,
     },
     {
-      path: '/loginV2',
+      path: "/loginV2",
       element: <LoginV2 />,
     },
-  ])
+  ]);
   return (
-    <BodyContainer>
-      {element}
-    </BodyContainer>
+    <>
+      <BodyContainer>
+        <Navigation></Navigation>
+        <RightWrapper>{element}</RightWrapper>
+      </BodyContainer>
+    </>
     // <Router>
     //   <Route path='/' component={Home}/>
     // </Router>
@@ -60,6 +70,6 @@ const App = () => {
     //   </header>
     // </div>
   );
-}
+};
 
 export default App;
