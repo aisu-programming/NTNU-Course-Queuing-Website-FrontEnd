@@ -53,7 +53,7 @@ export const Navigation = () => {
         </OptionTitle>
         <ul>
           <NavOption>
-            <NavLink to="/loginV2">
+            <NavLink to="/search">
               {({ isActive }) => (
                 <ButtonOption option={"查詢課程"} active={isActive}>
                   <MdManageSearch />

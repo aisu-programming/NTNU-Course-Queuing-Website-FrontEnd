@@ -8,6 +8,7 @@ import { Login } from "./pages";
 import { LoginV2 } from "./pages";
 import { Home } from "./pages";
 import { Navigation } from "./components";
+import { Search } from "pages";
 
 const BodyContainer = styled.div`
   width: 100%;
@@ -38,6 +39,10 @@ const App = () => {
     {
       path: "/loginV2",
       element: <LoginV2 />,
+    },
+    {
+      path: "/search",
+      element: <Search />,
     },
   ]);
   return (
