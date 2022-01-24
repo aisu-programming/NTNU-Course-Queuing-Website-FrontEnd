@@ -17,12 +17,13 @@ const BodyContainer = styled.div`
   min-height: 100vh;
   background: ${colors.background};
   display: flex;
-`;
-const RightWrapper = styled.div`
+  `;
+  const RightWrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
+  margin-left: 240px;
 `;
 
 const App = () => {
