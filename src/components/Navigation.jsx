@@ -6,9 +6,12 @@ import { MdManageSearch } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 
 const NavWrapper = styled.nav`
+  position: fixed;
   max-width: 240px;
   width: 100%;
+  height: 100%;
   padding: 20px;
+  background: ${colors.background};
   box-shadow: 4px 0px 4px rgba(0,0,0,0.4);
   z-index: 1;
 `;
