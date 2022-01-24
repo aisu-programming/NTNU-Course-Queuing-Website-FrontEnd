@@ -139,7 +139,7 @@ const Input = styled.input`
   font-size: 18px;
   color: #D0D0D3;
   border-radius: 4px;
-  background: #1D1D1D;
+  background: ${colors.gray500};
   border: none;
   outline: none;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
