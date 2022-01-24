@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import balloon from '../assets/login-balloon.svg'
 import cat_1 from '../assets/login-cat-1.svg'
 import cat_2 from '../assets/login-cat-2.svg'
@@ -6,6 +6,8 @@ import moon from '../assets/login-moon.svg'
 import { Link } from 'react-router-dom';
 import { colors } from '../styles'
 import styled, { keyframes } from 'styled-components'
+import { Login } from 'api'
+
 
 const generateShadow = (count, color) => {
   let i = 0;
@@ -183,35 +185,48 @@ const Moon = styled.img`
   filter: drop-shadow(4px 0px 3px rgba(0,0,0,0.6))
 `
 
-export const LoginV2 = (props) => (
-  <>
-    <Container>
-      <LeftWrapper>
-        {/* <PaperCut></PaperCut> */}
-        <ImgBox src={balloon}/>
-      </LeftWrapper>
-      <RightWrapper>
-        <LoginBox>
-          <Title>所以你要登入了嗎</Title>
-          <SubTitle>所以我說你為什麼不登入</SubTitle>
-          <InputBox>
-            <InputTitle>帳號</InputTitle>
-            <Input type="text"/>
-          </InputBox>
-          <InputBox>
-            <InputTitle>密碼</InputTitle>
-            <Input type="password"/>
-          </InputBox>
-          <Button>
-            <ButtonText>登入</ButtonText>
-          </Button>
-        </LoginBox>
-        <Cat_1 src={cat_1} />
-      </RightWrapper>
-    </Container>
-    {/* <div>
-      <h1>Home Page</h1>
-      <Link to="/login">Login</Link>
-    </div> */}
-  </>
-);
+export const LoginV2 = (props) => {
+  const [studentId, setStudentId] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = async() => {
+    const data = {
+      studentId: `${studentId}`,
+      password: `${password}`,
+    }
+    // console.log(data);
+    await Login(data).then(res => console.log(res));
+  }
+  return (
+    <>
+      <Container>
+        <LeftWrapper>
+          {/* <PaperCut></PaperCut> */}
+          <ImgBox src={balloon}/>
+        </LeftWrapper>
+        <RightWrapper>
+          <LoginBox>
+            <Title>所以你要登入了嗎</Title>
+            <SubTitle>所以我說你為什麼不登入</SubTitle>
+            <InputBox>
+              <InputTitle>帳號</InputTitle>
+              <Input type="text" value={studentId} onChange={(e) => setStudentId(e.target.value)}/>
+            </InputBox>
+            <InputBox>
+              <InputTitle>密碼</InputTitle>
+              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+            </InputBox>
+            <Button>
+              <ButtonText onClick={handleSubmit}>登入</ButtonText>
+            </Button>
+          </LoginBox>
+          <Cat_1 src={cat_1} />
+        </RightWrapper>
+      </Container>
+      {/* <div>
+        <h1>Home Page</h1>
+        <Link to="/login">Login</Link>
+      </div> */}
+    </>
+  );
+}
