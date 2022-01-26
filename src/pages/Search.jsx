@@ -43,7 +43,7 @@ const RightWrapper = styled.div`
   margin-left: 12px;
 `
 
-const DropdownBox = styled.div`
+const SearchBox = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 24px;
@@ -52,12 +52,34 @@ const DropdownBox = styled.div`
   }
 `
 
-const DropdownTitle = styled.h4`
+const SearchTitle = styled.h4`
   position: relative;
   left: 1px;
   letter-spacing: 2px;
   color: ${colors.gray100};
   margin-bottom: 4px;
+`
+
+const Input = styled.input`
+  width: 100%;
+  height: fit-content;
+  padding: 10px 18px;
+  font-size: 18px;
+  color: #D0D0D3;
+  border-radius: 4px;
+  background: ${colors.gray500};
+  border: none;
+  outline: none;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0);
+  transition: .2s;
+  &:hover {
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+  }
+  &:focus {
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+    border: 1px solid ${colors.primary500};
+  }
 `
 
 const SubTitle = styled.div`
@@ -75,18 +97,30 @@ export const Search = (props) => {
       <Title>查詢課程</Title>
       <ContentContainer>
         <LeftWrapper>
-          <DropdownBox>
-            <DropdownTitle>課程代號</DropdownTitle>
+          <SearchBox>
+            <SearchTitle>開課序號</SearchTitle>
+            <Input type="text" />
+          </SearchBox>
+          <SearchBox>
+            <SearchTitle>科目名稱</SearchTitle>
+            <Input type="text" />
+          </SearchBox>
+          <SearchBox>
+            <SearchTitle>課程系所 / 學程</SearchTitle>
             <DropdownV2></DropdownV2>
-          </DropdownBox>
-          <DropdownBox>
-            <DropdownTitle>開課系所</DropdownTitle>
+          </SearchBox>
+          <SearchBox>
+            <SearchTitle>教師名稱</SearchTitle>
+            <Input type="text" />
+          </SearchBox>
+          <SearchBox>
+            <SearchTitle>課程時間</SearchTitle>
             <DropdownV2></DropdownV2>
-          </DropdownBox>
-          <DropdownBox>
-            <DropdownTitle>大屌怪</DropdownTitle>
+          </SearchBox>
+          <SearchBox>
+            <SearchTitle>課程地點</SearchTitle>
             <DropdownV2></DropdownV2>
-          </DropdownBox>
+          </SearchBox>
         </LeftWrapper>
         <RightWrapper></RightWrapper>
       </ContentContainer>
