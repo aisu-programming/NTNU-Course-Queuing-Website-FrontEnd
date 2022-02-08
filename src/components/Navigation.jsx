@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { colors } from "../styles";
 import { ButtonOption } from "components";
-import { MdManageSearch } from "react-icons/md";
+import { MdManageSearch, MdPerson } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 
 const NavWrapper = styled.nav`
@@ -65,19 +65,10 @@ export const Navigation = () => {
             </NavLink>
           </NavOption>
           <NavOption>
-            <NavLink to="/pennis">
+            <NavLink to="/login">
               {({ isActive }) => (
-                <ButtonOption option={"大屌"} active={isActive}>
-                  <MdManageSearch />
-                </ButtonOption>
-              )}
-            </NavLink>
-          </NavOption>
-          <NavOption>
-            <NavLink to="/chicken">
-              {({ isActive }) => (
-                <ButtonOption option={"小屌"} active={isActive}>
-                  <MdManageSearch />
+                <ButtonOption option={"登入"} active={isActive}>
+                  <MdPerson />
                 </ButtonOption>
               )}
             </NavLink>

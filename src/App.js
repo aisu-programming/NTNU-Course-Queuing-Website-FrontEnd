@@ -30,15 +30,11 @@ const App = () => {
   const element = useRoutes([
     {
       path: "/",
-      element: <Home />,
+      element: <LoginV2 />,
       children: [{ path: ":id", element: <Login /> }],
     },
     {
       path: "/login",
-      element: <Login />,
-    },
-    {
-      path: "/loginV2",
       element: <LoginV2 />,
     },
     {
@@ -53,28 +49,6 @@ const App = () => {
         <RightWrapper>{element}</RightWrapper>
       </BodyContainer>
     </>
-    // <Router>
-    //   <Route path='/' component={Home}/>
-    // </Router>
-    // <div className="App">
-    //   {/* <Route path="/" component = {Home}/> */}
-    //   {/* <Route path="/login" component = {Login}/> */}
-    //   <header className="App-header">
-    //     <img src={logo} className="App-logo" alt="logo" />
-    //     <p>
-    //       Edit <code>src/App.js</code> and save to reload.
-    //     </p>
-    //     <Link to='/login'>Login</Link>
-    //     <a
-    //       className="App-link"
-    //       href="https://reactjs.org"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       Learn React
-    //     </a>
-    //   </header>
-    // </div>
   );
 };
 
