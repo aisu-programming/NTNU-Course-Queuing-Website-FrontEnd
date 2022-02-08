@@ -1,51 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState } from 'react';
 import { colors } from 'styles';
-import { Transition } from 'react-transition-group';
-import { MdKeyboardArrowUp } from 'react-icons/md';
-import Select, { components, createFilter } from 'react-select';
+import Select, { components } from 'react-select';
 import SimpleBarReact from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 
-const DropdownBox = styled.div`
-  position: relative;
-  width: 100%;
-  min-height: 40px;
-  color: ${colors.white};
-  background: ${colors.gray500};
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
-`;
-
-const DropdownIcon = styled.div`
-  min-width: 20px;
-  min-height: 20px;
-  display: flex;
-  align-items: center;
-
-  svg {
-    width: 100%;
-    height: 100%;
-    transform: ${(props) => (props.isShow ? `rotate(180deg)` : ``)};
-    transition: 0.3s;
-  }
-`;
-
-const Text = styled.h4`
-  position: relative;
-  top: 1px;
-  font-size: 16px;
-  letter-spacing: 2px;
-`;
-
 export const DropdownV2 = (props) => {
-  const { data, active, children } = props;
-  const [isShow, setIsShow] = useState(false);
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState('');
 
@@ -56,13 +15,6 @@ export const DropdownV2 = (props) => {
     setSelected(selected);
     if (open) setOpen(!open);
   }
-  const openModal = () => {
-    if (isShow) return;
-    setIsShow(!isShow);
-  };
-  const closeModal = () => {
-    setIsShow(false);
-  };
   const options = [
     { value: 'ruby', label: 'Ruby' },
     {
@@ -80,33 +32,11 @@ export const DropdownV2 = (props) => {
     { value: 'kanan', label: 'Kanan' },
     { value: 'mari', label: 'Mari' },
   ];
-  const DropdownIndicator = ({children, ...props}) => {
-    return (
-      <components.DropdownIndicator {...props}>
-        <MdKeyboardArrowUp />
-        {children}
-      </components.DropdownIndicator>
-    );
-  };
-  const transitionStyles = {
-    exited: {
-      opacity: 0,
-      transform: 'scaleY(0)',
-    },
-  };
   const Menu = (props) => {
     return (
-      // <Transition in={props.selectProps.menuIsOpen} timeout={100}>
-      //   {(state) => (
-      //     <div
-      //       style={{ ...transitionStyles[state] }}
-      //     >
-      //     </div>
-      //   )}
-      // </Transition>
-            <components.Menu {...props}>
-              <SimpleBarReact>{props.children}</SimpleBarReact>
-            </components.Menu>
+      <components.Menu {...props}>
+        <SimpleBarReact>{props.children}</SimpleBarReact>
+      </components.Menu>
     );
   };
   const CustomOption = ({ children, ...props }) => {
@@ -119,17 +49,22 @@ export const DropdownV2 = (props) => {
     );
   };
   const customStyles = (open) => ({
-    control: (provided) => {
+    control: (provided, state) => {
       return {
         ...provided,
         height: '40px',
         padding: '8px 16px',
         border: 0,
-        borderRadius: '8px',
+        borderRadius: '4px',
         boxShadow: 'none',
         background: `${colors.gray500}`,
         alignItems: 'center',
         cursor: 'text',
+        border: state.isFocused ? `1px solid ${colors.primary500}` : '1px solid rgba(0,0,0,0)',
+        boxShadow: `2px 2px 4px rgba(0, 0, 0, 0.1)`,
+        '&:hover': {
+          border: state.isFocused ? `1px solid ${colors.primary500}` : '1px solid rgba(0,0,0,0)',
+        },
       };
     },
     valueContainer: (provided) => {
@@ -189,17 +124,16 @@ export const DropdownV2 = (props) => {
         display: 'none',
       };
     },
-    menu: (props, state) => {
+    menu: (props) => {
       return {
         ...props,
         background: 'none',
         border: 'none',
-        borderRadius: '10px',
+        borderRadius: '4px',
         marginTop: '4px',
-        // height: open ? "200px" : "0px",
+        height: open ? "200px" : "0px",
         overflow: "hidden",
         transition: ".3s ease-in-out",
-        // opacity: open ? 1 : 0,
         transform: open ? 'scaleY(1)' : 'scaleY(0)',
         transformOrigin: 'top',
         visibility: open ? "visible" : "hidden"
@@ -253,14 +187,9 @@ export const DropdownV2 = (props) => {
     <>
       <div onClick={handleOpen}>
         <Select
-          // value={selected}
+          value={selected}
           onChange={handleSelect}
           onBlur={() => setOpen(false)}
-          components={{
-            // DropdownIndicator,
-            // CustomOption,
-            // Menu
-          }}
           styles={customStyles(open)}
           options={options}
           noOptionsMessage={() => '你是不是在亂打 O_Q'}
@@ -269,7 +198,6 @@ export const DropdownV2 = (props) => {
           maxMenuHeight={200}
           // For Scroll
           captureMenuScroll={false}
-          // filterOption={createFilter({ ignoreAccents: false })}
         />
       </div>
     </>
