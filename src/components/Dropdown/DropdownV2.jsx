@@ -94,7 +94,7 @@ export const DropdownV2 = (props) => {
         color: `${colors.gray100}`,
       };
     },
-    dropdownIndicator: (provided) => {
+    dropdownIndicator: (provided, state) => {
       return {
         ...provided,
         color: `${colors.gray100}`,
@@ -102,7 +102,7 @@ export const DropdownV2 = (props) => {
         maxWidth: '16px',
         maxHeight: '16px',
         cursor: 'pointer',
-        transform: open ? 'rotate(0deg)' : 'rotate(-180deg)',
+        transform: state.selectProps.menuIsOpen ? 'rotate(0deg)' : 'rotate(-180deg)',
         transition: "all .3s ease-in-out",
         svg: {
           width: '100%',
@@ -132,18 +132,18 @@ export const DropdownV2 = (props) => {
         borderRadius: '4px',
         marginTop: '4px',
         height: open ? "200px" : "0px",
-        overflow: "hidden",
-        transition: ".3s ease-in-out",
-        transform: open ? 'scaleY(1)' : 'scaleY(0)',
-        transformOrigin: 'top',
-        visibility: open ? "visible" : "hidden"
+        // overflow: "hidden",
+        // transition: ".3s ease-in-out",
+        // transform: open ? 'scaleY(1)' : 'scaleY(0)',
+        // transformOrigin: 'top',
+        // visibility: open ? "visible" : "hidden"
       }
     },
     menuList: (props) => {
       return {
         ...props,
         padding: '8px',
-        background: `${colors.gray500}`,
+        background: `${colors.gray600}`,
         border: 'none',
         borderRadius: '8px',
         '::-webkit-scrollbar': {
@@ -164,7 +164,7 @@ export const DropdownV2 = (props) => {
       const getBackground = () => {
         if (isFocused) return `${colors.gray400}${colors.opacity60}`;
         if (isSelected) return `${colors.gray400}`;
-        return `${colors.gray500}`;
+        return `${colors.gray600}`;
       }
       return {
         ...props,
@@ -177,7 +177,7 @@ export const DropdownV2 = (props) => {
         background: `${getBackground()}`,
         cursor: 'pointer',
         '&:hover': {
-          background: `${colors.gray400}`,
+          background: `${colors.gray400}${colors.opacity60}`,
         },
       }
     }
@@ -194,7 +194,7 @@ export const DropdownV2 = (props) => {
           options={options}
           noOptionsMessage={() => '你是不是在亂打 O_Q'}
           placeholder={''}
-          menuIsOpen
+          // menuIsOpen
           maxMenuHeight={200}
           // For Scroll
           captureMenuScroll={false}
