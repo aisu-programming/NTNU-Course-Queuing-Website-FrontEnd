@@ -28,8 +28,10 @@ const subtitle = gray200;
 const white = gray000;
 const black = gray900;
 const background = gray600;
+const primaryText = "#2D2D2D";
 export const colors = {
   primary500,
+  primaryText,
   gray000,
   gray100,
   gray200,
