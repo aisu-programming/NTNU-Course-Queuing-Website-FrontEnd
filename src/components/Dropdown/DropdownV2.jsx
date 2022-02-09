@@ -4,34 +4,17 @@ import Select, { components } from 'react-select';
 import SimpleBarReact from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 
-export const DropdownV2 = (props) => {
+export const DropdownV2 = ({name, options, handleValue, ...props}) => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState('');
-
   const handleOpen = () => {
     if (!open) setOpen(!open);
   }
   const handleSelect = (selected) => {
     setSelected(selected);
+    handleValue(selected, name);
     if (open) setOpen(!open);
   }
-  const options = [
-    { value: 'ruby', label: 'Ruby' },
-    {
-      value: 'yoshiko',
-      label: 'Yohane',
-    },
-    {
-      value: 'hanamaru',
-      label: 'Hanamaru',
-    },
-    { value: 'chika', label: 'Chika' },
-    { value: 'you', label: 'You' },
-    { value: 'riko', label: 'Riko' },
-    { value: 'dia', label: 'Dia' },
-    { value: 'kanan', label: 'Kanan' },
-    { value: 'mari', label: 'Mari' },
-  ];
   const Menu = (props) => {
     return (
       <components.Menu {...props}>
@@ -91,7 +74,7 @@ export const DropdownV2 = (props) => {
     singleValue: (provided) => {
       return {
         ...provided,
-        color: `${colors.gray100}`,
+        color: `${colors.white}`,
       };
     },
     dropdownIndicator: (provided, state) => {
@@ -132,6 +115,7 @@ export const DropdownV2 = (props) => {
         borderRadius: '4px',
         marginTop: '4px',
         height: open ? "200px" : "0px",
+        boxShadow: 'none',
         // overflow: "hidden",
         // transition: ".3s ease-in-out",
         // transform: open ? 'scaleY(1)' : 'scaleY(0)',

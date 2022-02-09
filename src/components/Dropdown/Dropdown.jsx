@@ -48,10 +48,8 @@ export const Dropdown = (props) => {
   const closeRef = useRef();
   useEffect(() => {
     a.current = a.current + 1;
-    console.log(a);
   });
   const openModal = () => {
-    console.log('click');
     if (isShow) return;
     setIsShow(!isShow);
   };
