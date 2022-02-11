@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import { colors } from "../styles";
+import React from 'react';
+import styled from 'styled-components';
+import { colors } from '../styles';
 
 const Option = styled.div`
   width: 100%;
@@ -10,13 +10,16 @@ const Option = styled.div`
   padding: 8px 10px;
   border-radius: 8px;
   cursor: pointer;
-  background: ${(props) => (props.isActive ? colors.gray400 : "none")};
+  background: ${(props) =>
+    props.isActive ? colors.gray400 : 'none'};
   transition: 0.3s;
 
   svg,
   h4 {
-    color: ${(props) => (props.isActive ? colors.white : "")};
-    transform: ${(props) => (props.isActive ? "translate(10px, 0)" : "none")};
+    color: ${(props) =>
+      props.isActive ? colors.white : ''};
+    transform: ${(props) =>
+      props.isActive ? 'translate(10px, 0)' : 'none'};
     transition: 0.3s ease;
   }
   &:hover {
@@ -32,6 +35,24 @@ const Option = styled.div`
     height: 24px;
     width: 24px;
     margin-right: 10px;
+    flex-shrink: 0;
+  }
+`;
+const OptionRWD = styled(Option)`
+  padding: 8px;
+
+  svg,
+  h4 {
+    transform: none;
+  }
+  &:hover {
+    svg,
+    h4 {
+      transform: none;
+    }
+  }
+  svg {
+    margin-right: 0;
   }
 `;
 
@@ -40,13 +61,26 @@ const Text = styled.h4`
   top: 1px;
   font-size: 16px;
   letter-spacing: 2px;
+  white-space: nowrap;
 `;
 
-export const ButtonOption = ({ option, active, children }) => {
+export const ButtonOption = ({
+  isRWD,
+  option,
+  active,
+  children,
+}) => {
   return (
-    <Option isActive={active}>
-      {children}
-      <Text>{option}</Text>
-    </Option>
+    <>
+      {!isRWD && (
+        <Option isActive={active}>
+          {children}
+          <Text>{option}</Text>
+        </Option>
+      )}
+      {isRWD && (
+        <OptionRWD isActive={active}>{children}</OptionRWD>
+      )}
+    </>
   );
 };

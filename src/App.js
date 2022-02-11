@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 import './App.css';
-import { colors } from './styles';
+import { colors, size } from 'styles';
 import styled from 'styled-components';
 // import Home from './pages/Home'
 import { Login } from './pages';
@@ -9,6 +9,7 @@ import { LoginV2 } from './pages';
 import { Home } from './pages';
 import { Navigation } from './components';
 import { Search, RushList, CardBox } from 'pages';
+import { useMediaQuery } from 'react-responsive';
 
 const BodyContainer = styled.div`
   width: 100%;
@@ -17,16 +18,25 @@ const BodyContainer = styled.div`
   min-height: 100vh;
   background: ${colors.background};
   display: flex;
+  flex-direction: ${props => props.isRWD ? 'column' : 'row'};
 `;
+
 const RightWrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  margin-left: 240px;
+  ${props => {
+    if (props.isTable && !props.isPhone) return 'margin-left: 60px';
+    if (props.isPhone) return 'margin-top: 60px';
+    return 'margin-left: 240px';
+  }};
 `;
 
 const App = () => {
+  const isTable = useMediaQuery({ maxWidth: size.table });
+  const isPhone = useMediaQuery({ maxWidth: size.phone });
+
   const element = useRoutes([
     {
       path: '/',
@@ -54,9 +64,9 @@ const App = () => {
   ]);
   return (
     <>
-      <BodyContainer>
-        <Navigation></Navigation>
-        <RightWrapper>{element}</RightWrapper>
+      <BodyContainer isRWD={isPhone}>
+        <Navigation />
+        <RightWrapper isTable={isTable} isPhone={isPhone}>{element}</RightWrapper>
       </BodyContainer>
     </>
   );

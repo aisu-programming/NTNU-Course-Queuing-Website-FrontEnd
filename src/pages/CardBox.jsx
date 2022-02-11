@@ -193,13 +193,17 @@ export const CardBox = () => {
     data3,
     data3,
   ];
+  let i = 1;
   const waitCards = datas
     .filter((item) => item.state !== 'done')
-    .map((item) => (
-      <li>
-        <Card data={item} />
-      </li>
-    ));
+    .map((item) => {
+      i = i + 1;
+      return (
+        <li key={i}>
+          <Card data={item} />
+        </li>
+      )
+    });
   const doneCards = datas
     .filter((item) => item.state === 'done')
     .map((item) => (
