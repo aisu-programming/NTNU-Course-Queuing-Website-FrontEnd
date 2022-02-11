@@ -29,6 +29,14 @@ const white = gray000;
 const black = gray900;
 const background = gray600;
 const primaryText = "#2D2D2D";
+
+const active400 = '#EA5D2C';
+const active300 = '#FF7F40';
+const success400 = '#65B067';
+const success300 = '#91C483';
+const pause400 = '#FFBD36';
+const pause300 = primary;
+
 export const colors = {
   primary500,
   primaryText,
@@ -56,4 +64,10 @@ export const colors = {
   white,
   black,
   background,
+  active400,
+  active300,
+  success400,
+  success300,
+  pause400,
+  pause300,
 };
