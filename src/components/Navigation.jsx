@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { colors } from "../styles";
 import { ButtonOption } from "components";
-import { MdManageSearch, MdPerson } from "react-icons/md";
+import { MdManageSearch, MdPerson, MdViewModule } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 
 const NavWrapper = styled.nav`
@@ -34,6 +34,10 @@ const OptionTitle = styled.div`
   color: ${colors.gray300};
   font-size: 14px;
   padding: 4px 10px;
+  margin-top: 16px;
+  &:first-of-type {
+    margin-top: 0;
+  }
 `;
 
 const NavOption = styled.li`
@@ -69,6 +73,20 @@ export const Navigation = () => {
               {({ isActive }) => (
                 <ButtonOption option={"登入"} active={isActive}>
                   <MdPerson />
+                </ButtonOption>
+              )}
+            </NavLink>
+          </NavOption>
+        </ul>
+        <OptionTitle>
+          學生
+        </OptionTitle>
+        <ul>
+          <NavOption>
+            <NavLink to="/rushlist">
+              {({ isActive }) => (
+                <ButtonOption option={"搶課清單"} active={isActive}>
+                  <MdViewModule />
                 </ButtonOption>
               )}
             </NavLink>
