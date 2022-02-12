@@ -12,6 +12,7 @@ import { TimeSelector } from 'components/TimeSelector';
 import { format } from 'date-fns';
 import zh_tw from 'date-fns/locale/zh_tw';
 import { department, place } from 'data';
+import { search } from 'api';
 
 const SearchContainer = styled.section`
   width: 100%;
@@ -188,19 +189,19 @@ const CellBox = styled.div`
 `;
 
 export const Search = (props) => {
-  const [filter, setFilter] = useState();
+  const [filter, setFilter] = useState([]);
   const [schedule, setSchedule] = useState([]);
   const [otherSchedule, setOtherSchedule] = useState(false);
   const [isPrecise, setIsPrecise] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  console.log(filter);
+  // console.log(filter);
   // 判斷有無的布林區
   const hasSchedule = !!schedule.length || otherSchedule;
 
   // 整理系所/學程的選項
   const departmentOptions = department.map((item) => {
-    return { value: item.code, label: item.text };
+    return { value: item.id, label: item.text };
   });
 
   // 處理事件區
@@ -235,6 +236,15 @@ export const Search = (props) => {
     });
     handleFilter({ value: formatSchedule }, 'time');
   },[schedule]);
+
+  const Submit = async () => {
+    const data = {
+      filter,
+      otherSchedule,
+      isPrecise
+    };
+    await search(data);
+  };
 
   return (
     <SearchContainer>
@@ -310,7 +320,7 @@ export const Search = (props) => {
             />
           </SearchBox>
           <SearchBox>
-            <Button>查詢</Button>
+            <Button onClick={Submit}>查詢</Button>
           </SearchBox>
         </LeftWrapper>
         <RightWrapper>

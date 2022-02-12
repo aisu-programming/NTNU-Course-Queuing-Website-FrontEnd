@@ -1,9 +1,7 @@
-import { config } from "./config"
-
-export const GetApi = async(props) => { 
+export const GetApi = async(props , url) => { 
   
   return await fetch(
-    config.url,{
+    url,{
       method: 'GET',
       headers:{
         'Content-Type': 'application/json'

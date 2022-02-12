@@ -1,2 +1,3 @@
 export { Login } from './Login'
-export { Search } from './Search'
+export { search } from './Search'
+export { key } from './base64Key'
