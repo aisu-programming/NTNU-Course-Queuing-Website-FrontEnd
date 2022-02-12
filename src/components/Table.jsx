@@ -153,8 +153,6 @@ export const Table = ({ columns, data }) => {
     rows,
     prepareRow,
     visibleColumns,
-    allColumns,
-    getToggleHideAllColumnsProps,
   } = useTable(
     {
       columns,
@@ -244,117 +242,16 @@ export const Table = ({ columns, data }) => {
     </table>
   );
 };
-const header = [
-  '開課序號',
-  '開課單位',
-  '課程資訊',
-  '課程名稱',
-  '教師',
-  '地點',
-  '時間',
-  '課程名額',
-  '限修',
-  '備註',
-];
-export const Test = () => {
-  const tableData = [
-    { name: 'Tanner Linsley', age: 26 },
-    { name: 'Bob Dylan', age: 53 },
-  ];
-  let ans = {};
-  const data = header.map((item) => {
-    return (ans[item] = Math.random().toFixed(3));
-  });
-  // let column = header.map((item) => {
-  //   return {
-  //     Header: () => {
-  //       return `${item}`;
-  //     },
-  //     accessor: `${item}`,
-  //     width: 100,
-  //   }
-  // });
-  // console.log(column);
-  // column.push({
-  //   Header: () => null, // No header
-  //   id: 'expander', // It needs an ID
-  //   Cell: ({ row }) => (
-  //     // Use Cell to render an expander for each row.
-  //     // We can use the getToggleRowExpandedProps prop-getter
-  //     // to build the expander.
-  //     <span key={'icon'} {...row.getToggleRowExpandedProps()}>
-  //       {row.isExpanded && (
-  //         <MdUnfoldLess />
-  //       )}
-  //       {!row.isExpanded && (
-  //         <MdUnfoldMore />
-  //       )}
-  //     </span>
-  //   ),
-  // });
-  // console.log(column);
-  // const columns = [
-  //   {
-  //     Header: () => {
-  //       return (
-  //         <div>
-  //           <MdKeyboardArrowUp />
-  //           name
-  //         </div>
-  //       );
-  //     },
-  //     accessor: 'name', // String-based value accessors!
-  //   },
-  //   {
-  //     Header: 'Age',
-  //     accessor: 'age',
-  //     Cell: (props) => <p className="number">{props.value}</p>, // Custom cell components!
-  //   },
-  // ];
+
+export const Test = ( {data} ) => {
+  console.log(data);
+ 
   return (
     <Styles>
       <Table
         columns={columns}
-        data={[
-          fakeData,
-          fakeData,
-          fakeData,
-          fakeData,
-          fakeData,
-          fakeData,
-          fakeData,
-          fakeData,
-          fakeData,
-          fakeData,
-          fakeData,
-          fakeData,
-          fakeData,
-          fakeData,
-          fakeData,
-          fakeData,
-          fakeData,
-          // fakeData,
-          // ans,
-          // ans,
-          // ans,
-          // ans,
-          // ans,
-          // ans,
-          // ans,
-          // ans,
-          // ans,
-          // ans,
-          // ans,
-          // ans,
-          // ans,
-          // ans,
-          // ans,
-          // ans,
-          // ans,
-          // ans,
-          // ans,
-          // ans,
-        ]}
+        data={data}
+        
       />
     </Styles>
   );

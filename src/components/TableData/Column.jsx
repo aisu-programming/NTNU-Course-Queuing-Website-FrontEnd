@@ -78,3 +78,8 @@ export const fakeData = {
   department: '資工系',
   credit: '3',
 };
+
+
+// export const appendData = (data) =>{
+  
+// }

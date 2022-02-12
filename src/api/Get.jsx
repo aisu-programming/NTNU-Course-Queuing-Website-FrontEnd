@@ -1,4 +1,4 @@
-export const GetApi = async(props , url) => { 
+export const GetApi = async( url) => { 
   
   return await fetch(
     url,{
@@ -6,7 +6,6 @@ export const GetApi = async(props , url) => {
       headers:{
         'Content-Type': 'application/json'
       },
-      body:JSON.stringify(props)
     })
     .then((response) => response.json())
     .catch((error) => console.log('error'+error))

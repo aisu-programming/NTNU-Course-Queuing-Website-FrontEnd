@@ -1,5 +1,5 @@
 export const PostApi = async(props , url) => { 
-  console.log(url);
+
   return await fetch(
     url,{
       method: 'POST',

@@ -14,6 +14,7 @@ import zh_tw from 'date-fns/locale/zh_tw';
 import { department, place } from 'data';
 import { search } from 'api';
 
+
 const SearchContainer = styled.section`
   width: 100%;
   height: 100%;
@@ -194,6 +195,7 @@ export const Search = (props) => {
   const [otherSchedule, setOtherSchedule] = useState(false);
   const [isPrecise, setIsPrecise] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [classData, setClassData] = useState();
 
   // console.log(filter);
   // 判斷有無的布林區
@@ -234,16 +236,19 @@ export const Search = (props) => {
     const formatSchedule = schedule.map((item) => {
       return format(item, 'd H', { locale: zh_tw });
     });
+    
     handleFilter({ value: formatSchedule }, 'time');
   },[schedule]);
 
+  //處理資料傳輸
+  // let classData = [];
   const Submit = async () => {
     const data = {
       filter,
       otherSchedule,
       isPrecise
     };
-    await search(data);
+    await search(data).then((res) => setClassData(res));
   };
 
   return (
@@ -325,7 +330,7 @@ export const Search = (props) => {
         </LeftWrapper>
         <RightWrapper>
           <BoxTitle>課程列表</BoxTitle>
-          <Test></Test>
+          <Test data={classData}></Test>
         </RightWrapper>
       </ContentContainer>
     </SearchContainer>
