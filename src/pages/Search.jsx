@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { colors } from 'styles';
+import { colors, device } from 'styles';
 import { DropdownV2 } from 'components/Dropdown';
 import { Test } from 'components';
 import { CustomModal } from 'components/Modal';
@@ -23,18 +23,32 @@ const SearchContainer = styled.section`
   padding: 40px;
   display: flex;
   flex-direction: column;
+
+  @media ${device.phone} {
+    padding: 20px 0;
+  }
 `;
 const Title = styled.h1`
   color: ${colors.title};
   font-size: 32px;
   letter-spacing: 4px;
   margin-bottom: 40px;
+
+  @media ${device.phone} {
+    text-align: center;
+    margin-bottom: 16px;
+  }
 `;
 
 const ContentContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+
+  @media ${device.phone} {
+    flex-direction: column;
+    gap: 8px;
+  }
 `;
 
 const LeftWrapper = styled.div`
@@ -46,6 +60,10 @@ const LeftWrapper = styled.div`
   background: ${colors.gray400};
   border-radius: 10px;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+
+  @media ${device.phone} {
+    border-radius: 4px;
+  }
 `;
 
 const RightWrapper = styled.div`
@@ -58,15 +76,33 @@ const RightWrapper = styled.div`
   margin-left: 12px;
   display: flex;
   flex-direction: column;
+
+  @media ${device.phone} {
+    border-radius: 4px;
+    margin-left: 0;
+  }
 `;
+
+const RowBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+  gap: 24px;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  @media ${device.phone} {
+    flex-direction: row;
+    gap: 12px;
+  }
+`
 
 const SearchBox = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 24px;
-  &:last-of-type {
-    margin-bottom: 0;
-  }
+  flex: ${props => props.width ? props.width : '1'};
 `;
 
 const SearchTitle = styled.h4`
@@ -256,74 +292,92 @@ export const Search = (props) => {
       <Title>查詢課程</Title>
       <ContentContainer>
         <LeftWrapper>
-          <SearchBox>
-            <SearchTitle>開課序號</SearchTitle>
-            <Input name='id' type='text' onChange={handleFilter} />
-          </SearchBox>
-          <SearchBox>
-            <SearchTitle>科目名稱</SearchTitle>
-            <Input name='name' type='text' onChange={handleFilter} />
-          </SearchBox>
-          <SearchBox>
-            <SearchTitle>課程系所 / 學程</SearchTitle>
-            <DropdownV2
-              name='department'
-              options={departmentOptions}
-              handleValue={handleFilter}
-            />
-          </SearchBox>
-          <SearchBox>
-            <SearchTitle>教師名稱</SearchTitle>
-            <Input
-              name='teacher'
-              type='text'
-              onChange={handleFilter}
-            />
-          </SearchBox>
-          <SearchBox>
-            <SearchTitle>課程時間</SearchTitle>
-            <InputBox
-              hasSchedule={hasSchedule}
-              onClick={handleIsOpen}
-            >
-              {hasSchedule ? `已設定` : `未設定`}
-            </InputBox>
-            <CustomModal
-              isOpen={isOpen}
-              handleIsOpen={handleIsOpen}
-              title='設定搜尋時間'
-            >
-              <ModalDesc>
-                <CheckButton onClick={handlePrecise}>
-                  精確搜尋
-                  <Icon>
-                    {isPrecise && <MdOutlineCheckBox />}
-                    {!isPrecise && <MdOutlineCheckBoxOutlineBlank />}
-                  </Icon>
-                </CheckButton>
-                <ModalTitle>設定搜尋時間</ModalTitle>
-                <TimeSelector
-                  schedule={schedule}
-                  setSchedule={setSchedule}
-                />
-                <CellWrapper>
-                  密集授課
-                  <CellBox
-                    otherSchedule={otherSchedule}
-                    onClick={handleOtherSchedule}
-                  ></CellBox>
-                </CellWrapper>
-              </ModalDesc>
-            </CustomModal>
-          </SearchBox>
-          <SearchBox>
-            <SearchTitle>課程地點</SearchTitle>
-            <DropdownV2
-              name='place'
-              options={place}
-              handleValue={handleFilter}
-            />
-          </SearchBox>
+          <RowBox>
+            <SearchBox width={1}>
+              <SearchTitle>開課序號</SearchTitle>
+              <Input name='id' type='text' onChange={handleFilter} />
+            </SearchBox>
+            <SearchBox width={2}>
+              <SearchTitle>課程名稱</SearchTitle>
+              <Input name='name' type='text' onChange={handleFilter} />
+            </SearchBox>
+          </RowBox>
+          <RowBox>
+            <SearchBox>
+              <SearchTitle>課程系所 / 學程</SearchTitle>
+              <DropdownV2
+                name='department'
+                options={departmentOptions}
+                handleValue={handleFilter}
+              />
+            </SearchBox>
+          </RowBox>
+          <RowBox>
+            <SearchBox>
+              <SearchTitle>通識領域</SearchTitle>
+              <DropdownV2
+                name='department'
+                options={departmentOptions}
+                handleValue={handleFilter}
+              />
+            </SearchBox>
+          </RowBox>
+          <RowBox>
+            <SearchBox width={3}>
+              <SearchTitle>教師名稱</SearchTitle>
+              <Input
+                name='teacher'
+                type='text'
+                onChange={handleFilter}
+              />
+            </SearchBox>
+            <SearchBox width={2}>
+              <SearchTitle>課程時間</SearchTitle>
+              <InputBox
+                hasSchedule={hasSchedule}
+                onClick={handleIsOpen}
+              >
+                {hasSchedule ? `已設定` : `未設定`}
+              </InputBox>
+              <CustomModal
+                isOpen={isOpen}
+                handleIsOpen={handleIsOpen}
+                title='設定搜尋時間'
+              >
+                <ModalDesc>
+                  <CheckButton onClick={handlePrecise}>
+                    精確搜尋
+                    <Icon>
+                      {isPrecise && <MdOutlineCheckBox />}
+                      {!isPrecise && <MdOutlineCheckBoxOutlineBlank />}
+                    </Icon>
+                  </CheckButton>
+                  <ModalTitle>設定搜尋時間</ModalTitle>
+                  <TimeSelector
+                    schedule={schedule}
+                    setSchedule={setSchedule}
+                  />
+                  <CellWrapper>
+                    密集授課
+                    <CellBox
+                      otherSchedule={otherSchedule}
+                      onClick={handleOtherSchedule}
+                    ></CellBox>
+                  </CellWrapper>
+                </ModalDesc>
+              </CustomModal>
+            </SearchBox>
+          </RowBox>
+          <RowBox>
+            <SearchBox>
+              <SearchTitle>課程地點</SearchTitle>
+              <DropdownV2
+                name='place'
+                options={place}
+                handleValue={handleFilter}
+              />
+            </SearchBox>
+          </RowBox>
           <SearchBox>
             <Button onClick={Submit}>查詢</Button>
           </SearchBox>

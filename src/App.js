@@ -22,10 +22,11 @@ const BodyContainer = styled.div`
 `;
 
 const RightWrapper = styled.div`
-  width: 100%;
-  height: 100%;
+  // width: 100%;
+  // height: 100%;
   display: flex;
   flex-direction: column;
+  flex: 1;
   ${props => {
     if (props.isTable && !props.isPhone) return 'margin-left: 60px';
     if (props.isPhone) return 'margin-top: 60px';

@@ -45,7 +45,6 @@ export const IconButton = ({
   text,
   children,
 }) => {
-  console.log(!!isDanger)
   return (
     <Button isDanger={isDanger}>
       {children}

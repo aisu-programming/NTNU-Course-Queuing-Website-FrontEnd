@@ -1,16 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import { colors } from 'styles';
+import { colors, device } from 'styles';
 import { NavLink, Outlet } from 'react-router-dom';
 
 const Container = styled.section`
-  width: 100%;
-  height: 100%;
+  flex: 1;
   min-height: 100vh;
   background: ${colors.gray500};
   padding: 40px;
   display: flex;
   flex-direction: column;
+
+  @media ${device.phone} {
+    padding: 20px 0px;
+  }
 `;
 
 const Title = styled.h1`
@@ -18,27 +21,44 @@ const Title = styled.h1`
   font-size: 32px;
   letter-spacing: 4px;
   margin-bottom: 40px;
+
+  @media ${device.phone} {
+    text-align: center;
+    margin-bottom: 16px;
+  }
 `;
 
 const ContentContainer = styled.div`
   width: 100%;
-  height: 100%;
   display: flex;
+  flex: 1;
 `;
 
 const Wrapper = styled.div`
   width: 100%;
-  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   padding: 20px;
   flex-shrink: 0;
   background: ${colors.gray400};
   border-radius: 10px;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+  @media ${device.phone} {
+    padding: 20px;
+    border-radius: 2px;
+  }
 `;
 
 const ChildWrapper = styled(Wrapper)`
   background: ${colors.gray600};
-  min-height: 680px;
+  flex: 1;
+  // min-height: 100vh;
+
+  @media ${device.phone} {
+    border-radius: 2px;
+    padding: 20px 10px;
+  }
 `;
 
 const NavOptions = styled.div`
@@ -46,6 +66,9 @@ const NavOptions = styled.div`
   gap: 10px;
   transform: translate(30px, 0);
   margin-bottom: 4px;
+  @media ${device.phone} {
+    transform: translate(0px, 0);
+  }
 `;
 
 const Button = styled.div`
@@ -70,11 +93,16 @@ const Button = styled.div`
     content: '';
     display: ${(props) => (props.isActive ? 'block' : 'none')};
     width: 100%;
-    height: 6px;
+    height: 8px;
     background: ${colors.gray600};
     position: absolute;
-    bottom: -4px;
+    bottom: -6px;
     left: 0;
+  }
+  @media ${device.phone} {
+    padding: ${(props) =>
+      !props.isActive ? '6px 12px' : '8px 12px 4px'};
+    width: 100px;
   }
 `;
 

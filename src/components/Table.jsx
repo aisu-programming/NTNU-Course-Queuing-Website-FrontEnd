@@ -1,14 +1,15 @@
-import React, { Fragment } from 'react';
+import React, {
+  useState,
+  Fragment,
+  useEffect,
+} from 'react';
 import styled from 'styled-components';
-import { colors } from 'styles';
-import { useTable, useSortBy, useExpanded } from 'react-table';
-import {
-  MdKeyboardArrowUp,
-  MdUnfoldMore,
-  MdUnfoldLess,
-} from 'react-icons/md';
+import { colors, size, device } from 'styles';
+import { useTable, useExpanded } from 'react-table';
+import { MdOutlinePlaylistAdd } from 'react-icons/md';
 import { columns, fakeData } from 'components/TableData';
-import { Transition } from 'react-transition-group';
+import { useMediaQuery } from 'react-responsive';
+import { IconButton } from 'components';
 
 const Styles = styled.div`
   display: block;
@@ -22,6 +23,15 @@ const Styles = styled.div`
   border-radius: 6px;
   box-shadow: 2px 2px 4px ${colors.black}${colors.opacity20};
 
+  @media ${device.table} {
+    max-width: calc(100vw - 492px);
+    // max-height: 100%;
+  }
+  @media ${device.phone} {
+    max-width: calc(100vw);
+    // max-height: 100%;
+  }
+
   table {
     width: 100%;
     color: ${colors.gray100};
@@ -34,9 +44,19 @@ const Styles = styled.div`
         background: ${colors.gray500};
         border-bottom: 2px solid ${colors.gray600};
         th {
-          height: 60px;
+          // height: 60px;
+          height: fit-content;
           padding: 10px 16px;
           vertical-align: middle;
+
+          @media ${device.phone} {
+            padding: 10px 12px;
+            font-size: 14px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            // transform: translateY(2px);
+          }
         }
       }
     }
@@ -107,45 +127,110 @@ const ExpandTableRowEven = styled.td`
   box-shadow: inset 0 8px 10px -8px ${colors.black}${colors.opacity60};
 `;
 
-const NavWrapper = styled.nav`
-  position: fixed;
-  max-width: 240px;
-  width: 100%;
-  height: 100%;
-  padding: 20px;
-  background: ${colors.background};
-  box-shadow: 4px 0px 4px rgba(0, 0, 0, 0.4);
-  z-index: 1;
-`;
-
-const LogoBox = styled.div`
-  height: 80px;
-  background: #202020;
+const Container = styled.div`
+  padding: 16px;
   display: flex;
+
+  @media ${device.table} {
+    padding: 24px 16px 16px;
+  }
+`;
+const Wrapper = styled.div`
+  flex: 1;
+`;
+const LeftWrapper = styled(Wrapper)`
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  margin-bottom: 40px;
 `;
-
-const LogoTitle = styled.div`
-  font-size: 24px;
-  color: ${colors.white};
+const RightWrapper = styled(Wrapper)`
+  display: flex;
+  flex-direction: column;
+  // justify-content: center;
+  align-items: flex-end;
 `;
-
-const OptionTitle = styled.div`
-  color: ${colors.gray300};
-  font-size: 14px;
-  padding: 4px 10px;
-`;
-
-const NavOption = styled.li`
-  margin-bottom: 4px;
+const TextBox = styled.div`
+  display: flex;
+  margin-bottom: 16px;
   &:last-of-type {
     margin-bottom: 0;
   }
-`;
+`
+const Title = styled.h5`
+  font-size: 14px;
+  color: ${colors.gray200};
+  margin-right: 8px;
+  transform: translateY(2px);
+`
+const Desc = styled.h4`
+  font-size: 16px;
+  color: ${colors.gray100};
+`
+
+const ExpandRow = ({ row }) => {
+  const isTable = useMediaQuery({
+    maxWidth: size.table,
+  });
+  const { teacher, department, credit } = row.original;
+
+  return (
+    <Container>
+      {(() => {
+        if (!isTable) {
+          return (
+            <LeftWrapper>
+              <TextBox>
+                <Title>
+                  這裡沒有更多資訊了 OuO
+                </Title>
+              </TextBox>
+            </LeftWrapper>
+          );
+        }
+        return (
+          <LeftWrapper>
+            <TextBox>
+              <Title>老師:</Title>
+              <Desc>{teacher}</Desc>
+            </TextBox>
+            <TextBox>
+              <Title>系所:</Title>
+              <Desc>{department}</Desc>
+            </TextBox>
+            <TextBox>
+              <Title>學分:</Title>
+              <Desc>{credit}</Desc>
+            </TextBox>
+          </LeftWrapper>
+        );
+      })()}
+      <RightWrapper>
+        <IconButton text={'搶課清單'}>
+          <MdOutlinePlaylistAdd />
+        </IconButton>
+      </RightWrapper>
+    </Container>
+  );
+};
 
 export const Table = ({ columns, data }) => {
+  const [list, setList] = useState([]);
+  const isTable = useMediaQuery({
+    maxWidth: size.table,
+  });
+  const isPhone = useMediaQuery({ maxWidth: size.phone });
+  const checkSize = () => {
+    if (isTable) {
+      return [
+        'teacher',
+        'department',
+        'credit',
+        'isInList',
+      ];
+    }
+    return ['isInList'];
+  };
+  const hiddenColumn = checkSize();
   const {
     getTableProps,
     getTableBodyProps,
@@ -153,23 +238,37 @@ export const Table = ({ columns, data }) => {
     rows,
     prepareRow,
     visibleColumns,
+    setHiddenColumns,
   } = useTable(
     {
       columns,
       data,
+      initialState: {
+        hiddenColumns: hiddenColumn,
+      },
     },
     useExpanded
   );
+  useEffect(() => {
+    setHiddenColumns(checkSize());
+  }, [isTable]);
   // Render the UI for your table
   return (
     <table {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup, i) => (
-          <tr key={i} {...headerGroup.getHeaderGroupProps()}>
+          <tr
+            key={i}
+            {...headerGroup.getHeaderGroupProps()}
+          >
             {headerGroup.headers.map((column) => (
               <th
                 {...column.getHeaderProps({
-                  style: { width: column.width },
+                  style: {
+                    width: column.width,
+                    minWidth: column.minWidth,
+                    maxWidth: column.maxWidth,
+                  },
                 })}
               >
                 {column.render('Header')}
@@ -178,13 +277,15 @@ export const Table = ({ columns, data }) => {
           </tr>
         ))}
       </thead>
-      <tbody key={'a'} {...getTableBodyProps()}>
+      <tbody {...getTableBodyProps()}>
         {rows.map((row, i) => {
           prepareRow(row);
           const isOdd = i % 2 == 1;
           const buildRowCell = row.cells.map((cell, i) => {
             return (
-              <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+              <td {...cell.getCellProps()}>
+                {cell.render('Cell')}
+              </td>
             );
           });
           return (
@@ -201,37 +302,21 @@ export const Table = ({ columns, data }) => {
 
               {row.isExpanded && isOdd && (
                 <tr>
-                  <ExpandTableRowOdd colSpan={visibleColumns.length}>
-                    {/*
-                        Inside it, call our renderRowSubComponent function. In reality,
-                        you could pass whatever you want as props to
-                        a component like this, including the entire
-                        table instance. But for this example, we'll just
-                        pass the row
-                      */}
-                    <div>吃屌屌</div>
-                    <div>吃屌屌</div>
-                    <div>吃屌屌</div>
-                    <div>吃屌屌</div>
-                    <div>吃屌屌</div>
-                    <div>吃屌屌</div>
-                    <div>吃屌屌</div>
-                    <div>吃屌屌</div>
+                  <ExpandTableRowOdd
+                    colSpan={visibleColumns.length}
+                  >
+                    {console.log(row)}
+                    <ExpandRow row={row} />
                     {/* {renderRowSubComponent({ row })} */}
                   </ExpandTableRowOdd>
                 </tr>
               )}
               {row.isExpanded && !isOdd && (
                 <tr>
-                  <ExpandTableRowEven colSpan={visibleColumns.length}>
-                    <div>吃屌屌</div>
-                    <div>吃屌屌</div>
-                    <div>吃屌屌</div>
-                    <div>吃屌屌</div>
-                    <div>吃屌屌</div>
-                    <div>吃屌屌</div>
-                    <div>吃屌屌</div>
-                    <div>吃屌屌</div>
+                  <ExpandTableRowEven
+                    colSpan={visibleColumns.length}
+                  >
+                    <ExpandRow row={row} />
                   </ExpandTableRowEven>
                 </tr>
               )}
@@ -245,13 +330,12 @@ export const Table = ({ columns, data }) => {
 
 export const Test = ( {data} ) => {
   console.log(data);
- 
+
   return (
     <Styles>
       <Table
         columns={columns}
         data={data}
-        
       />
     </Styles>
   );

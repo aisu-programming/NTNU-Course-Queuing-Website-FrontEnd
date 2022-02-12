@@ -18,11 +18,13 @@ const LayOut = styled.div`
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: ${(props) =>
+    props.isPhone ? 'calc(100vh - 60px)' : '100vh'};
   overflow: hidden;
   background: ${colors.black}${colors.opacity50};
   backdrop-filter: blur(1px);
-  z-index: 1;
+  z-index: 2;
+  margin-top: ${props => props.isPhone && '60px'};
 `;
 
 const NavWrapper = styled.nav`
@@ -33,7 +35,7 @@ const NavWrapper = styled.nav`
   padding: 20px;
   background: ${colors.background};
   box-shadow: 4px 0px 4px rgba(0, 0, 0, 0.4);
-  z-index: 1;
+  z-index: 2;
 `;
 const NavWrapperRWD = styled(NavWrapper)`
   max-width: ${(props) =>
@@ -279,7 +281,10 @@ export const Navigation = () => {
           <LogoBoxRWD></LogoBoxRWD>
           {!fold && (
             <>
-              <LayOut onClick={handleFold} />
+              <LayOut
+                isPhone={isPhone}
+                onClick={handleFold}
+              />
               <NavWrapperPhoneRWD>
                 <OptionTitleRWD isFold={fold}>
                   功能

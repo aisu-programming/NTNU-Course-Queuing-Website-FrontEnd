@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import balloon from '../assets/login-balloon.svg';
 import cat_1 from '../assets/login-cat-1.svg';
-import { colors } from '../styles';
+import { colors, size, device } from 'styles';
 import styled, { keyframes } from 'styled-components';
 import { Login } from 'api';
+import { useMediaQuery } from 'react-responsive';
 
 const generateShadow = (count, color) => {
   let i = 0;
@@ -19,12 +20,11 @@ const generateShadow = (count, color) => {
 
 const Container = styled.div`
   display: flex;
-  width: 100%;
-  height: 100vh;
+  flex: 1;
   overflow: hidden;
 `;
 const LeftWrapper = styled.div`
-  width: 50%;
+  flex: 1;
   display: flex;
   justify-content: center;
   overflow: hidden;
@@ -33,7 +33,7 @@ const LeftWrapper = styled.div`
 `;
 
 const RightWrapper = styled.div`
-  width: 50%;
+  flex: 1;
   position: relative;
   display: flex;
   justify-content: center;
@@ -42,6 +42,10 @@ const RightWrapper = styled.div`
   z-index: 1;
   box-shadow: -4px 0 4px rgba(0, 0, 0, 0.3);
   overflow: hidden;
+
+  @media ${device.phone} {
+    padding: 20px;
+  }
 `;
 const LoginBox = styled.div`
   width: 560px;
@@ -55,6 +59,12 @@ const LoginBox = styled.div`
   box-shadow: 3px 0px 4px rgba(0, 0, 0, 0.3),
     ${generateShadow(420, 'rgba(40,40,40,0.2)')};
   // box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.3);
+
+  @media ${device.phone} {
+    width: 100%;
+    max-width: 560px;
+    padding: 32px 20px;
+  }
 `;
 
 const wave = keyframes`
@@ -78,16 +88,28 @@ const Title = styled.div`
   color: ${colors.title};
   text-align: center;
   margin-bottom: 10px;
+
+  @media ${device.phone} {
+    font-size: 24px;
+  }
 `;
 const SubTitle = styled.div`
   font-size: 18px;
   color: ${colors.subtitle};
   text-align: center;
   margin-bottom: 24px;
+
+  @media ${device.phone} {
+    font-size: 16px;
+  }
 `;
 
 const Button = styled.div`
-  background: linear-gradient(45deg, #f6d365 0%, #fda085 100%);
+  background: linear-gradient(
+    45deg,
+    #f6d365 0%,
+    #fda085 100%
+  );
   width: 60%;
   margin-top: 20px;
   height: fit-content;
@@ -106,6 +128,11 @@ const Button = styled.div`
   &:active {
     filter: brightness(0.7);
   }
+
+  @media ${device.phone} {
+    width: 100%;
+    padding: 8px 10px;
+  }
 `;
 const ButtonText = styled.div`
   font-size: 24px;
@@ -113,6 +140,10 @@ const ButtonText = styled.div`
   position: relative;
   top: 1px;
   color: #2d2d2d;
+
+  @media ${device.phone} {
+    font-size: 20px;
+  }
 `;
 const InputBox = styled.div`
   width: 100%;
@@ -123,6 +154,11 @@ const InputTitle = styled(SubTitle)`
   text-align: left;
   color: #d0d0d3;
   margin-bottom: 8px;
+
+  @media ${device.phone} {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
 `;
 const Input = styled.input`
   width: 100%;
@@ -159,6 +195,10 @@ const Cat1 = styled.img`
 export const LoginV2 = (props) => {
   const [studentId, setStudentId] = useState('');
   const [password, setPassword] = useState('');
+  const isTableSmall = useMediaQuery({
+    maxWidth: size.tableSmall,
+  });
+  const isPhone = useMediaQuery({ maxWidth: size.phone });
 
   const handleSubmit = async () => {
     const data = {
@@ -170,9 +210,11 @@ export const LoginV2 = (props) => {
   return (
     <>
       <Container>
-        <LeftWrapper>
-          <ImgBox src={balloon} />
-        </LeftWrapper>
+        {!isTableSmall && (
+          <LeftWrapper>
+            <ImgBox src={balloon} />
+          </LeftWrapper>
+        )}
         <RightWrapper>
           <LoginBox>
             <Title>所以你要登入了嗎</Title>
@@ -180,24 +222,30 @@ export const LoginV2 = (props) => {
             <InputBox>
               <InputTitle>帳號</InputTitle>
               <Input
-                type="text"
+                type='text'
                 value={studentId}
-                onChange={(e) => setStudentId(e.target.value)}
+                onChange={(e) =>
+                  setStudentId(e.target.value)
+                }
               />
             </InputBox>
             <InputBox>
               <InputTitle>密碼</InputTitle>
               <Input
-                type="password"
+                type='password'
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) =>
+                  setPassword(e.target.value)
+                }
               />
             </InputBox>
             <Button>
-              <ButtonText onClick={handleSubmit}>登入</ButtonText>
+              <ButtonText onClick={handleSubmit}>
+                登入
+              </ButtonText>
             </Button>
           </LoginBox>
-          <Cat1 src={cat_1} />
+          {!isPhone && <Cat1 src={cat_1} />}
         </RightWrapper>
       </Container>
     </>

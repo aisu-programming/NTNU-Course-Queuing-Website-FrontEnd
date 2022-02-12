@@ -25,7 +25,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 *::before {
   margin: 0;
   padding: 0;
-  box-sizing: inherit;
+  box-sizing: border-box;
 }
 html {
   text-size-adjust: 100%;

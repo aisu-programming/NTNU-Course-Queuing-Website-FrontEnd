@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { colors } from 'styles';
+import { colors, device } from 'styles';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   MdOutlineThumbUpAlt,
@@ -28,6 +28,12 @@ const Cards = styled.ul`
     minmax(300px, 1fr)
   );
   gap: 20px;
+  @media ${device.phone} {
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(100%, 1fr)
+    );
+  }
 `;
 // Card
 const Container = styled.div`
@@ -55,6 +61,10 @@ const Content = styled.div`
     color: ${(props) =>
       props.isWhite ? colors.gray100 : colors.gray600};
   }
+
+  @media ${device.phoneSmall} {
+    grid-template-columns: 1fr;
+  }
 `;
 const Footer = styled.div`
   display: flex;
@@ -62,24 +72,36 @@ const Footer = styled.div`
   padding: 8px 12px;
   gap: 8px;
   background: ${(props) => StateColor[props.state + 300]};
+  border-top: 1px solid ${colors.black}${colors.opacity10};
 `;
 const TextBox = styled.div`
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
+  overflow: hidden;
 `;
 const Title = styled.h5`
   font-size: 14px;
   color: ${colors.gray600};
+  flex-shrink: 0;
+  transform: translate(0, 2px);
 `;
 const Desc = styled.h4`
   color: ${colors.gray900};
   margin-left: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 const Text = styled.div`
   margin-left: 12px;
   &:first-of-type {
     margin-left: 0;
   }
+`;
+const Empty = styled.div`
+  color: ${colors.gray300};
+  font-size: 20px;
+  margin: auto;
 `;
 const Card = ({ data }) => {
   const {
@@ -104,31 +126,29 @@ const Card = ({ data }) => {
           <Desc>{department}</Desc>
         </TextBox>
         <TextBox>
-          <Title>時間:</Title>
-          <Desc>{time}</Desc>
-        </TextBox>
-        <TextBox>
           <Title>教師:</Title>
           <Desc>{teacher}</Desc>
         </TextBox>
-        <TextBox>
+        <TextBox style={{gridColumn: '1/3'}}>
+          <Title>時間地點:</Title>
+          <Desc>
+            {time} {place}
+          </Desc>
+        </TextBox>
+        {/* <TextBox>
           <Title>地點:</Title>
           <Desc>{place}</Desc>
-        </TextBox>
+        </TextBox> */}
       </Content>
       {state !== 'done' && (
         <Footer state={state}>
           {state !== 'active' && (
-            <IconButton
-              text={'搶'}
-            >
+            <IconButton text={'搶'}>
               <MdOutlineThumbUpAlt />
             </IconButton>
           )}
           {state !== 'pause' && (
-            <IconButton
-              text={'暫停'}
-            >
+            <IconButton text={'暫停'}>
               <MdOutlinePauseCircleOutline />
             </IconButton>
           )}
@@ -146,7 +166,7 @@ const Card = ({ data }) => {
 export const CardBox = () => {
   const location = useLocation();
   const path = location.pathname.split('/')[2];
-  console.log(path);
+
   const data = {
     state: 'active',
     id: '1487',
@@ -187,11 +207,11 @@ export const CardBox = () => {
     data,
     data1,
     data2,
-    data3,
+    // data3,
     data2,
     data1,
-    data3,
-    data3,
+    // data3,
+    // data3,
   ];
   let i = 1;
   const waitCards = datas
@@ -202,7 +222,7 @@ export const CardBox = () => {
         <li key={i}>
           <Card data={item} />
         </li>
-      )
+      );
     });
   const doneCards = datas
     .filter((item) => item.state === 'done')
@@ -213,6 +233,12 @@ export const CardBox = () => {
     ));
   return (
     <>
+      {path === 'wait' && !waitCards.length && (
+        <Empty>{`這裡沒有任何課程噢 >uO`}</Empty>
+      )}
+      {path === 'done' && !doneCards.length && (
+        <Empty>{`這裡沒有任何課程噢 >uO`}</Empty>
+      )}
       <Cards>
         {path === 'wait' && waitCards}
         {path === 'done' && doneCards}
