@@ -24,7 +24,7 @@ const LayOut = styled.div`
   background: ${colors.black}${colors.opacity50};
   backdrop-filter: blur(1px);
   z-index: 2;
-  margin-top: ${props => props.isPhone && '60px'};
+  margin-top: ${(props) => props.isPhone && '60px'};
 `;
 
 const NavWrapper = styled.nav`

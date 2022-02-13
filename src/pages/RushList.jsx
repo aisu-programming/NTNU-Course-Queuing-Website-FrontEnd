@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { colors, device } from 'styles';
 import { NavLink, Outlet } from 'react-router-dom';
@@ -12,7 +12,7 @@ const Container = styled.section`
   flex-direction: column;
 
   @media ${device.phone} {
-    padding: 20px 0px;
+    padding: 20px 0px 0px;
   }
 `;
 
@@ -25,6 +25,7 @@ const Title = styled.h1`
   @media ${device.phone} {
     text-align: center;
     margin-bottom: 16px;
+    font-size: 24px;
   }
 `;
 
@@ -105,8 +106,34 @@ const Button = styled.div`
     width: 100px;
   }
 `;
+const Footer = styled.div`
+  width: 100%;
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+`
+const SaveButton = styled.div`
+  background: ${colors.success400};
+  width: fit-content;
+  height: fit-content;
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  transition: 0.3s;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  &:hover {
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  &:active {
+    background: ${colors.success400}${colors.opacity80};
+  }
+`;
 
 export const RushList = (props) => {
+  const [data, setData] = useState([]);
   return (
     <Container>
       <Title>搶課清單</Title>
@@ -125,8 +152,11 @@ export const RushList = (props) => {
             </NavLink>
           </NavOptions>
           <ChildWrapper>
-            <Outlet />
+            <Outlet context={[data, setData]} />
           </ChildWrapper>
+          <Footer>
+            <SaveButton>儲存</SaveButton>
+          </Footer>
         </Wrapper>
       </ContentContainer>
     </Container>

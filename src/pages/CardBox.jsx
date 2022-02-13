@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { colors, device } from 'styles';
-import { NavLink, useLocation } from 'react-router-dom';
+import {
+  useOutletContext,
+  useLocation,
+} from 'react-router-dom';
 import {
   MdOutlineThumbUpAlt,
   MdOutlinePauseCircleOutline,
@@ -63,7 +66,7 @@ const Content = styled.div`
   }
 
   @media ${device.phoneSmall} {
-    grid-template-columns: 1fr;
+    grid-template-columns: 3fr 2fr;
   }
 `;
 const Footer = styled.div`
@@ -103,7 +106,7 @@ const Empty = styled.div`
   font-size: 20px;
   margin: auto;
 `;
-const Card = ({ data }) => {
+const Card = ({ data, setData, item }) => {
   const {
     state,
     id,
@@ -112,8 +115,22 @@ const Card = ({ data }) => {
     teacher,
     time,
     place,
-  } = data;
+  } = item;
   const isWhite = state === 'unSave';
+  const handleAction = (action) => {
+    const findIndex = data
+      .map((item) => {
+        if (item.id === id) {
+          item.state = action;
+        }
+        return item;
+      })
+      .filter((item) => {
+        return item.state !== 'delete';
+      });
+    console.log(findIndex);
+    setData(findIndex);
+  };
   return (
     <Container>
       <Header isWhite={isWhite} state={state}>
@@ -129,31 +146,42 @@ const Card = ({ data }) => {
           <Title>教師:</Title>
           <Desc>{teacher}</Desc>
         </TextBox>
-        <TextBox style={{gridColumn: '1/3'}}>
+        <TextBox style={{ gridColumn: '1/3' }}>
           <Title>時間地點:</Title>
           <Desc>
             {time} {place}
           </Desc>
         </TextBox>
-        {/* <TextBox>
-          <Title>地點:</Title>
-          <Desc>{place}</Desc>
-        </TextBox> */}
       </Content>
       {state !== 'done' && (
         <Footer state={state}>
+          {state === 'pause' && item.department === '通識' && (
+            <IconButton
+              handleEvent={() => handleAction('pause')}
+              text={'變更領域'}
+            >
+              <MdOutlinePauseCircleOutline />
+            </IconButton>
+          )}
           {state !== 'active' && (
-            <IconButton text={'搶'}>
+            <IconButton
+              handleEvent={() => handleAction('active')}
+              text={'搶'}
+            >
               <MdOutlineThumbUpAlt />
             </IconButton>
           )}
           {state !== 'pause' && (
-            <IconButton text={'暫停'}>
+            <IconButton
+              handleEvent={() => handleAction('pause')}
+              text={'暫停'}
+            >
               <MdOutlinePauseCircleOutline />
             </IconButton>
           )}
           <IconButton
             isDanger={StateColor['delete']}
+            handleEvent={() => handleAction('delete')}
             text={'刪除'}
           >
             <MdDeleteOutline />
@@ -164,10 +192,11 @@ const Card = ({ data }) => {
   );
 };
 export const CardBox = () => {
+  const [data, setData] = useOutletContext();
   const location = useLocation();
   const path = location.pathname.split('/')[2];
 
-  const data = {
+  const data0 = {
     state: 'active',
     id: '1487',
     name: '離散數學',
@@ -178,7 +207,7 @@ export const CardBox = () => {
   };
   const data1 = {
     state: 'pause',
-    id: '1487',
+    id: '1488',
     name: '離散數學',
     department: '資工系',
     teacher: '王弘倫',
@@ -187,7 +216,7 @@ export const CardBox = () => {
   };
   const data2 = {
     state: 'unSave',
-    id: '1487',
+    id: '1489',
     name: '離散數學',
     department: '資工系',
     teacher: '王弘倫',
@@ -196,41 +225,55 @@ export const CardBox = () => {
   };
   const data3 = {
     state: 'done',
-    id: '1487',
+    id: '1490',
     name: '離散數學',
     department: '資工系',
     teacher: '王弘倫',
     time: '一 3 4',
     place: '分部',
   };
+  const data4 = {
+    state: 'active',
+    id: '1491',
+    name: '離散數學',
+    department: '通識',
+    teacher: '王弘倫',
+    time: '一 3 4',
+    place: '分部',
+  };
   const datas = [
-    data,
+    data0,
     data1,
     data2,
-    // data3,
-    data2,
-    data1,
+    data3,
+    data4,
+    // data2,
+    // data1,
     // data3,
     // data3,
   ];
-  let i = 1;
-  const waitCards = datas
+
+  useEffect(() => {
+    setData(datas);
+  }, []);
+
+  const waitCards = data
     .filter((item) => item.state !== 'done')
     .map((item) => {
-      i = i + 1;
       return (
-        <li key={i}>
-          <Card data={item} />
+        <li key={`${item.id}`}>
+          <Card data={data} setData={setData} item={item} />
         </li>
       );
     });
-  const doneCards = datas
+  const doneCards = data
     .filter((item) => item.state === 'done')
     .map((item) => (
-      <li>
-        <Card data={item} />
+      <li key={`${item.id}`}>
+        <Card data={data} setData={setData} item={item} />
       </li>
     ));
+
   return (
     <>
       {path === 'wait' && !waitCards.length && (

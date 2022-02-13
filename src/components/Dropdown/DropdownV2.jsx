@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { colors } from 'styles';
+import { colors, size } from 'styles';
 import Select, { components } from 'react-select';
 import SimpleBarReact from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
+import { useMediaQuery } from 'react-responsive';
 
 export const DropdownV2 = ({name, options, handleValue, ...props}) => {
+  const isPhone = useMediaQuery({ maxWidth: size.phone });
+
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState('');
   const handleOpen = () => {
@@ -35,8 +38,9 @@ export const DropdownV2 = ({name, options, handleValue, ...props}) => {
     control: (provided, state) => {
       return {
         ...provided,
-        height: '40px',
-        padding: '8px 16px',
+        height: '32px',
+        maxHeight: '32px',
+        padding: `${isPhone ? '8px 12px' : '8px 16px'}`,
         border: 0,
         borderRadius: '4px',
         boxShadow: 'none',
@@ -53,7 +57,7 @@ export const DropdownV2 = ({name, options, handleValue, ...props}) => {
     valueContainer: (provided) => {
       return {
         ...provided,
-        height: '100%',
+        height: `${isPhone ? '14px' : '100%'}`,
         padding: '0px',
         top: '1px',
       };
@@ -64,17 +68,20 @@ export const DropdownV2 = ({name, options, handleValue, ...props}) => {
         margin: `0`,
         padding: `0`,
         color: `${colors.white}`,
+        fontSize: `${isPhone ? '14px' : '16px'}`,
       };
     },
     placeholder: (provided) => {
       return {
         ...provided,
+        fontSize: `${isPhone ? '14px' : '16px'}`,
       };
     },
     singleValue: (provided) => {
       return {
         ...provided,
         color: `${colors.white}`,
+        fontSize: `${isPhone ? '14px' : '16px'}`,
       };
     },
     dropdownIndicator: (provided, state) => {
@@ -82,8 +89,8 @@ export const DropdownV2 = ({name, options, handleValue, ...props}) => {
         ...provided,
         color: `${colors.gray100}`,
         padding: '0',
-        maxWidth: '16px',
-        maxHeight: '16px',
+        maxWidth: '14px',
+        maxHeight: '14px',
         cursor: 'pointer',
         transform: state.selectProps.menuIsOpen ? 'rotate(0deg)' : 'rotate(-180deg)',
         transition: "all .3s ease-in-out",
@@ -116,6 +123,7 @@ export const DropdownV2 = ({name, options, handleValue, ...props}) => {
         marginTop: '4px',
         height: open ? "200px" : "0px",
         boxShadow: 'none',
+        zIndex: '3',
         // overflow: "hidden",
         // transition: ".3s ease-in-out",
         // transform: open ? 'scaleY(1)' : 'scaleY(0)',
@@ -142,6 +150,7 @@ export const DropdownV2 = ({name, options, handleValue, ...props}) => {
         '::-webkit-scrollbar-thumb:hover': {
           background: `${colors.gray300}${colors.opacity80}`,
         },
+        fontSize: `${isPhone ? '14px' : '16px'}`,
       };
     },
     option: (props, { data, isFocused, isSelected}) => {

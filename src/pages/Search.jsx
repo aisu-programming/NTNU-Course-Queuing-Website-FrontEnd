@@ -14,7 +14,6 @@ import zh_tw from 'date-fns/locale/zh_tw';
 import { department, place } from 'data';
 import { search } from 'api';
 
-
 const SearchContainer = styled.section`
   width: 100%;
   height: 100%;
@@ -25,7 +24,7 @@ const SearchContainer = styled.section`
   flex-direction: column;
 
   @media ${device.phone} {
-    padding: 20px 0;
+    padding: 20px 0 0;
   }
 `;
 const Title = styled.h1`
@@ -37,6 +36,7 @@ const Title = styled.h1`
   @media ${device.phone} {
     text-align: center;
     margin-bottom: 16px;
+    font-size: 24px;
   }
 `;
 
@@ -96,13 +96,14 @@ const RowBox = styled.div`
   @media ${device.phone} {
     flex-direction: row;
     gap: 12px;
+    margin-bottom: 16px;
   }
-`
+`;
 
 const SearchBox = styled.div`
   display: flex;
   flex-direction: column;
-  flex: ${props => props.width ? props.width : '1'};
+  flex: ${(props) => (props.width ? props.width : '1')};
 `;
 
 const SearchTitle = styled.h4`
@@ -111,6 +112,10 @@ const SearchTitle = styled.h4`
   letter-spacing: 2px;
   color: ${colors.gray100};
   margin-bottom: 4px;
+
+  @media ${device.phone} {
+    font-size: 12px;
+  }
 `;
 const InputBox = styled.div`
   width: 100%;
@@ -124,11 +129,15 @@ const InputBox = styled.div`
   border-radius: 4px;
   background: ${(props) =>
     props.hasSchedule ? colors.primary : colors.gray500};
-  border: none;
   outline: none;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(0, 0, 0, 0);
   cursor: pointer;
+
+  @media ${device.phone} {
+    font-size: 14px;
+    padding: 11px 12px;
+  }
 `;
 const Input = styled.input`
   width: 100%;
@@ -138,13 +147,16 @@ const Input = styled.input`
   color: #d0d0d3;
   border-radius: 4px;
   background: ${colors.gray500};
-  border: none;
   outline: none;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(0, 0, 0, 0);
   transition: 0.2s;
   &:focus {
     border: 1px solid ${colors.primary500};
+  }
+  @media ${device.phone} {
+    font-size: 14px;
+    padding: 10px 12px;
   }
 `;
 const BoxTitle = styled.h3`
@@ -153,12 +165,19 @@ const BoxTitle = styled.h3`
   letter-spacing: 2px;
   font-size: 24px;
   margin-bottom: 12px;
+  @media ${device.phone} {
+    font-size: 20px;
+  }
 `;
 const Button = styled.div`
-  background: linear-gradient(45deg, #f6d365 0%, #fda085 100%);
+  background: linear-gradient(
+    45deg,
+    #f6d365 0%,
+    #fda085 100%
+  );
   width: 100%;
   height: fit-content;
-  margin-top: 20px;
+  margin-top: 8px;
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
@@ -173,13 +192,21 @@ const Button = styled.div`
   &:active {
     filter: brightness(0.7);
   }
+
+  @media ${device.phone} {
+    margin-top: auto;
+    transform: translateY(-1px);
+  }
 `;
 
 const ModalDesc = styled.div``;
 const ModalTitle = styled.h4`
-  // font-size: 16px;
   color: ${colors.gray100};
   margin-bottom: 16px;
+
+  @media ${device.phone} {
+    margin-bottom: 8px;
+  }
 `;
 
 const CheckButton = styled.div`
@@ -189,6 +216,10 @@ const CheckButton = styled.div`
   color: ${colors.white};
   cursor: pointer;
   margin-bottom: 16px;
+
+  @media ${device.phone} {
+    margin-bottom: 8px;
+  }
 `;
 const Icon = styled.div`
   position: relative;
@@ -210,6 +241,12 @@ const CellWrapper = styled(CheckButton)`
   font-size: 16px;
   margin-top: 16px;
   cursor: default;
+  margin-bottom: 0;
+
+  @media ${device.phone} {
+    font-size: 14px;
+    margin-top: 8px;
+  }
 `;
 const CellBox = styled.div`
   width: 48px;
@@ -222,7 +259,18 @@ const CellBox = styled.div`
     background: ${(props) => {
       // if (props.otherSchedule) return colors.gray500;
       return colors.primary + colors.opacity40;
-    }}
+    }};
+  }
+  @media ${device.phone} {
+    width: 30px;
+    height: 20px;
+    &:hover {
+      background: ${(props) =>
+        props.otherSchedule
+          ? colors.primary
+          : colors.gray500};
+    }
+  }
 `;
 
 export const Search = (props) => {
@@ -231,7 +279,7 @@ export const Search = (props) => {
   const [otherSchedule, setOtherSchedule] = useState(false);
   const [isPrecise, setIsPrecise] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [classData, setClassData] = useState();
+  const [classData, setClassData] = useState([]);
 
   // console.log(filter);
   // 判斷有無的布林區
@@ -272,9 +320,9 @@ export const Search = (props) => {
     const formatSchedule = schedule.map((item) => {
       return format(item, 'd H', { locale: zh_tw });
     });
-    
+
     handleFilter({ value: formatSchedule }, 'time');
-  },[schedule]);
+  }, [schedule]);
 
   //處理資料傳輸
   // let classData = [];
@@ -282,7 +330,7 @@ export const Search = (props) => {
     const data = {
       filter,
       otherSchedule,
-      isPrecise
+      isPrecise,
     };
     await search(data).then((res) => setClassData(res));
   };
@@ -295,11 +343,19 @@ export const Search = (props) => {
           <RowBox>
             <SearchBox width={1}>
               <SearchTitle>開課序號</SearchTitle>
-              <Input name='id' type='text' onChange={handleFilter} />
+              <Input
+                name='id'
+                type='text'
+                onChange={handleFilter}
+              />
             </SearchBox>
             <SearchBox width={2}>
               <SearchTitle>課程名稱</SearchTitle>
-              <Input name='name' type='text' onChange={handleFilter} />
+              <Input
+                name='name'
+                type='text'
+                onChange={handleFilter}
+              />
             </SearchBox>
           </RowBox>
           <RowBox>
@@ -349,7 +405,9 @@ export const Search = (props) => {
                     精確搜尋
                     <Icon>
                       {isPrecise && <MdOutlineCheckBox />}
-                      {!isPrecise && <MdOutlineCheckBoxOutlineBlank />}
+                      {!isPrecise && (
+                        <MdOutlineCheckBoxOutlineBlank />
+                      )}
                     </Icon>
                   </CheckButton>
                   <ModalTitle>設定搜尋時間</ModalTitle>
@@ -362,14 +420,14 @@ export const Search = (props) => {
                     <CellBox
                       otherSchedule={otherSchedule}
                       onClick={handleOtherSchedule}
-                    ></CellBox>
+                    />
                   </CellWrapper>
                 </ModalDesc>
               </CustomModal>
             </SearchBox>
           </RowBox>
           <RowBox>
-            <SearchBox>
+            <SearchBox width={1}>
               <SearchTitle>課程地點</SearchTitle>
               <DropdownV2
                 name='place'
@@ -377,10 +435,10 @@ export const Search = (props) => {
                 handleValue={handleFilter}
               />
             </SearchBox>
+            <SearchBox width={1}>
+              <Button onClick={Submit}>查詢</Button>
+            </SearchBox>
           </RowBox>
-          <SearchBox>
-            <Button onClick={Submit}>查詢</Button>
-          </SearchBox>
         </LeftWrapper>
         <RightWrapper>
           <BoxTitle>課程列表</BoxTitle>

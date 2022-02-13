@@ -19,7 +19,7 @@ const Button = styled.div`
 
   svg {
     transform: '';
-    transition: .3s;
+    transition: 0.3s;
   }
   &:hover {
     background: ${colors.white}${colors.opacity60};
@@ -40,13 +40,10 @@ const Text = styled.h4`
   top: 1px;
 `;
 
-export const IconButton = ({
-  isDanger='',
-  text,
-  children,
-}) => {
+export const IconButton = (props) => {
+  const { isDanger, handleEvent, text, children } = props;
   return (
-    <Button isDanger={isDanger}>
+    <Button onClick={handleEvent} isDanger={isDanger}>
       {children}
       <Text>{text}</Text>
     </Button>

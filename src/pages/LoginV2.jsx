@@ -2,9 +2,17 @@ import React, { useState } from 'react';
 import balloon from '../assets/login-balloon.svg';
 import cat_1 from '../assets/login-cat-1.svg';
 import { colors, size, device } from 'styles';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { Login } from 'api';
 import { useMediaQuery } from 'react-responsive';
+import { PuffLoader } from 'react-spinners';
+import {
+  MdOutlineCheckBoxOutlineBlank,
+  MdOutlineCheckBox,
+} from 'react-icons/md';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const generateShadow = (count, color) => {
   let i = 0;
@@ -50,9 +58,10 @@ const RightWrapper = styled.div`
 const LoginBox = styled.div`
   width: 560px;
   height: fit-content;
+  position: relative;
   background: #303030;
   border-radius: 8px;
-  padding: 40px;
+  padding: 40px 40px 32px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -111,7 +120,7 @@ const Button = styled.div`
     #fda085 100%
   );
   width: 60%;
-  margin-top: 20px;
+  margin-top: 8px;
   height: fit-content;
   border-radius: 4px;
   padding: 10px 20px;
@@ -128,6 +137,16 @@ const Button = styled.div`
   &:active {
     filter: brightness(0.7);
   }
+
+  ${(props) =>
+    props.isLoading &&
+    css`
+      cursor: default;
+      filter: brightness(0.6) contrast(0.8);
+      &:hover {
+        filter: brightness(0.6) contrast(0.8);
+      }
+    `}
 
   @media ${device.phone} {
     width: 100%;
@@ -152,7 +171,7 @@ const InputBox = styled.div`
 const InputTitle = styled(SubTitle)`
   font-size: 16px;
   text-align: left;
-  color: #d0d0d3;
+  color: ${colors.gray100};
   margin-bottom: 8px;
 
   @media ${device.phone} {
@@ -182,6 +201,26 @@ const Input = styled.input`
   }
 `;
 
+const CheckBox = styled.div`
+  display: flex;
+  align-items: center;
+  color: ${colors.gray100};
+  margin-bottom: 24px;
+  cursor: pointer;
+
+  svg {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    transform: translateY(-1px);
+  }
+`;
+
+const ErrorMessage = styled.h5`
+  font-size: 14px;
+  color: ${colors.danger};
+`;
+
 const Cat1 = styled.img`
   width: 20%;
   height: fit-content;
@@ -191,25 +230,79 @@ const Cat1 = styled.img`
   left: -50px;
   filter: drop-shadow(4px 0px 3px rgba(0, 0, 0, 0.6));
 `;
+const Hint = styled.h5`
+  position: absolute;
+  bottom: 12px;
+  margin-top: 8px;
+  color: ${colors.gray300};
+  font-size: 12px;
+  text-align: center;
+`;
 
 export const LoginV2 = (props) => {
+  const [loading, setLoading] = useState(false);
   const [studentId, setStudentId] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [readCheck, setReadCheck] = useState(false);
+  const navigate = useNavigate();
   const isTableSmall = useMediaQuery({
     maxWidth: size.tableSmall,
   });
   const isPhone = useMediaQuery({ maxWidth: size.phone });
 
+  const toggleToast = () => {
+    toast.dark('🍖 登入成功！ OuO (等待自動跳轉)', {
+      position: 'top-center',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
   const handleSubmit = async () => {
+    if (loading) return;
+    if (!readCheck) {
+      setErrorMsg('請閱讀注意事項和免責聲明，並勾選');
+      return;
+    }
+    if (!studentId) {
+      setErrorMsg('請輸入帳號');
+      return;
+    }
+    if (!password) {
+      setErrorMsg('請輸入密碼');
+      return;
+    }
+    setLoading(true);
+
     const data = {
       studentId: `${studentId}`,
       password: `${password}`,
     };
-    await Login(data).then((res) => console.log(res));
+    await Login(data).then((res) => {
+      setLoading(false);
+      const isSuccess = !res;
+      if (!isSuccess) setErrorMsg(`＊${res}`);
+      if (isSuccess) {
+        toggleToast();
+        setTimeout(()=> {
+          navigate('/search')
+        }, 3000);
+      }
+      console.log(res);
+    });
+  };
+
+  const handleReadCheck = () => {
+    setReadCheck(!readCheck);
   };
   return (
     <>
       <Container>
+        <ToastContainer />
         {!isTableSmall && (
           <LeftWrapper>
             <ImgBox src={balloon} />
@@ -229,7 +322,7 @@ export const LoginV2 = (props) => {
                 }
               />
             </InputBox>
-            <InputBox>
+            <InputBox style={{ marginBottom: '12px' }}>
               <InputTitle>密碼</InputTitle>
               <Input
                 type='password'
@@ -239,11 +332,30 @@ export const LoginV2 = (props) => {
                 }
               />
             </InputBox>
-            <Button>
-              <ButtonText onClick={handleSubmit}>
-                登入
-              </ButtonText>
+            <CheckBox onClick={handleReadCheck}>
+              {!readCheck && (
+                <MdOutlineCheckBoxOutlineBlank />
+              )}
+              {readCheck && <MdOutlineCheckBox />}
+              我已閱讀注意事項 & 作者免責聲明
+            </CheckBox>
+            {!loading && (
+              <ErrorMessage>{errorMsg}</ErrorMessage>
+            )}
+            <Button
+              onClick={handleSubmit}
+              isLoading={loading}
+            >
+              <PuffLoader
+                color={colors.primaryText}
+                size={24}
+                loading={loading}
+              />
+              {!loading && <ButtonText>登入</ButtonText>}
             </Button>
+            {loading && (
+              <Hint>{'打錯帳號密碼會讀取較久噢 >.O'}</Hint>
+            )}
           </LoginBox>
           {!isPhone && <Cat1 src={cat_1} />}
         </RightWrapper>

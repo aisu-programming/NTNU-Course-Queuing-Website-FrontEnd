@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { colors } from 'styles';
+import { colors, device, size } from 'styles';
 import ScheduleSelector from 'react-schedule-selector';
 import { format } from 'date-fns';
 import zh_tw from 'date-fns/locale/zh_tw';
+import { useMediaQuery } from 'react-responsive';
 
 const DateLabel = styled.div`
   text-align: center;
@@ -25,6 +26,7 @@ const ScheduleCell = styled.div`
   display: flex;
   justify-content: center;
   align-item: center;
+  cursor: pointer;
   background: ${(props) =>
     props.selected ? colors.primary : colors.gray500};
   &:hover {
@@ -32,9 +34,21 @@ const ScheduleCell = styled.div`
       // if (props.selected) return colors.gray500;
       return colors.primary + colors.opacity40;
     }}
+  }
+
+  @media ${device.phone} {
+    width: 30px;
+    height: 20px;
+    &:hover {
+      background: ${(props) =>
+        props.selected ? colors.primary : colors.gray500};
+    }
+  }
 `;
 
 export const TimeSelector = ({ schedule, setSchedule }) => {
+  const isPhone = useMediaQuery({ maxWidth: size.phone });
+
   const handleChange = (newSchedule) => {
     // console.log(newSchedule);
     console.log(format(newSchedule[0], 'd H', { locale: zh_tw }));
@@ -46,7 +60,8 @@ export const TimeSelector = ({ schedule, setSchedule }) => {
   };
 
   const renderCustomDateLabel = (time) => {
-    const Label = format(time, 'dddd', { locale: zh_tw });
+    const dateFormat = isPhone ? 'dd' : 'dddd';
+    const Label = format(time, dateFormat, { locale: zh_tw });
     return <DateLabel>{Label}</DateLabel>;
   };
 
@@ -66,9 +81,9 @@ export const TimeSelector = ({ schedule, setSchedule }) => {
     <ScheduleSelector
       selection={schedule}
       numDays={6}
-      minTime={0}
+      minTime={1}
       maxTime={15}
-      columnGap={'12px'}
+      columnGap={`${isPhone ? '6px' : '12px'}`}
       rowGap={'0px'}
       unselectedColor={`${colors.gray500}`}
       selectedColor={`${colors.primary}`}

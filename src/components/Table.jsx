@@ -3,11 +3,11 @@ import React, {
   Fragment,
   useEffect,
 } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { colors, size, device } from 'styles';
 import { useTable, useExpanded } from 'react-table';
 import { MdOutlinePlaylistAdd } from 'react-icons/md';
-import { columns, fakeData } from 'components/TableData';
+import { columns } from 'components/TableData';
 import { useMediaQuery } from 'react-responsive';
 import { IconButton } from 'components';
 
@@ -20,6 +20,7 @@ const Styles = styled.div`
   // menu 240 + bodyPad 40 * 2 + search 300
   // marginLeft 12 + insidePad 20 * 2
   overflow-y: scroll;
+  position: relative;
   border-radius: 6px;
   box-shadow: 2px 2px 4px ${colors.black}${colors.opacity20};
 
@@ -29,7 +30,7 @@ const Styles = styled.div`
   }
   @media ${device.phone} {
     max-width: calc(100vw);
-    // max-height: 100%;
+    max-height: calc(100vh - 150px);
   }
 
   table {
@@ -42,20 +43,23 @@ const Styles = styled.div`
         position: sticky;
         top: 0;
         background: ${colors.gray500};
-        border-bottom: 2px solid ${colors.gray600};
+        z-index: 1;
+
         th {
           // height: 60px;
           height: fit-content;
           padding: 10px 16px;
           vertical-align: middle;
+          border-bottom: 2px solid ${colors.gray600};
+          border-right: none;
+          overflow: hidden;
+          white-space: nowrap;
+          // text-overflow: ellipsis;
+          transform: translateY(2px);
 
           @media ${device.phone} {
             padding: 10px 12px;
             font-size: 14px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            // transform: translateY(2px);
           }
         }
       }
@@ -72,8 +76,13 @@ const Styles = styled.div`
         td {
           padding: 10px 16px;
           vertical-align: middle;
+          line-height: 1.2rem;
           &:last-of-type {
             padding: 0;
+          }
+
+          @media ${device.phone} {
+            padding: 10px 10px;
           }
         }
       }
@@ -155,17 +164,56 @@ const TextBox = styled.div`
   &:last-of-type {
     margin-bottom: 0;
   }
-`
+`;
 const Title = styled.h5`
   font-size: 14px;
   color: ${colors.gray200};
   margin-right: 8px;
   transform: translateY(2px);
-`
+`;
 const Desc = styled.h4`
   font-size: 16px;
   color: ${colors.gray100};
-`
+`;
+
+const shake = keyframes`
+  from {
+    transform: translate(-50%, -50%) translate(5px, 0px) rotate(1deg);
+  }
+  to {
+    transform: translate(-50%, -50%) translate(-5px, 0px) rotate(-1deg);
+  }
+`;
+const shake2 = keyframes`
+from {
+  transform: translate(5px, 0px);
+  overflowY: hidden;
+}
+to {
+  transform: translate(-5px, 0px);
+  overflowY: hidden;
+}
+`;
+const Empty = styled.div`
+  width: fit-content;
+  color: ${colors.gray300};
+  font-size: 16px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: ${shake} 0.1s alternate ease-in-out 5;
+
+  @media ${device.phone} {
+    margin: auto;
+    position: relative;
+    inset: auto;
+    transform: none;
+    animation: ${shake2} 0.1s alternate ease-in-out 5;
+    text-align: center;
+    padding: 20px 0;
+  }
+`;
 
 const ExpandRow = ({ row }) => {
   const isTable = useMediaQuery({
@@ -180,9 +228,7 @@ const ExpandRow = ({ row }) => {
           return (
             <LeftWrapper>
               <TextBox>
-                <Title>
-                  這裡沒有更多資訊了 OuO
-                </Title>
+                <Title>這裡沒有更多資訊了 OuO</Title>
               </TextBox>
             </LeftWrapper>
           );
@@ -214,7 +260,6 @@ const ExpandRow = ({ row }) => {
 };
 
 export const Table = ({ columns, data }) => {
-  const [list, setList] = useState([]);
   const isTable = useMediaQuery({
     maxWidth: size.table,
   });
@@ -225,10 +270,10 @@ export const Table = ({ columns, data }) => {
         'teacher',
         'department',
         'credit',
-        'isInList',
+        'isOrdered',
       ];
     }
-    return ['isInList'];
+    return ['isOrdered'];
   };
   const hiddenColumn = checkSize();
   const {
@@ -328,15 +373,15 @@ export const Table = ({ columns, data }) => {
   );
 };
 
-export const Test = ( {data} ) => {
-  console.log(data);
-
+export const Test = ({ data }) => {
+  const noData = () => {
+    if (!data.length)
+      return <Empty>抱歉，找不到任何課程噢 OuO</Empty>;
+  };
   return (
     <Styles>
-      <Table
-        columns={columns}
-        data={data}
-      />
+      <Table columns={columns} data={data} />
+      {noData()}
     </Styles>
   );
 };
