@@ -12,6 +12,7 @@ import {
   MdLoop,
 } from 'react-icons/md';
 import { IconButton } from 'components';
+import { useDataContext } from 'data';
 
 const StateColor = {
   active400: `${colors.active400}`,
@@ -116,12 +117,10 @@ const Empty = styled.div`
   font-size: 20px;
   margin: auto;
 `;
-const Card = ({
-  originalData,
-  copyData,
-  setCopyData,
-  item,
-}) => {
+const Card = ({ item }) => {
+  const { courseData, courseList, setCourseList } =
+    useDataContext();
+
   const {
     state,
     courseNo,
@@ -132,28 +131,29 @@ const Card = ({
     domains,
   } = item;
   const isWhite = state === 'delete';
-  const originalItem = originalData.find((item) => {
-    return item.courseNo=== courseNo;
-  });
 
   const isChange = () => {
-    console.log(originalItem.state);
-    if (originalItem.state !== state) return 200;
+    const courseItem = courseData.find((item) => {
+      return item.courseNo === courseNo;
+    });
+
+    if (!courseItem) return 200;
+    if (courseItem.state !== state) return 200;
     return 0;
   };
 
   const handleAction = (action) => {
-    const findIndex = copyData.map((item) => {
+    const changeState = courseList.map((item) => {
       if (item.courseNo === courseNo) {
-        const copy = {
+        const updateCourse = {
           ...item,
           state: action,
         };
-        return copy;
+        return updateCourse;
       }
       return item;
     });
-    setCopyData(findIndex);
+    setCourseList(changeState);
   };
 
   return (
@@ -181,9 +181,7 @@ const Card = ({
         </TextBox>
         <TextBox style={{ gridColumn: '1/3' }}>
           <Title>時間地點:</Title>
-          <Desc>
-            {timeInfo}
-          </Desc>
+          <Desc>{timeInfo}</Desc>
         </TextBox>
         <TextBox style={{ gridColumn: '1/3' }}>
           <Title>通識領域:</Title>
@@ -194,7 +192,7 @@ const Card = ({
         <Footer state={state} isChange={isChange()}>
           {state === 'pause' && item.department === '通識' && (
             <IconButton
-              handleEvent={() => handleAction('pause')}
+              onClick={() => handleAction('pause')}
               text={'變更領域'}
             >
               <MdLoop />
@@ -202,7 +200,7 @@ const Card = ({
           )}
           {state !== 'active' && (
             <IconButton
-              handleEvent={() => handleAction('active')}
+              onClick={() => handleAction('active')}
               text={'搶'}
             >
               <MdOutlineThumbUpAlt />
@@ -210,7 +208,7 @@ const Card = ({
           )}
           {state !== 'pause' && (
             <IconButton
-              handleEvent={() => handleAction('pause')}
+              onClick={() => handleAction('pause')}
               text={'暫停'}
             >
               <MdOutlinePauseCircleOutline />
@@ -219,7 +217,7 @@ const Card = ({
           {state !== 'delete' && (
             <IconButton
               isDanger={StateColor['delete']}
-              handleEvent={() => handleAction('delete')}
+              onClick={() => handleAction('delete')}
               text={'刪除'}
             >
               <MdDeleteOutline />
@@ -231,57 +229,48 @@ const Card = ({
   );
 };
 
-export const CardBox = (props) => {
-  const { dataText, changeText } = useOutletContext();
-  const { list } = props;
-  const [hasChange, setHasChange] = changeText;
-  const [data, setData] = dataText;
-  const [copyData, setCopyData] = useState([]);
+export const CardBox = () => {
+  const { Change } = useOutletContext();
+  const setHasChange = Change[1];
+  const { courseData, courseList, setCourseList } =
+    useDataContext();
   const location = useLocation();
   const path = location.pathname.split('/')[2];
-  console.log(list);
+
   const checkChange = () => {
-    const changeList = copyData.filter((item, index) => {
-      const state = data[index].state;
-      if (item.state !== state) {
-        return item;
-      }
+    const changeList = courseList.filter((item, index) => {
+      const course = courseData.find((data) => {
+        return data.courseNo === item.courseNo;
+      });
+
+      const isNewCourse = !course;
+      if (isNewCourse) return item;
+
+      const isChangeState = course.state !== item.state;
+      if (isChangeState) return item;
     });
     return !!changeList.length;
   };
 
   useEffect(() => {
-    setCopyData([...data]);
-  }, [data]);
+    setCourseList([...courseData, ...courseList]);
+    setHasChange(checkChange);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
-    setHasChange(checkChange());
-  }, [copyData]);
-
-  const waitCards = copyData
+  const waitCards = courseList
     .filter((item) => item.state !== 'done')
     .map((item) => {
       return (
-        <li key={`${item.id}`}>
-          <Card
-            originalData={data}
-            copyData={copyData}
-            setCopyData={setCopyData}
-            item={item}
-          />
+        <li key={`${item.courseNo}`}>
+          <Card item={item} />
         </li>
       );
     });
-  const doneCards = copyData
+  const doneCards = courseList
     .filter((item) => item.state === 'done')
     .map((item) => (
-      <li key={`${item.id}`}>
-        <Card
-          originalData={data}
-          copyData={copyData}
-          setCopyData={setCopyData}
-          item={item}
-        />
+      <li key={`${item.courseNo}`}>
+        <Card item={item} />
       </li>
     ));
 

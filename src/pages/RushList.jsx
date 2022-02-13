@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { colors, device } from 'styles';
 import { NavLink, Outlet } from 'react-router-dom';
+import { useDataContext } from 'data';
 
 const Container = styled.section`
   flex: 1;
@@ -146,55 +147,15 @@ const SaveButton = styled.div`
     `}
 `;
 
-export const RushList = (props) => {
-  const { list, setList } = props;
-  const [data, setData] = useState([]);
+export const RushList = () => {
+  const { courseData, courseList } = useDataContext();
   const [hasChange, setHasChange] = useState(false);
 
-  const data0 = {
-    state: 'active',
-    courseNo: '1487',
-    chineseName: '離散數學',
-    department: '資工系',
-    teacher: '王弘倫',
-    timeInfo: '一 3 4',
-  };
-  const data1 = {
-    state: 'pause',
-    id: '1488',
-    name: '離散數學',
-    department: '資工系',
-    teacher: '王弘倫',
-    time: '一 3 4',
-    place: '分部',
-  };
-  const data3 = {
-    state: 'done',
-    id: '1490',
-    name: '離散數學',
-    department: '資工系',
-    teacher: '王弘倫',
-    time: '一 3 4',
-    place: '分部',
-  };
-  const data4 = {
-    state: 'active',
-    id: '1491',
-    name: '離散數學',
-    department: '通識',
-    teacher: '王弘倫',
-    time: '一 3 4',
-    place: '分部',
-  };
-  const datas = [
-    data0,
-    // data1,
-    // data3,
-    // data4,
-  ];
-  useEffect(() => {
-    setData(datas);
-  }, []);
+  const handleSave = () => {
+    console.log(courseData);
+    console.log(courseList);
+  }
+
   return (
     <Container>
       <Title>搶課清單</Title>
@@ -217,13 +178,12 @@ export const RushList = (props) => {
           <ChildWrapper>
             <Outlet
               context={{
-                dataText: [data, setData],
-                changeText: [hasChange, setHasChange],
+                Change: [hasChange, setHasChange],
               }}
             />
           </ChildWrapper>
           <Footer>
-            <SaveButton isChange={hasChange}>
+            <SaveButton onClick={handleSave} isChange={hasChange}>
               儲存
             </SaveButton>
           </Footer>

@@ -3,12 +3,15 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import './App.css';
 import { colors, size } from 'styles';
 import styled from 'styled-components';
-// import Home from './pages/Home'
-import { Login } from './pages';
-import { LoginV2 } from './pages';
-import { Home } from './pages';
-import { Navigation } from './components';
-import { Search, RushList, CardBox } from 'pages';
+import {
+  Home,
+  LoginV2,
+  Search,
+  RushList,
+  CardBox,
+} from 'pages';
+import { Navigation } from 'components';
+import { DataProvider } from 'data';
 import { useMediaQuery } from 'react-responsive';
 import { useCookies } from 'react-cookie';
 
@@ -19,7 +22,8 @@ const BodyContainer = styled.div`
   min-height: 100vh;
   background: ${colors.background};
   display: flex;
-  flex-direction: ${props => props.isRWD ? 'column' : 'row'};
+  flex-direction: ${(props) =>
+    props.isRWD ? 'column' : 'row'};
 `;
 
 const RightWrapper = styled.div`
@@ -28,8 +32,9 @@ const RightWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-  ${props => {
-    if (props.isTable && !props.isPhone) return 'margin-left: 60px';
+  ${(props) => {
+    if (props.isTable && !props.isPhone)
+      return 'margin-left: 60px';
     if (props.isPhone) return 'margin-top: 60px';
     return 'margin-left: 240px';
   }};
@@ -38,14 +43,14 @@ const RightWrapper = styled.div`
 const App = () => {
   const isTable = useMediaQuery({ maxWidth: size.table });
   const isPhone = useMediaQuery({ maxWidth: size.phone });
-  const [courseList, setCourseList] = useState([])
-  const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
+  const [cookies, setCookie, removeCookie] = useCookies([
+    'jwt',
+  ]);
   // console.log(cookies);
   const element = useRoutes([
     {
       path: '/',
-      element: <LoginV2 />,
-      children: [{ path: ':id', element: <Login /> }],
+      element: <Home />,
     },
     {
       path: '/login',
@@ -53,26 +58,37 @@ const App = () => {
     },
     {
       path: '/search',
-      element: <Search list={courseList} setList={setCourseList}/>,
+      element: <Search />,
     },
     {
       path: '/rushlist',
       element: <RushList />,
       children: [
-        { path: '', element: <Navigate to='/rushlist/wait' /> },
-        { path: 'wait', element: <CardBox list={courseList}/> },
+        {
+          path: '',
+          element: <Navigate to='/rushlist/wait' />,
+        },
+        {
+          path: 'wait',
+          element: <CardBox />,
+        },
         { path: 'done', element: <CardBox /> },
-        { path: '*', element: <Navigate to='/rushlist/wait' /> },
+        {
+          path: '*',
+          element: <Navigate to='/rushlist/wait' />,
+        },
       ],
     },
   ]);
   return (
-    <>
+    <DataProvider>
       <BodyContainer isRWD={isPhone}>
         <Navigation />
-        <RightWrapper isTable={isTable} isPhone={isPhone}>{element}</RightWrapper>
+        <RightWrapper isTable={isTable} isPhone={isPhone}>
+          {element}
+        </RightWrapper>
       </BodyContainer>
-    </>
+    </DataProvider>
   );
 };
 

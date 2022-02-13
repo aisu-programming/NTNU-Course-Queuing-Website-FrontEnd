@@ -12,6 +12,7 @@ import {
 } from 'react-table';
 import {
   MdOutlinePlaylistAdd,
+  MdPlaylistAddCheck,
   MdFastRewind,
   MdSkipPrevious,
   MdSkipNext,
@@ -20,6 +21,7 @@ import {
 import { columns } from 'components/TableData';
 import { useMediaQuery } from 'react-responsive';
 import { IconButton } from 'components';
+import { useDataContext } from 'data';
 
 const Styles = styled.div`
   display: block;
@@ -48,7 +50,6 @@ const Styles = styled.div`
     color: ${colors.gray100};
 
     thead {
-      // color: ${colors.primary};
       tr {
         position: sticky;
         top: 0;
@@ -179,7 +180,6 @@ const Title = styled.h5`
   font-size: 14px;
   color: ${colors.gray200};
   margin-right: 8px;
-  transform: translateY(2px);
 `;
 const Desc = styled.h4`
   font-size: 16px;
@@ -231,7 +231,7 @@ const PageRow = styled.div`
   position: sticky;
   bottom: 0;
   margin-top: 8px;
-`
+`;
 const PageButton = styled.button`
   display: flex;
   justify-content: center;
@@ -246,7 +246,7 @@ const PageButton = styled.button`
     height: 1rem;
     color: ${colors.white};
   }
-`
+`;
 const PageText = styled.div`
   color: ${colors.white};
   font-size: 14px;
@@ -254,23 +254,47 @@ const PageText = styled.div`
   border-radius: 4px;
   margin-right: 4px;
   background: ${colors.gray500};
-`
+`;
 
-const ExpandRow = ({ list, setList, row }) => {
+const ExpandRow = ({ row }) => {
+  const {
+    courseData,
+    setCourseData,
+    courseList,
+    setCourseList,
+  } = useDataContext();
   const isTable = useMediaQuery({
     maxWidth: size.table,
   });
-  const { teacher, department, credit } = row.original;
+  const { courseNo, teacher, department, credit } =
+    row.original;
+
+  const hasCourse = () => {
+    const checkList = (list) => {
+      return !!list.find((item) => {
+        return item.courseNo === courseNo;
+      });
+    };
+    const originList = checkList(courseData);
+    const tempList = checkList(courseList);
+
+    if (originList || tempList) return true;
+    return false;
+  };
+
   const handleAdd = () => {
-    const newRow = {
-      ...row.original,
-      state: 'pause'
+    if (hasCourse()) {
+      // Handle Has Course
+      // console.log('hasCourse!');
+      return;
     }
-    setList([
-      ...list,
-      newRow
-    ]);
-  }
+    const addCourse = {
+      ...row.original,
+      state: 'pause',
+    };
+    const newCourseList = [...courseList, addCourse];
+    setCourseList(newCourseList);
+  };
 
   return (
     <Container>
@@ -302,8 +326,14 @@ const ExpandRow = ({ list, setList, row }) => {
         );
       })()}
       <RightWrapper>
-        <IconButton handleEvent={handleAdd} text={'搶課清單'}>
-          <MdOutlinePlaylistAdd />
+        <IconButton
+          onClick={handleAdd}
+          text={'搶課清單'}
+          disableText={'已加入'}
+          disabled={hasCourse()}
+        >
+          {hasCourse() && <MdPlaylistAddCheck />}
+          {!hasCourse() && <MdOutlinePlaylistAdd />}
         </IconButton>
       </RightWrapper>
     </Container>
@@ -316,7 +346,7 @@ const resetScrollInsideTable = (indexTable) => {
   ].scrollTop = 0;
 };
 
-export const Table = ({ list, setList, columns, data }) => {
+export const Table = ({ columns, data }) => {
   const isTable = useMediaQuery({
     maxWidth: size.table,
   });
@@ -423,7 +453,7 @@ export const Table = ({ list, setList, columns, data }) => {
                     <ExpandTableRowOdd
                       colSpan={visibleColumns.length}
                     >
-                      <ExpandRow list={list} setList={setList} row={row} />
+                      <ExpandRow row={row} />
                       {/* {renderRowSubComponent({ row })} */}
                     </ExpandTableRowOdd>
                   </tr>
@@ -433,7 +463,7 @@ export const Table = ({ list, setList, columns, data }) => {
                     <ExpandTableRowEven
                       colSpan={visibleColumns.length}
                     >
-                      <ExpandRow list={list} setList={setList} row={row} />
+                      <ExpandRow row={row} />
                     </ExpandTableRowEven>
                   </tr>
                 )}
@@ -472,7 +502,9 @@ export const Table = ({ list, setList, columns, data }) => {
             <MdFastForward />
           </PageButton>
           <PageText>
-            {`第 ${pageIndex + 1} 頁 / 共 ${pageOptions.length} 頁`}
+            {`第 ${pageIndex + 1} 頁 / 共 ${
+              pageOptions.length
+            } 頁`}
           </PageText>
           <span>
             | Go to page:{' '}
@@ -494,14 +526,14 @@ export const Table = ({ list, setList, columns, data }) => {
   );
 };
 
-export const TableContainer = ({ data, list, setList }) => {
+export const TableContainer = ({ data }) => {
   const noData = () => {
     if (!data.length)
       return <Empty>抱歉，找不到任何課程噢 OuO</Empty>;
   };
   return (
     <Styles className='rt-tbody'>
-      <Table list={list} setList={setList} columns={columns} data={data} />
+      <Table columns={columns} data={data} />
       {noData()}
     </Styles>
   );

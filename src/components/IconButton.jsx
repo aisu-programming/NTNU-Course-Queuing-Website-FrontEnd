@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { colors } from '../styles';
 
 const Button = styled.div`
@@ -20,6 +20,9 @@ const Button = styled.div`
   svg {
     transform: '';
     transition: 0.3s;
+    height: 16px;
+    width: 16px;
+    margin-right: 4px;
   }
   &:hover {
     background: ${colors.white}${colors.opacity60};
@@ -28,11 +31,19 @@ const Button = styled.div`
     }
   }
 
-  svg {
-    height: 16px;
-    width: 16px;
-    margin-right: 4px;
-  }
+  ${(props) =>
+    props.disabled &&
+    css`
+      cursor: default;
+      filter: brightness(0.6) contrast(0.8);
+      &:hover {
+        background: ${colors.white}${colors.opacity40};
+        filter: brightness(0.6) contrast(0.8);
+        svg {
+          transform: none;
+        }
+      }
+    `}
 `;
 
 const Text = styled.h4`
@@ -41,11 +52,24 @@ const Text = styled.h4`
 `;
 
 export const IconButton = (props) => {
-  const { isDanger, handleEvent, text, children } = props;
+  const { isDanger, onClick, disabled, text, disableText, children } =
+    props;
+  const textResult = () => {
+    if (!disabled) {
+      return text;
+    }
+    if (!!disabled) {
+      return disableText;
+    }
+  }
   return (
-    <Button onClick={handleEvent} isDanger={isDanger}>
+    <Button
+      onClick={onClick}
+      disabled={disabled}
+      isDanger={isDanger}
+    >
       {children}
-      <Text>{text}</Text>
+      <Text>{textResult()}</Text>
     </Button>
   );
 };

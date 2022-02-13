@@ -273,8 +273,7 @@ const CellBox = styled.div`
   }
 `;
 
-export const Search = (props) => {
-  const { list, setList } = props;
+export const Search = () => {
   const [filter, setFilter] = useState([]);
   const [schedule, setSchedule] = useState([]);
   const [otherSchedule, setOtherSchedule] = useState(false);
@@ -446,7 +445,7 @@ export const Search = (props) => {
         </LeftWrapper>
         <RightWrapper>
           <BoxTitle>課程列表</BoxTitle>
-          <TableContainer data={classData} list={list} setList={setList}></TableContainer>
+          <TableContainer data={classData} />
         </RightWrapper>
       </ContentContainer>
     </SearchContainer>
