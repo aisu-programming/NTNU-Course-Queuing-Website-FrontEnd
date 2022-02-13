@@ -1,1 +1,1 @@
-export { columns, fakeData } from './Column';
+export { columns } from './Column';
