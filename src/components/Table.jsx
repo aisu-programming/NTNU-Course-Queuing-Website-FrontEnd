@@ -230,6 +230,8 @@ const PageRow = styled.div`
   align-items: center;
   position: sticky;
   bottom: 0;
+  padding: 4px 0;
+  background: ${colors.gray600};
   margin-top: 8px;
 `;
 const PageButton = styled.button`
@@ -239,8 +241,12 @@ const PageButton = styled.button`
   padding: 4px 4px;
   border-radius: 4px;
   margin-right: 4px;
-  background: ${colors.gray500};
-
+  background: ${(props) =>
+    props.disabled
+      ? colors.gray500
+      : colors.gray300 + colors.opacity50};
+  cursor: ${(props) =>
+    props.disabled ? 'default' : 'pointer'};
   svg {
     width: 1rem;
     height: 1rem;
@@ -506,20 +512,6 @@ export const Table = ({ columns, data }) => {
               pageOptions.length
             } 頁`}
           </PageText>
-          <span>
-            | Go to page:{' '}
-            <input
-              type='number'
-              defaultValue={pageIndex + 1}
-              onChange={(e) => {
-                const page = e.target.value
-                  ? Number(e.target.value) - 1
-                  : 0;
-                gotoPage(page);
-              }}
-              style={{ width: '100px' }}
-            />
-          </span>
         </PageRow>
       )}
     </>
