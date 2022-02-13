@@ -172,7 +172,19 @@ export const department = [
 ];
 
 export const place = [
-  { value: 'sub', label: '本部' },
-  { value: 'main', label: '分部' },
-  { value: 'other', label: '其他' },
+  { value: 4, label: '本部' },
+  { value: 2, label: '分部' },
+  { value: 1, label: '其他' },
 ];
+
+
+export const domain = [
+  { value: 0 , label:'非通識' },
+  { value: 1 , label:'語言與文學' },
+  { value: 2 , label:'藝術與美感' },
+  { value: 3 , label:'哲學思維與道德推理' },
+  { value: 4 , label:'公民素養與社會探究' },
+  { value: 5 , label:'歷史與文化' },
+  { value: 6 , label:'數學與邏輯思維' },
+  { value: 7 , label:'科學與生命' },
+]

@@ -124,26 +124,27 @@ const Card = ({
 }) => {
   const {
     state,
-    id,
-    name,
+    courseNo,
+    chineseName,
     department,
     teacher,
-    time,
-    place,
+    timeInfo,
+    domains,
   } = item;
   const isWhite = state === 'delete';
   const originalItem = originalData.find((item) => {
-    return item.id === id;
+    return item.courseNo=== courseNo;
   });
 
   const isChange = () => {
+    console.log(originalItem.state);
     if (originalItem.state !== state) return 200;
     return 0;
   };
 
   const handleAction = (action) => {
     const findIndex = copyData.map((item) => {
-      if (item.id === id) {
+      if (item.courseNo === courseNo) {
         const copy = {
           ...item,
           state: action,
@@ -162,8 +163,8 @@ const Card = ({
         state={state}
         isChange={isChange()}
       >
-        <Text>{id}</Text>
-        <Text>{name}</Text>
+        <Text>{courseNo}</Text>
+        <Text>{chineseName}</Text>
       </Header>
       <Content
         isWhite={isWhite}
@@ -181,7 +182,7 @@ const Card = ({
         <TextBox style={{ gridColumn: '1/3' }}>
           <Title>時間地點:</Title>
           <Desc>
-            {time} {place}
+            {timeInfo}
           </Desc>
         </TextBox>
         <TextBox style={{ gridColumn: '1/3' }}>
@@ -230,14 +231,15 @@ const Card = ({
   );
 };
 
-export const CardBox = () => {
+export const CardBox = (props) => {
   const { dataText, changeText } = useOutletContext();
+  const { list } = props;
   const [hasChange, setHasChange] = changeText;
   const [data, setData] = dataText;
   const [copyData, setCopyData] = useState([]);
   const location = useLocation();
   const path = location.pathname.split('/')[2];
-
+  console.log(list);
   const checkChange = () => {
     const changeList = copyData.filter((item, index) => {
       const state = data[index].state;

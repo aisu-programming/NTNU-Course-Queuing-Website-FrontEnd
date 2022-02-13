@@ -2,7 +2,6 @@ import { PostApi } from "api";
 import { config } from "./config";
 import { key } from "data";
 
-
 export const search= async (data) =>{
 
     let timeBs = new Array(85).fill('0');
@@ -47,14 +46,14 @@ export const search= async (data) =>{
 
     time = base64_encode(tbinString) + '=';
     dept = base64_encode(dbinString) + '==';
-
+    console.log(time);
     const classdata = {
         courseNo  : "",
         courseName: "",
         department: dept,
         teacher   : "",
-        time      : time,
-        place     : 0,
+        time      : "H/////////////8=",
+        place     : 7,
         precise   : false,
     }
 
@@ -69,15 +68,18 @@ export const search= async (data) =>{
     if (data.filter.teacher){
         classdata.teacher = data.filter.teacher.toString()
     }
-
-    if (data.filter.place){
-        classdata.place = data.filter.place.toString()
+    if (data.filter.time.length !== 0){
+        classdata.time = time;
     }
 
+    if (data.filter.place){
+        classdata.place = data.filter.place
+    }
+    
     if ( data.filter.precise ){
         classdata.precise = true;
     }
-    console.log(classdata);
+
     return await PostApi(classdata , config.searchUrl)
         .then(res => {
             return res.data.courses;

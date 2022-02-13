@@ -256,11 +256,21 @@ const PageText = styled.div`
   background: ${colors.gray500};
 `
 
-const ExpandRow = ({ row }) => {
+const ExpandRow = ({ list, setList, row }) => {
   const isTable = useMediaQuery({
     maxWidth: size.table,
   });
   const { teacher, department, credit } = row.original;
+  const handleAdd = () => {
+    const newRow = {
+      ...row.original,
+      state: 'pause'
+    }
+    setList([
+      ...list,
+      newRow
+    ]);
+  }
 
   return (
     <Container>
@@ -292,7 +302,7 @@ const ExpandRow = ({ row }) => {
         );
       })()}
       <RightWrapper>
-        <IconButton text={'搶課清單'}>
+        <IconButton handleEvent={handleAdd} text={'搶課清單'}>
           <MdOutlinePlaylistAdd />
         </IconButton>
       </RightWrapper>
@@ -306,7 +316,7 @@ const resetScrollInsideTable = (indexTable) => {
   ].scrollTop = 0;
 };
 
-export const Table = ({ columns, data }) => {
+export const Table = ({ list, setList, columns, data }) => {
   const isTable = useMediaQuery({
     maxWidth: size.table,
   });
@@ -413,7 +423,7 @@ export const Table = ({ columns, data }) => {
                     <ExpandTableRowOdd
                       colSpan={visibleColumns.length}
                     >
-                      <ExpandRow row={row} />
+                      <ExpandRow list={list} setList={setList} row={row} />
                       {/* {renderRowSubComponent({ row })} */}
                     </ExpandTableRowOdd>
                   </tr>
@@ -423,7 +433,7 @@ export const Table = ({ columns, data }) => {
                     <ExpandTableRowEven
                       colSpan={visibleColumns.length}
                     >
-                      <ExpandRow row={row} />
+                      <ExpandRow list={list} setList={setList} row={row} />
                     </ExpandTableRowEven>
                   </tr>
                 )}
@@ -484,14 +494,14 @@ export const Table = ({ columns, data }) => {
   );
 };
 
-export const TableContainer = ({ data }) => {
+export const TableContainer = ({ data, list, setList }) => {
   const noData = () => {
     if (!data.length)
       return <Empty>抱歉，找不到任何課程噢 OuO</Empty>;
   };
   return (
     <Styles className='rt-tbody'>
-      <Table columns={columns} data={data} />
+      <Table list={list} setList={setList} columns={columns} data={data} />
       {noData()}
     </Styles>
   );

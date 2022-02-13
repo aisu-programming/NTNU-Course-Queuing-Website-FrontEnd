@@ -38,6 +38,7 @@ const RightWrapper = styled.div`
 const App = () => {
   const isTable = useMediaQuery({ maxWidth: size.table });
   const isPhone = useMediaQuery({ maxWidth: size.phone });
+  const [courseList, setCourseList] = useState([])
   const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
   // console.log(cookies);
   const element = useRoutes([
@@ -52,14 +53,14 @@ const App = () => {
     },
     {
       path: '/search',
-      element: <Search />,
+      element: <Search list={courseList} setList={setCourseList}/>,
     },
     {
       path: '/rushlist',
       element: <RushList />,
       children: [
         { path: '', element: <Navigate to='/rushlist/wait' /> },
-        { path: 'wait', element: <CardBox /> },
+        { path: 'wait', element: <CardBox list={courseList}/> },
         { path: 'done', element: <CardBox /> },
         { path: '*', element: <Navigate to='/rushlist/wait' /> },
       ],

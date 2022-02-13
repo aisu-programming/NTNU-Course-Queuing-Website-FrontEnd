@@ -147,17 +147,17 @@ const SaveButton = styled.div`
 `;
 
 export const RushList = (props) => {
+  const { list, setList } = props;
   const [data, setData] = useState([]);
   const [hasChange, setHasChange] = useState(false);
 
   const data0 = {
     state: 'active',
-    id: '1487',
-    name: '離散數學',
+    courseNo: '1487',
+    chineseName: '離散數學',
     department: '資工系',
     teacher: '王弘倫',
-    time: '一 3 4',
-    place: '分部',
+    timeInfo: '一 3 4',
   };
   const data1 = {
     state: 'pause',
@@ -188,8 +188,8 @@ export const RushList = (props) => {
   };
   const datas = [
     data0,
-    data1,
-    data3,
+    // data1,
+    // data3,
     // data4,
   ];
   useEffect(() => {

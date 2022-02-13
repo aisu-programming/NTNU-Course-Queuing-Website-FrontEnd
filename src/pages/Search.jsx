@@ -11,7 +11,7 @@ import {
 import { TimeSelector } from 'components/TimeSelector';
 import { format } from 'date-fns';
 import zh_tw from 'date-fns/locale/zh_tw';
-import { department, place } from 'data';
+import { department, place , domain } from 'data';
 import { search } from 'api';
 
 const SearchContainer = styled.section`
@@ -274,6 +274,7 @@ const CellBox = styled.div`
 `;
 
 export const Search = (props) => {
+  const { list, setList } = props;
   const [filter, setFilter] = useState([]);
   const [schedule, setSchedule] = useState([]);
   const [otherSchedule, setOtherSchedule] = useState(false);
@@ -376,7 +377,7 @@ export const Search = (props) => {
               <SearchTitle>通識領域</SearchTitle>
               <DropdownV2
                 name='department'
-                options={departmentOptions}
+                options={domain}
                 handleValue={handleFilter}
               />
             </SearchBox>
@@ -445,7 +446,7 @@ export const Search = (props) => {
         </LeftWrapper>
         <RightWrapper>
           <BoxTitle>課程列表</BoxTitle>
-          <TableContainer data={classData}></TableContainer>
+          <TableContainer data={classData} list={list} setList={setList}></TableContainer>
         </RightWrapper>
       </ContentContainer>
     </SearchContainer>
