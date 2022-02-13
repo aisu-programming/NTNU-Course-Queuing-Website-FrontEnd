@@ -5,13 +5,16 @@ import { ResetStyle, GlobalStyle } from './styles/globalStyle'
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { CookiesProvider } from 'react-cookie';
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
       <ResetStyle />
       <GlobalStyle />
-      <App />
+      <CookiesProvider>
+        <App />
+      </CookiesProvider>
     </Router>
   </React.StrictMode>,
   document.getElementById('root')

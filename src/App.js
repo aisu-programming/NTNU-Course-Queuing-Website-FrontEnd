@@ -10,6 +10,7 @@ import { Home } from './pages';
 import { Navigation } from './components';
 import { Search, RushList, CardBox } from 'pages';
 import { useMediaQuery } from 'react-responsive';
+import { useCookies } from 'react-cookie';
 
 const BodyContainer = styled.div`
   width: 100%;
@@ -37,7 +38,8 @@ const RightWrapper = styled.div`
 const App = () => {
   const isTable = useMediaQuery({ maxWidth: size.table });
   const isPhone = useMediaQuery({ maxWidth: size.phone });
-
+  const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
+  // console.log(cookies);
   const element = useRoutes([
     {
       path: '/',
