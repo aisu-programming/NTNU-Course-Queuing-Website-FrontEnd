@@ -332,7 +332,10 @@ export const Search = (props) => {
       otherSchedule,
       isPrecise,
     };
-    await search(data).then((res) => setClassData(res));
+    await search(data).then((res) => {
+      console.log(res);
+      setClassData(res);
+    });
   };
 
   return (
@@ -442,7 +445,7 @@ export const Search = (props) => {
         </LeftWrapper>
         <RightWrapper>
           <BoxTitle>課程列表</BoxTitle>
-          <Test data={classData}></Test>
+          <Test data={[{courseNO: 123}]}></Test>
         </RightWrapper>
       </ContentContainer>
     </SearchContainer>

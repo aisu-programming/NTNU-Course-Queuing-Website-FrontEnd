@@ -10,7 +10,13 @@ import {
   useExpanded,
   usePagination,
 } from 'react-table';
-import { MdOutlinePlaylistAdd } from 'react-icons/md';
+import {
+  MdOutlinePlaylistAdd,
+  MdFastRewind,
+  MdSkipPrevious,
+  MdSkipNext,
+  MdFastForward,
+} from 'react-icons/md';
 import { columns } from 'components/TableData';
 import { useMediaQuery } from 'react-responsive';
 import { IconButton } from 'components';
@@ -218,6 +224,33 @@ const Empty = styled.div`
     padding: 20px 0;
   }
 `;
+const PageRow = styled.div`
+  display: flex;
+  align-items: center;
+`
+const PageButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 4px;
+  border-radius: 4px;
+  margin-right: 4px;
+  background: ${colors.gray500};
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    color: ${colors.white};
+  }
+`
+const PageText = styled.div`
+  color: ${colors.white};
+  font-size: 14px;
+  padding: 4px 4px;
+  border-radius: 4px;
+  margin-right: 4px;
+  background: ${colors.gray500};
+`
 
 const ExpandRow = ({ row }) => {
   const isTable = useMediaQuery({
@@ -264,7 +297,9 @@ const ExpandRow = ({ row }) => {
 };
 
 const resetScrollInsideTable = (indexTable) => {
-  document.getElementsByClassName('rt-tbody')[indexTable].scrollTop = 0;
+  document.getElementsByClassName('rt-tbody')[
+    indexTable
+  ].scrollTop = 0;
 };
 
 export const Table = ({ columns, data }) => {
@@ -284,11 +319,11 @@ export const Table = ({ columns, data }) => {
     return ['isOrdered'];
   };
   const hiddenColumn = checkSize();
+
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    rows,
     page,
     canPreviousPage,
     canNextPage,
@@ -307,7 +342,7 @@ export const Table = ({ columns, data }) => {
       columns,
       data,
       initialState: {
-        pageSize: 50,
+        pageSize: 20,
         hiddenColumns: hiddenColumn,
       },
     },
@@ -393,40 +428,40 @@ export const Table = ({ columns, data }) => {
           })}
         </tbody>
       </table>
-      <div className='pagination'>
-        <button
+      <PageRow>
+        <PageButton
           onClick={() => gotoPage(0)}
           disabled={!canPreviousPage}
         >
-          {'<<'}
-        </button>{' '}
-        <button
+          <MdFastRewind />
+        </PageButton>
+        <PageButton
           onClick={() => previousPage()}
           disabled={!canPreviousPage}
         >
-          {'<'}
-        </button>{' '}
-        <button
+          <MdSkipPrevious />
+        </PageButton>
+        <PageButton
           onClick={() => {
             resetScrollInsideTable(0);
             return nextPage();
           }}
           disabled={!canNextPage}
         >
-          {'>'}
-        </button>{' '}
-        <button
+          <MdSkipNext />
+        </PageButton>
+        <PageButton
           onClick={() => gotoPage(pageCount - 1)}
           disabled={!canNextPage}
         >
-          {'>>'}
-        </button>{' '}
-        <span>
+          <MdFastForward />
+        </PageButton>
+        <PageText>
           Page{' '}
           <strong>
             {pageIndex + 1} of {pageOptions.length}
           </strong>{' '}
-        </span>
+        </PageText>
         <span>
           | Go to page:{' '}
           <input
@@ -453,7 +488,7 @@ export const Table = ({ columns, data }) => {
             </option>
           ))}
         </select>
-      </div>
+      </PageRow>
     </>
   );
 };
