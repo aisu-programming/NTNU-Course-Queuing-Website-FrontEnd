@@ -37,6 +37,8 @@ const success300 = '#91C483';
 const pause400 = '#FFBD36';
 const pause300 = primary;
 
+const danger = '#EC250C';
+
 export const colors = {
   primary500,
   primaryText,
@@ -70,4 +72,5 @@ export const colors = {
   success300,
   pause400,
   pause300,
+  danger,
 };
