@@ -73,7 +73,7 @@ export const search= async (data) =>{
     if (data.filter.place){
         classdata.place = data.filter.place.toString()
     }
-    
+
     if ( data.filter.precise ){
         classdata.precise = true;
     }

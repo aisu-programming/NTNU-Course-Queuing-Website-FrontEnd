@@ -226,7 +226,11 @@ const Empty = styled.div`
 `;
 const PageRow = styled.div`
   display: flex;
+  justify-content: flex-end;
   align-items: center;
+  position: sticky;
+  bottom: 0;
+  margin-top: 8px;
 `
 const PageButton = styled.button`
   display: flex;
@@ -246,7 +250,7 @@ const PageButton = styled.button`
 const PageText = styled.div`
   color: ${colors.white};
   font-size: 14px;
-  padding: 4px 4px;
+  padding: 4px 12px;
   border-radius: 4px;
   margin-right: 4px;
   background: ${colors.gray500};
@@ -353,6 +357,7 @@ export const Table = ({ columns, data }) => {
     setHiddenColumns(checkSize());
   }, [isTable]);
   // Render the UI for your table
+
   return (
     <>
       <table {...getTableProps()}>
@@ -408,7 +413,6 @@ export const Table = ({ columns, data }) => {
                     <ExpandTableRowOdd
                       colSpan={visibleColumns.length}
                     >
-                      {console.log(row)}
                       <ExpandRow row={row} />
                       {/* {renderRowSubComponent({ row })} */}
                     </ExpandTableRowOdd>
@@ -428,72 +432,59 @@ export const Table = ({ columns, data }) => {
           })}
         </tbody>
       </table>
-      <PageRow>
-        <PageButton
-          onClick={() => gotoPage(0)}
-          disabled={!canPreviousPage}
-        >
-          <MdFastRewind />
-        </PageButton>
-        <PageButton
-          onClick={() => previousPage()}
-          disabled={!canPreviousPage}
-        >
-          <MdSkipPrevious />
-        </PageButton>
-        <PageButton
-          onClick={() => {
-            resetScrollInsideTable(0);
-            return nextPage();
-          }}
-          disabled={!canNextPage}
-        >
-          <MdSkipNext />
-        </PageButton>
-        <PageButton
-          onClick={() => gotoPage(pageCount - 1)}
-          disabled={!canNextPage}
-        >
-          <MdFastForward />
-        </PageButton>
-        <PageText>
-          Page{' '}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
-        </PageText>
-        <span>
-          | Go to page:{' '}
-          <input
-            type='number'
-            defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value
-                ? Number(e.target.value) - 1
-                : 0;
-              gotoPage(page);
+      {!!data.length && (
+        <PageRow>
+          <PageButton
+            onClick={() => gotoPage(0)}
+            disabled={!canPreviousPage}
+          >
+            <MdFastRewind />
+          </PageButton>
+          <PageButton
+            onClick={() => previousPage()}
+            disabled={!canPreviousPage}
+          >
+            <MdSkipPrevious />
+          </PageButton>
+          <PageButton
+            onClick={() => {
+              resetScrollInsideTable(0);
+              return nextPage();
             }}
-            style={{ width: '100px' }}
-          />
-        </span>{' '}
-        <select
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-      </PageRow>
+            disabled={!canNextPage}
+          >
+            <MdSkipNext />
+          </PageButton>
+          <PageButton
+            onClick={() => gotoPage(pageCount - 1)}
+            disabled={!canNextPage}
+          >
+            <MdFastForward />
+          </PageButton>
+          <PageText>
+            {`第 ${pageIndex + 1} 頁 / 共 ${pageOptions.length} 頁`}
+          </PageText>
+          <span>
+            | Go to page:{' '}
+            <input
+              type='number'
+              defaultValue={pageIndex + 1}
+              onChange={(e) => {
+                const page = e.target.value
+                  ? Number(e.target.value) - 1
+                  : 0;
+                gotoPage(page);
+              }}
+              style={{ width: '100px' }}
+            />
+          </span>
+        </PageRow>
+      )}
     </>
   );
 };
 
-export const Test = ({ data }) => {
+export const TableContainer = ({ data }) => {
   const noData = () => {
     if (!data.length)
       return <Empty>抱歉，找不到任何課程噢 OuO</Empty>;

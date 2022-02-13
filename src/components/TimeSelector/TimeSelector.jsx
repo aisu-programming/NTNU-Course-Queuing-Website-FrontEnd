@@ -51,7 +51,7 @@ export const TimeSelector = ({ schedule, setSchedule }) => {
 
   const handleChange = (newSchedule) => {
     // console.log(newSchedule);
-    console.log(format(newSchedule[0], 'd H', { locale: zh_tw }));
+    // console.log(format(newSchedule[0], 'd H', { locale: zh_tw }));
     setSchedule(newSchedule);
   };
 

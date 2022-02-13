@@ -149,8 +149,7 @@ const SaveButton = styled.div`
 export const RushList = (props) => {
   const [data, setData] = useState([]);
   const [hasChange, setHasChange] = useState(false);
-  console.log('change');
-  console.log(hasChange);
+
   const data0 = {
     state: 'active',
     id: '1487',

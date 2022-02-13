@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { colors, device } from 'styles';
 import { DropdownV2 } from 'components/Dropdown';
-import { Test } from 'components';
+import { TableContainer } from 'components';
 import { CustomModal } from 'components/Modal';
 import {
   MdOutlineCheckBoxOutlineBlank,
@@ -445,7 +445,7 @@ export const Search = (props) => {
         </LeftWrapper>
         <RightWrapper>
           <BoxTitle>課程列表</BoxTitle>
-          <Test data={[{courseNO: 123}]}></Test>
+          <TableContainer data={classData}></TableContainer>
         </RightWrapper>
       </ContentContainer>
     </SearchContainer>
