@@ -5,7 +5,11 @@ import React, {
 } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { colors, size, device } from 'styles';
-import { useTable, useExpanded } from 'react-table';
+import {
+  useTable,
+  useExpanded,
+  usePagination,
+} from 'react-table';
 import { MdOutlinePlaylistAdd } from 'react-icons/md';
 import { columns } from 'components/TableData';
 import { useMediaQuery } from 'react-responsive';
@@ -30,7 +34,7 @@ const Styles = styled.div`
   }
   @media ${device.phone} {
     max-width: calc(100vw);
-    max-height: calc(100vh - 150px);
+    max-height: 100%;
   }
 
   table {
@@ -259,6 +263,10 @@ const ExpandRow = ({ row }) => {
   );
 };
 
+const resetScrollInsideTable = (indexTable) => {
+  document.getElementsByClassName('rt-tbody')[indexTable].scrollTop = 0;
+};
+
 export const Table = ({ columns, data }) => {
   const isTable = useMediaQuery({
     maxWidth: size.table,
@@ -281,6 +289,16 @@ export const Table = ({ columns, data }) => {
     getTableBodyProps,
     headerGroups,
     rows,
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
     prepareRow,
     visibleColumns,
     setHiddenColumns,
@@ -289,87 +307,154 @@ export const Table = ({ columns, data }) => {
       columns,
       data,
       initialState: {
+        pageSize: 50,
         hiddenColumns: hiddenColumn,
       },
     },
-    useExpanded
+    useExpanded,
+    usePagination
   );
   useEffect(() => {
     setHiddenColumns(checkSize());
   }, [isTable]);
   // Render the UI for your table
   return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map((headerGroup, i) => (
-          <tr
-            key={i}
-            {...headerGroup.getHeaderGroupProps()}
-          >
-            {headerGroup.headers.map((column) => (
-              <th
-                {...column.getHeaderProps({
-                  style: {
-                    width: column.width,
-                    minWidth: column.minWidth,
-                    maxWidth: column.maxWidth,
-                  },
-                })}
-              >
-                {column.render('Header')}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row, i) => {
-          prepareRow(row);
-          const isOdd = i % 2 == 1;
-          const buildRowCell = row.cells.map((cell, i) => {
-            return (
-              <td {...cell.getCellProps()}>
-                {cell.render('Cell')}
-              </td>
+    <>
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map((headerGroup, i) => (
+            <tr
+              key={i}
+              {...headerGroup.getHeaderGroupProps()}
+            >
+              {headerGroup.headers.map((column) => (
+                <th
+                  {...column.getHeaderProps({
+                    style: {
+                      width: column.width,
+                      minWidth: column.minWidth,
+                      maxWidth: column.maxWidth,
+                    },
+                  })}
+                >
+                  {column.render('Header')}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {page.map((row, i) => {
+            prepareRow(row);
+            const isOdd = i % 2 == 1;
+            const buildRowCell = row.cells.map(
+              (cell, i) => {
+                return (
+                  <td {...cell.getCellProps()}>
+                    {cell.render('Cell')}
+                  </td>
+                );
+              }
             );
-          });
-          return (
-            <Fragment key={i}>
-              {isOdd ? (
-                <TableRowOdd {...row.getRowProps()}>
-                  {buildRowCell}
-                </TableRowOdd>
-              ) : (
-                <TableRowEven {...row.getRowProps()}>
-                  {buildRowCell}
-                </TableRowEven>
-              )}
+            return (
+              <Fragment key={i}>
+                {isOdd ? (
+                  <TableRowOdd {...row.getRowProps()}>
+                    {buildRowCell}
+                  </TableRowOdd>
+                ) : (
+                  <TableRowEven {...row.getRowProps()}>
+                    {buildRowCell}
+                  </TableRowEven>
+                )}
 
-              {row.isExpanded && isOdd && (
-                <tr>
-                  <ExpandTableRowOdd
-                    colSpan={visibleColumns.length}
-                  >
-                    {console.log(row)}
-                    <ExpandRow row={row} />
-                    {/* {renderRowSubComponent({ row })} */}
-                  </ExpandTableRowOdd>
-                </tr>
-              )}
-              {row.isExpanded && !isOdd && (
-                <tr>
-                  <ExpandTableRowEven
-                    colSpan={visibleColumns.length}
-                  >
-                    <ExpandRow row={row} />
-                  </ExpandTableRowEven>
-                </tr>
-              )}
-            </Fragment>
-          );
-        })}
-      </tbody>
-    </table>
+                {row.isExpanded && isOdd && (
+                  <tr>
+                    <ExpandTableRowOdd
+                      colSpan={visibleColumns.length}
+                    >
+                      {console.log(row)}
+                      <ExpandRow row={row} />
+                      {/* {renderRowSubComponent({ row })} */}
+                    </ExpandTableRowOdd>
+                  </tr>
+                )}
+                {row.isExpanded && !isOdd && (
+                  <tr>
+                    <ExpandTableRowEven
+                      colSpan={visibleColumns.length}
+                    >
+                      <ExpandRow row={row} />
+                    </ExpandTableRowEven>
+                  </tr>
+                )}
+              </Fragment>
+            );
+          })}
+        </tbody>
+      </table>
+      <div className='pagination'>
+        <button
+          onClick={() => gotoPage(0)}
+          disabled={!canPreviousPage}
+        >
+          {'<<'}
+        </button>{' '}
+        <button
+          onClick={() => previousPage()}
+          disabled={!canPreviousPage}
+        >
+          {'<'}
+        </button>{' '}
+        <button
+          onClick={() => {
+            resetScrollInsideTable(0);
+            return nextPage();
+          }}
+          disabled={!canNextPage}
+        >
+          {'>'}
+        </button>{' '}
+        <button
+          onClick={() => gotoPage(pageCount - 1)}
+          disabled={!canNextPage}
+        >
+          {'>>'}
+        </button>{' '}
+        <span>
+          Page{' '}
+          <strong>
+            {pageIndex + 1} of {pageOptions.length}
+          </strong>{' '}
+        </span>
+        <span>
+          | Go to page:{' '}
+          <input
+            type='number'
+            defaultValue={pageIndex + 1}
+            onChange={(e) => {
+              const page = e.target.value
+                ? Number(e.target.value) - 1
+                : 0;
+              gotoPage(page);
+            }}
+            style={{ width: '100px' }}
+          />
+        </span>{' '}
+        <select
+          value={pageSize}
+          onChange={(e) => {
+            setPageSize(Number(e.target.value));
+          }}
+        >
+          {[10, 20, 30, 40, 50].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
+    </>
   );
 };
 
@@ -379,7 +464,7 @@ export const Test = ({ data }) => {
       return <Empty>抱歉，找不到任何課程噢 OuO</Empty>;
   };
   return (
-    <Styles>
+    <Styles className='rt-tbody'>
       <Table columns={columns} data={data} />
       {noData()}
     </Styles>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import balloon from '../assets/login-balloon.svg';
 import cat_1 from '../assets/login-cat-1.svg';
 import { colors, size, device } from 'styles';
@@ -73,6 +73,7 @@ const LoginBox = styled.div`
     width: 100%;
     max-width: 560px;
     padding: 32px 20px;
+    box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.3);
   }
 `;
 
@@ -239,7 +240,7 @@ const Hint = styled.h5`
   text-align: center;
 `;
 
-export const LoginV2 = (props) => {
+export const LoginV2 = () => {
   const [loading, setLoading] = useState(false);
   const [studentId, setStudentId] = useState('');
   const [password, setPassword] = useState('');
@@ -287,12 +288,12 @@ export const LoginV2 = (props) => {
       const isSuccess = !res;
       if (!isSuccess) setErrorMsg(`＊${res}`);
       if (isSuccess) {
+        setErrorMsg('');
         toggleToast();
-        setTimeout(()=> {
-          navigate('/search')
+        setTimeout(() => {
+          navigate('/search');
         }, 3000);
       }
-      console.log(res);
     });
   };
 

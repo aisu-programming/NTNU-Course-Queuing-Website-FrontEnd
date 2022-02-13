@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from 'react';
+import styled, { css } from 'styled-components';
 import { colors, device } from 'styles';
 import { NavLink, Outlet } from 'react-router-dom';
 
@@ -92,7 +92,8 @@ const Button = styled.div`
   }
   &::after {
     content: '';
-    display: ${(props) => (props.isActive ? 'block' : 'none')};
+    display: ${(props) =>
+      props.isActive ? 'block' : 'none'};
     width: 100%;
     height: 8px;
     background: ${colors.gray600};
@@ -111,7 +112,7 @@ const Footer = styled.div`
   margin-top: 20px;
   display: flex;
   justify-content: flex-end;
-`
+`;
 const SaveButton = styled.div`
   background: ${colors.success400};
   width: fit-content;
@@ -130,10 +131,71 @@ const SaveButton = styled.div`
   &:active {
     background: ${colors.success400}${colors.opacity80};
   }
+
+  ${(props) =>
+    !props.isChange &&
+    css`
+      cursor: default;
+      filter: brightness(0.6) contrast(0.8);
+      &:hover {
+        filter: brightness(0.6) contrast(0.8);
+      }
+      &:active {
+        background: ${colors.success400};
+      }
+    `}
 `;
 
 export const RushList = (props) => {
   const [data, setData] = useState([]);
+  const [hasChange, setHasChange] = useState(false);
+  console.log('change');
+  console.log(hasChange);
+  const data0 = {
+    state: 'active',
+    id: '1487',
+    name: '離散數學',
+    department: '資工系',
+    teacher: '王弘倫',
+    time: '一 3 4',
+    place: '分部',
+  };
+  const data1 = {
+    state: 'pause',
+    id: '1488',
+    name: '離散數學',
+    department: '資工系',
+    teacher: '王弘倫',
+    time: '一 3 4',
+    place: '分部',
+  };
+  const data3 = {
+    state: 'done',
+    id: '1490',
+    name: '離散數學',
+    department: '資工系',
+    teacher: '王弘倫',
+    time: '一 3 4',
+    place: '分部',
+  };
+  const data4 = {
+    state: 'active',
+    id: '1491',
+    name: '離散數學',
+    department: '通識',
+    teacher: '王弘倫',
+    time: '一 3 4',
+    place: '分部',
+  };
+  const datas = [
+    data0,
+    data1,
+    data3,
+    // data4,
+  ];
+  useEffect(() => {
+    setData(datas);
+  }, []);
   return (
     <Container>
       <Title>搶課清單</Title>
@@ -142,7 +204,9 @@ export const RushList = (props) => {
           <NavOptions>
             <NavLink to='/rushlist/wait'>
               {({ isActive }) => (
-                <Button isActive={isActive}>我的清單</Button>
+                <Button isActive={isActive}>
+                  我的清單
+                </Button>
               )}
             </NavLink>
             <NavLink to='/rushlist/done'>
@@ -152,10 +216,17 @@ export const RushList = (props) => {
             </NavLink>
           </NavOptions>
           <ChildWrapper>
-            <Outlet context={[data, setData]} />
+            <Outlet
+              context={{
+                dataText: [data, setData],
+                changeText: [hasChange, setHasChange],
+              }}
+            />
           </ChildWrapper>
           <Footer>
-            <SaveButton>儲存</SaveButton>
+            <SaveButton isChange={hasChange}>
+              儲存
+            </SaveButton>
           </Footer>
         </Wrapper>
       </ContentContainer>

@@ -40,7 +40,7 @@ export const DropdownV2 = ({name, options, handleValue, ...props}) => {
         ...provided,
         height: '32px',
         maxHeight: '32px',
-        padding: `${isPhone ? '8px 12px' : '8px 16px'}`,
+        padding: `${isPhone ? '6px 12px' : '8px 16px'}`,
         border: 0,
         borderRadius: '4px',
         boxShadow: 'none',

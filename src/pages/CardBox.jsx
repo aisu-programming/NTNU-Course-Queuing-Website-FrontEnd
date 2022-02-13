@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { colors, device } from 'styles';
 import {
@@ -9,19 +9,26 @@ import {
   MdOutlineThumbUpAlt,
   MdOutlinePauseCircleOutline,
   MdDeleteOutline,
+  MdLoop,
 } from 'react-icons/md';
 import { IconButton } from 'components';
 
 const StateColor = {
   active400: `${colors.active400}`,
   active300: `${colors.active300}`,
+  active200: `${colors.active400}${colors.opacity60}`,
+  active100: `${colors.active300}${colors.opacity60}`,
   pause400: `${colors.pause400}`,
   pause300: `${colors.pause300}`,
-  unSave400: `${colors.gray400}`,
-  unSave300: `${colors.gray300}${colors.opacity40}`,
+  pause200: `${colors.pause400}${colors.opacity60}`,
+  pause100: `${colors.pause300}${colors.opacity60}`,
+  delete200: `${colors.gray400}`,
+  delete100: `${colors.gray300}${colors.opacity40}`,
   done400: `${colors.success400}`,
   done300: `${colors.success300}`,
   delete: '#EC250C',
+  blue400: '#4599f5',
+  blue300: '#9fccff',
 };
 
 const Cards = styled.ul`
@@ -49,14 +56,16 @@ const Header = styled.div`
   font-weight: ${(props) =>
     props.isWhite ? '400' : '500'};
   color: ${(props) => props.isWhite && colors.white};
-  background: ${(props) => StateColor[props.state + 400]};
+  background: ${(props) =>
+    StateColor[props.state + (400 - props.isChange)]};
 `;
 const Content = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
   padding: 16px 12px;
-  background: ${(props) => StateColor[props.state + 300]};
+  background: ${(props) =>
+    StateColor[props.state + (300 - props.isChange)]};
   h4 {
     color: ${(props) => props.isWhite && colors.white};
   }
@@ -74,7 +83,8 @@ const Footer = styled.div`
   justify-content: flex-end;
   padding: 8px 12px;
   gap: 8px;
-  background: ${(props) => StateColor[props.state + 300]};
+  background: ${(props) =>
+    StateColor[props.state + (300 - props.isChange)]};
   border-top: 1px solid ${colors.black}${colors.opacity10};
 `;
 const TextBox = styled.div`
@@ -106,7 +116,12 @@ const Empty = styled.div`
   font-size: 20px;
   margin: auto;
 `;
-const Card = ({ data, setData, item }) => {
+const Card = ({
+  originalData,
+  copyData,
+  setCopyData,
+  item,
+}) => {
   const {
     state,
     id,
@@ -116,28 +131,45 @@ const Card = ({ data, setData, item }) => {
     time,
     place,
   } = item;
-  const isWhite = state === 'unSave';
-  const handleAction = (action) => {
-    const findIndex = data
-      .map((item) => {
-        if (item.id === id) {
-          item.state = action;
-        }
-        return item;
-      })
-      .filter((item) => {
-        return item.state !== 'delete';
-      });
-    console.log(findIndex);
-    setData(findIndex);
+  const isWhite = state === 'delete';
+  const originalItem = originalData.find((item) => {
+    return item.id === id;
+  });
+
+  const isChange = () => {
+    if (originalItem.state !== state) return 200;
+    return 0;
   };
+
+  const handleAction = (action) => {
+    const findIndex = copyData.map((item) => {
+      if (item.id === id) {
+        const copy = {
+          ...item,
+          state: action,
+        };
+        return copy;
+      }
+      return item;
+    });
+    setCopyData(findIndex);
+  };
+
   return (
     <Container>
-      <Header isWhite={isWhite} state={state}>
+      <Header
+        isWhite={isWhite}
+        state={state}
+        isChange={isChange()}
+      >
         <Text>{id}</Text>
         <Text>{name}</Text>
       </Header>
-      <Content isWhite={isWhite} state={state}>
+      <Content
+        isWhite={isWhite}
+        state={state}
+        isChange={isChange()}
+      >
         <TextBox>
           <Title>開課系所:</Title>
           <Desc>{department}</Desc>
@@ -152,15 +184,19 @@ const Card = ({ data, setData, item }) => {
             {time} {place}
           </Desc>
         </TextBox>
+        <TextBox style={{ gridColumn: '1/3' }}>
+          <Title>通識領域:</Title>
+          <Desc>無</Desc>
+        </TextBox>
       </Content>
       {state !== 'done' && (
-        <Footer state={state}>
+        <Footer state={state} isChange={isChange()}>
           {state === 'pause' && item.department === '通識' && (
             <IconButton
               handleEvent={() => handleAction('pause')}
               text={'變更領域'}
             >
-              <MdOutlinePauseCircleOutline />
+              <MdLoop />
             </IconButton>
           )}
           {state !== 'active' && (
@@ -179,98 +215,71 @@ const Card = ({ data, setData, item }) => {
               <MdOutlinePauseCircleOutline />
             </IconButton>
           )}
-          <IconButton
-            isDanger={StateColor['delete']}
-            handleEvent={() => handleAction('delete')}
-            text={'刪除'}
-          >
-            <MdDeleteOutline />
-          </IconButton>
+          {state !== 'delete' && (
+            <IconButton
+              isDanger={StateColor['delete']}
+              handleEvent={() => handleAction('delete')}
+              text={'刪除'}
+            >
+              <MdDeleteOutline />
+            </IconButton>
+          )}
         </Footer>
       )}
     </Container>
   );
 };
+
 export const CardBox = () => {
-  const [data, setData] = useOutletContext();
+  const { dataText, changeText } = useOutletContext();
+  const [hasChange, setHasChange] = changeText;
+  const [data, setData] = dataText;
+  const [copyData, setCopyData] = useState([]);
   const location = useLocation();
   const path = location.pathname.split('/')[2];
 
-  const data0 = {
-    state: 'active',
-    id: '1487',
-    name: '離散數學',
-    department: '資工系',
-    teacher: '王弘倫',
-    time: '一 3 4',
-    place: '分部',
+  const checkChange = () => {
+    const changeList = copyData.filter((item, index) => {
+      const state = data[index].state;
+      if (item.state !== state) {
+        return item;
+      }
+    });
+    return !!changeList.length;
   };
-  const data1 = {
-    state: 'pause',
-    id: '1488',
-    name: '離散數學',
-    department: '資工系',
-    teacher: '王弘倫',
-    time: '一 3 4',
-    place: '分部',
-  };
-  const data2 = {
-    state: 'unSave',
-    id: '1489',
-    name: '離散數學',
-    department: '資工系',
-    teacher: '王弘倫',
-    time: '一 3 4',
-    place: '分部',
-  };
-  const data3 = {
-    state: 'done',
-    id: '1490',
-    name: '離散數學',
-    department: '資工系',
-    teacher: '王弘倫',
-    time: '一 3 4',
-    place: '分部',
-  };
-  const data4 = {
-    state: 'active',
-    id: '1491',
-    name: '離散數學',
-    department: '通識',
-    teacher: '王弘倫',
-    time: '一 3 4',
-    place: '分部',
-  };
-  const datas = [
-    data0,
-    data1,
-    data2,
-    data3,
-    data4,
-    // data2,
-    // data1,
-    // data3,
-    // data3,
-  ];
 
   useEffect(() => {
-    setData(datas);
-  }, []);
+    setCopyData([...data]);
+  }, [data]);
 
-  const waitCards = data
+  useEffect(() => {
+    setHasChange(checkChange());
+  }, [copyData]);
+
+  const waitCards = copyData
     .filter((item) => item.state !== 'done')
     .map((item) => {
       return (
         <li key={`${item.id}`}>
-          <Card data={data} setData={setData} item={item} />
+          <Card
+            originalData={data}
+            copyData={copyData}
+            setCopyData={setCopyData}
+            item={item}
+          />
         </li>
       );
     });
-  const doneCards = data
+  const doneCards = copyData
     .filter((item) => item.state === 'done')
     .map((item) => (
       <li key={`${item.id}`}>
-        <Card data={data} setData={setData} item={item} />
+        <Card
+          originalData={data}
+          copyData={copyData}
+          setCopyData={setCopyData}
+          item={item}
+        />
       </li>
     ));
 
