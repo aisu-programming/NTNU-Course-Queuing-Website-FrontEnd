@@ -7,6 +7,7 @@
     "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.2.1",
     "react": "^17.0.2",
+    "react-cookie": "^4.1.1",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
     "react-modal": "^3.14.4",
@@ -15,7 +16,9 @@
     "react-schedule-selector": "^3.0.0",
     "react-scripts": "5.0.0",
     "react-select": "^5.2.2",
+    "react-spinners": "^0.11.0",
     "react-table": "^7.7.0",
+    "react-toastify": "^8.1.1",
     "react-transition-group": "^4.4.2",
     "simplebar-react": "^2.3.6",
     "web-vitals": "^2.1.0"
