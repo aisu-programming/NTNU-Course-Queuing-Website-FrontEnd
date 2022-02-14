@@ -79,6 +79,10 @@ const App = () => {
         },
       ],
     },
+    {
+      path: '*',
+      element: <Navigate to='/' />,
+    },
   ]);
   return (
     <DataProvider>

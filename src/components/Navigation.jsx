@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { colors } from '../styles';
 import { ButtonOption } from 'components';
 import {
+  MdHome,
   MdManageSearch,
   MdPerson,
   MdViewModule,
@@ -166,6 +167,20 @@ export const Navigation = () => {
           <LogoBox>
             <LogoTitle>師大選課系統</LogoTitle>
           </LogoBox>
+          <ul>
+            <NavOption>
+              <NavLink to='/'>
+                {({ isActive }) => (
+                  <ButtonOption
+                    option={'首頁'}
+                    active={isActive}
+                  >
+                    <MdHome />
+                  </ButtonOption>
+                )}
+              </NavLink>
+            </NavOption>
+          </ul>
           <OptionTitle>功能</OptionTitle>
           <ul>
             <NavOption>
