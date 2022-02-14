@@ -1,3 +1,4 @@
 export { Login } from './Login'
 export { search } from './Search'
-export { Getlist } from './List'
+export { GetList } from './List'
+export { FixList } from './List'

@@ -3,5 +3,6 @@ export { GetApi } from './Get'
 export { 
     search,
     Login,
-    Getlist,
+    GetList,
+    FixList,
 } from './utlis'

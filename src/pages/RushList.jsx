@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import { colors, device } from 'styles';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useDataContext } from 'data';
+import { FixList } from 'api';
 
 const Container = styled.section`
   flex: 1;
@@ -152,6 +153,7 @@ export const RushList = () => {
   const [hasChange, setHasChange] = useState(false);
 
   const handleSave = () => {
+    FixList( courseData , courseList );
     console.log(courseData);
     console.log(courseList);
   }

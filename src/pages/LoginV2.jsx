@@ -13,6 +13,8 @@ import {
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import { GetList } from 'api';
+import { useDataContext } from 'data';
 
 const generateShadow = (count, color) => {
   let i = 0;
@@ -241,6 +243,7 @@ const Hint = styled.h5`
 `;
 
 export const LoginV2 = () => {
+  const { courseData, setcourseData } = useDataContext();
   const [loading, setLoading] = useState(false);
   const [studentId, setStudentId] = useState('');
   const [password, setPassword] = useState('');
@@ -289,6 +292,7 @@ export const LoginV2 = () => {
       if (!isSuccess) setErrorMsg(`＊${res}`);
       if (isSuccess) {
         setErrorMsg('');
+        GetList( setcourseData );
         toggleToast();
         setTimeout(() => {
           navigate('/search');
