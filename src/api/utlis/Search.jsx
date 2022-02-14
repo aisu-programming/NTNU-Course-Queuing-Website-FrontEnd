@@ -53,6 +53,7 @@ export const search = async (data) => {
     teacher: '',
     time: 'H/////////////8=',
     place: 7,
+    domains: 0,
     precise: false,
   };
 
@@ -70,14 +71,16 @@ export const search = async (data) => {
   if (data.filter.time.length !== 0) {
     classdata.time = time;
   }
-
+  if (data.filter.department === 1) {
+    classdata.domain = data.filter.domain
+  }
   if (data.filter.place) {
     classdata.place = data.filter.place;
   }
   if (data.filter.precise) {
     classdata.precise = true;
   }
-
+  console.log(classdata);
   return await PostApi(classdata, config.searchUrl).then(
     (res) => {
       return res.data.courses;
