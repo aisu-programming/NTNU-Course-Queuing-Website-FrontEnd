@@ -292,7 +292,7 @@ export const LoginV2 = () => {
       if (!isSuccess) setErrorMsg(`＊${res}`);
       if (isSuccess) {
         setErrorMsg('');
-        GetList( setcourseData );
+        GetList( setCourseData );
         toggleToast();
         setTimeout(() => {
           navigate('/search');
