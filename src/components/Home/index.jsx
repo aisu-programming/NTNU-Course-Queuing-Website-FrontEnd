@@ -1,1 +1,1 @@
-export { MiniDisclaimer, Disclaimer } from './Disclaimer';
+export { MiniDisclaimer, FullDisclaimer } from './DisclaimerContent';

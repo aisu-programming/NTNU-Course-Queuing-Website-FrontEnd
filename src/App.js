@@ -9,6 +9,7 @@ import {
   Search,
   RushList,
   CardBox,
+  Disclaimer
 } from 'pages';
 import { Navigation } from 'components';
 import { DataProvider } from 'data';
@@ -59,6 +60,10 @@ const App = () => {
     {
       path: '/search',
       element: <Search />,
+    },
+    {
+      path: '/disclaimer',
+      element: <Disclaimer />,
     },
     {
       path: '/rushlist',

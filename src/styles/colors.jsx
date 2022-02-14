@@ -38,6 +38,7 @@ const pause400 = '#FFBD36';
 const pause300 = primary;
 
 const danger = '#EC250C';
+const blue = '#80A5FF';
 
 export const colors = {
   primary500,
@@ -73,4 +74,5 @@ export const colors = {
   pause400,
   pause300,
   danger,
+  blue,
 };

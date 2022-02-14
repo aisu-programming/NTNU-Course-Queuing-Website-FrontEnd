@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { colors } from 'styles';
-import { DropdownMenu } from 'components/Dropdown';
-import { MdKeyboardArrowUp } from 'react-icons/md';
+import { NavLink } from 'react-router-dom';
 
 const Title = styled.h3`
   color: ${colors.danger};
@@ -26,6 +25,12 @@ const Text = styled.li`
     margin-bottom: 0;
   }
 `;
+const Link = styled.a`
+  color: ${colors.blue};
+  &:hover {
+    text-decoration: underline;
+  }
+`
 
 export const MiniDisclaimer = () => {
   return (
@@ -33,21 +38,35 @@ export const MiniDisclaimer = () => {
       <Title>免責聲明</Title>
       <TextOrder>
         <Text>
-          本網站會記錄您的使用者資訊，但絕不挪作他用，同時也做好力求完美的防駭措施。若不幸真的被駭客竊取資料，恕無法做任何補償。仍有疑慮者請自行評估是否登入此網站。
+          本網站會記錄您的使用者資訊，但絕不將此資料挪作其他用途。
         </Text>
         <Text>
-          本網站並非透過駭入學校系統來進行選課，而是正常管道。
+          本網站盡量力求完美的防駭措施，若不幸真的被駭客竊取資料，恕無法做任何補償。仍有疑慮者請自行評估是否登入此網站。
+        </Text>
+        <Text>
+          本網站並非透過駭入學校系統來進行選課，而是正常管道幫使用者登記選課。
+        </Text>
+        <Text>
+          更詳細的內容可前往 <NavLink to='/disclaimer'><Link>免責聲明</Link></NavLink>。
         </Text>
       </TextOrder>
     </>
   )
 }
 
-export const Disclaimer = () => {
+export const FullDisclaimer = () => {
   return (
     <>
-      <Title>免責聲明</Title>
       <TextOrder>
+        <Text>
+          本網站會記錄您的使用者資訊，但絕不將此資料挪作其他用途。
+        </Text>
+        <Text>
+          本網站盡量力求完美的防駭措施，若不幸真的被駭客竊取資料，恕無法做任何補償。仍有疑慮者請自行評估是否登入此網站。
+        </Text>
+        <Text>
+          本網站並非透過駭入學校系統來進行選課，而是正常管道幫使用者登記選課。
+        </Text>
         <Text>
           當您使用本網站服務之風險由您個人承擔。用戶同意使用本網站各項功能服務基於用戶之個人意願，並同意自負任何風險。
         </Text>

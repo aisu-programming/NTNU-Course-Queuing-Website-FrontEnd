@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useDataContext } from 'data';
 import { colors, device, size } from 'styles';
 import styled, { css } from 'styled-components';
-import { MiniDisclaimer, Disclaimer } from 'components/Home';
+import { MiniDisclaimer } from 'components/Home';
 import { GetLine } from 'api/utlis';
 
 const Container = styled.section`
@@ -102,7 +102,6 @@ export const Home = () => {
         <ContentRow>
           <Wrapper>
             <Button onClick={handleClick}>Button</Button>
-            <Disclaimer />
           </Wrapper>
         </ContentRow>
         <ContentRow>
