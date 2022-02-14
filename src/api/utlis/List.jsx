@@ -12,40 +12,40 @@ export const GetList = async ( data ) =>{
 }
 
 export const FixList = async( originData , alterData) => {
-    let fixData = []
     const newData = alterData.filter( (item) => !item.isOreder ) //  我加入的
-    const changeData = alterData.filter( (item) => item.isOreder ) //  我加入的 
+    const changeData = alterData.filter( (item) => item.isOreder ) //  我原本有的
     const changeState = changeData.map( (item) => {
         originData.map( (OD) => {
             if ( OD.courseNo  === item.courseNo){
                 if ( OD.state  !== item.state){
-                    fixData.push( item )
+                    return item 
                 }
             }
         })
     })
-    let changes = [];
-    const changeState = changeData.map( (item) => {
+    
+    const cs = changeState.foreach( (item) => {
         const { courseNo, domain, state } = item;
         const data = {
             courseNo: courseNo,
             action: state,
             domain: domain,
         }
-        list.push(data)
+        return data
     })
 
-    newData = newData.map( (item) => {
+    const nd = newData.foreach( (item) => {
         const { courseNo, domain, state } = item;
         const data = {
             courseNo: courseNo,
             action: state,
             domain: domain,
         }
-        list.push(data)
+        return data
     })
 
-    const finalData = {changes: changes}
+    const fd =[...cs, ...nd];
+    const finalData = {changes: fd}
     console.log(originData , alterData);
     return await PatchApi( finalData , config.listUrl )
     .then(res => {

@@ -243,7 +243,7 @@ const Hint = styled.h5`
 `;
 
 export const LoginV2 = () => {
-  const { courseData, setcourseData } = useDataContext();
+  const { courseData, setCourseData } = useDataContext();
   const [loading, setLoading] = useState(false);
   const [studentId, setStudentId] = useState('');
   const [password, setPassword] = useState('');
