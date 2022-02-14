@@ -1,11 +1,12 @@
 export const PatchApi = async(props , url) => { 
-
-    return await fetch(
-      url,{
+    return await fetch(url, {
         method: 'PATCH',
-        headers:{
-          'Content-Type': 'application/json'
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Credentials': true,
         },
+        mode: 'cors',
+        credentials: 'include',
         body:JSON.stringify(props)
       })
       .then(response => response.json()  )
