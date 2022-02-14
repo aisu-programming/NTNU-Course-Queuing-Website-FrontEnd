@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { colors, device } from 'styles';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useDataContext } from 'data';
-import { FixList } from 'api';
+import { FixList, GetList } from 'api';
 
 const Container = styled.section`
   flex: 1;
@@ -149,14 +149,25 @@ const SaveButton = styled.div`
 `;
 
 export const RushList = () => {
-  const { courseData, courseList } = useDataContext();
+  const {
+    courseData,
+    courseList,
+    setCourseList,
+    setCourseData,
+  } = useDataContext();
   const [hasChange, setHasChange] = useState(false);
 
   const handleSave = () => {
-    FixList( courseData , courseList );
+    if (hasChange) {
+      FixList(courseData, courseList);
+      setCourseList([]);
+    }
+  };
+
+  GetList(setCourseData);
+  useEffect(() => {
     console.log(courseData);
-    console.log(courseList);
-  }
+  }, [courseData]);
 
   return (
     <Container>
@@ -185,7 +196,10 @@ export const RushList = () => {
             />
           </ChildWrapper>
           <Footer>
-            <SaveButton onClick={handleSave} isChange={hasChange}>
+            <SaveButton
+              onClick={handleSave}
+              isChange={hasChange}
+            >
               儲存
             </SaveButton>
           </Footer>

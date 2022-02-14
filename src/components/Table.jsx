@@ -296,7 +296,7 @@ const ExpandRow = ({ row }) => {
     }
     const addCourse = {
       ...row.original,
-      state: 'pause',
+      status: 'pause',
     };
     const newCourseList = [...courseList, addCourse];
     setCourseList(newCourseList);

@@ -13,6 +13,7 @@ import {
 } from 'react-icons/md';
 import { IconButton } from 'components';
 import { useDataContext } from 'data';
+import { GetList } from 'api';
 
 const StateColor = {
   active400: `${colors.active400}`,
@@ -58,7 +59,7 @@ const Header = styled.div`
     props.isWhite ? '400' : '500'};
   color: ${(props) => props.isWhite && colors.white};
   background: ${(props) =>
-    StateColor[props.state + (400 - props.isChange)]};
+    StateColor[props.status + (400 - props.isChange)]};
 `;
 const Content = styled.div`
   display: grid;
@@ -66,7 +67,7 @@ const Content = styled.div`
   gap: 12px;
   padding: 16px 12px;
   background: ${(props) =>
-    StateColor[props.state + (300 - props.isChange)]};
+    StateColor[props.status + (300 - props.isChange)]};
   h4 {
     color: ${(props) => props.isWhite && colors.white};
   }
@@ -85,7 +86,7 @@ const Footer = styled.div`
   padding: 8px 12px;
   gap: 8px;
   background: ${(props) =>
-    StateColor[props.state + (300 - props.isChange)]};
+    StateColor[props.status + (300 - props.isChange)]};
   border-top: 1px solid ${colors.black}${colors.opacity10};
 `;
 const TextBox = styled.div`
@@ -122,7 +123,7 @@ const Card = ({ item }) => {
     useDataContext();
 
   const {
-    state,
+    status,
     courseNo,
     chineseName,
     department,
@@ -130,7 +131,7 @@ const Card = ({ item }) => {
     timeInfo,
     domains,
   } = item;
-  const isWhite = state === 'delete';
+  const isWhite = status === 'delete';
 
   const isChange = () => {
     const courseItem = courseData.find((item) => {
@@ -138,29 +139,29 @@ const Card = ({ item }) => {
     });
 
     if (!courseItem) return 200;
-    if (courseItem.state !== state) return 200;
+    if (courseItem.status !== status) return 200;
     return 0;
   };
 
   const handleAction = (action) => {
-    const changeState = courseList.map((item) => {
+    const changeStatus = courseList.map((item) => {
       if (item.courseNo === courseNo) {
         const updateCourse = {
           ...item,
-          state: action,
+          status: action,
         };
         return updateCourse;
       }
       return item;
     });
-    setCourseList(changeState);
+    setCourseList(changeStatus);
   };
 
   return (
     <Container>
       <Header
         isWhite={isWhite}
-        state={state}
+        status={status}
         isChange={isChange()}
       >
         <Text>{courseNo}</Text>
@@ -168,7 +169,7 @@ const Card = ({ item }) => {
       </Header>
       <Content
         isWhite={isWhite}
-        state={state}
+        status={status}
         isChange={isChange()}
       >
         <TextBox>
@@ -188,17 +189,18 @@ const Card = ({ item }) => {
           <Desc>無</Desc>
         </TextBox>
       </Content>
-      {state !== 'done' && (
-        <Footer state={state} isChange={isChange()}>
-          {state === 'pause' && item.department === '通識' && (
-            <IconButton
-              onClick={() => handleAction('pause')}
-              text={'變更領域'}
-            >
-              <MdLoop />
-            </IconButton>
-          )}
-          {state !== 'active' && (
+      {status !== 'done' && (
+        <Footer status={status} isChange={isChange()}>
+          {status === 'pause' &&
+            item.department === '通識' && (
+              <IconButton
+                onClick={() => handleAction('pause')}
+                text={'變更領域'}
+              >
+                <MdLoop />
+              </IconButton>
+            )}
+          {status !== 'active' && (
             <IconButton
               onClick={() => handleAction('active')}
               text={'搶'}
@@ -206,7 +208,7 @@ const Card = ({ item }) => {
               <MdOutlineThumbUpAlt />
             </IconButton>
           )}
-          {state !== 'pause' && (
+          {status !== 'pause' && (
             <IconButton
               onClick={() => handleAction('pause')}
               text={'暫停'}
@@ -214,7 +216,7 @@ const Card = ({ item }) => {
               <MdOutlinePauseCircleOutline />
             </IconButton>
           )}
-          {state !== 'delete' && (
+          {status !== 'delete' && (
             <IconButton
               isDanger={StateColor['delete']}
               onClick={() => handleAction('delete')}
@@ -231,9 +233,14 @@ const Card = ({ item }) => {
 
 export const CardBox = () => {
   const { Change } = useOutletContext();
+  const [courseTotal, setCourseTotal] = useState([]);
   const setHasChange = Change[1];
-  const { courseData, courseList, setCourseList } =
-    useDataContext();
+  const {
+    courseData,
+    courseList,
+    setCourseList,
+    setCourseData,
+  } = useDataContext();
   const location = useLocation();
   const path = location.pathname.split('/')[2];
 
@@ -246,19 +253,21 @@ export const CardBox = () => {
       const isNewCourse = !course;
       if (isNewCourse) return item;
 
-      const isChangeState = course.state !== item.state;
-      if (isChangeState) return item;
+      const isChangeStatus = course.status !== item.status;
+      if (isChangeStatus) return item;
     });
     return !!changeList.length;
   };
 
   useEffect(() => {
-    setCourseList([...courseData, ...courseList]);
+    setCourseTotal([...courseData, ...courseList]);
     setHasChange(checkChange);
+    console.log(courseData);
+    console.log(courseList);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const waitCards = courseList
-    .filter((item) => item.state !== 'done')
+  const waitCards = courseTotal
+    .filter((item) => item.status !== 'done')
     .map((item) => {
       return (
         <li key={`${item.courseNo}`}>
@@ -266,8 +275,8 @@ export const CardBox = () => {
         </li>
       );
     });
-  const doneCards = courseList
-    .filter((item) => item.state === 'done')
+  const doneCards = courseTotal
+    .filter((item) => item.status === 'done')
     .map((item) => (
       <li key={`${item.courseNo}`}>
         <Card item={item} />
