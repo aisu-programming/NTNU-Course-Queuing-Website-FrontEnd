@@ -179,7 +179,7 @@ export const place = [
 
 
 export const domain = [
-  { value: 0 , label:'非通識' },
+  { value: 100, label: '全選' },
   { value: 1 , label:'語言與文學' },
   { value: 2 , label:'藝術與美感' },
   { value: 3 , label:'哲學思維與道德推理' },
