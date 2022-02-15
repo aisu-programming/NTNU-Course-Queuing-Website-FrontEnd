@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDataContext } from 'data';
 import { colors, device, size } from 'styles';
 import styled, { css } from 'styled-components';
-import { MiniDisclaimer } from 'components/Home';
-import { GetLine } from 'api/utlis';
+import { MdOutlineCampaign } from 'react-icons/md';
+import {
+  MiniDisclaimer,
+  NewsTicker,
+  Announce,
+  Questions
+} from 'components/Home';
+import { GetLine, GetRecord } from 'api/utlis';
 
 const Container = styled.section`
   width: 100%;
@@ -36,19 +42,21 @@ const Content = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-`
+`;
 const ContentRow = styled.div`
   display: flex;
   margin-bottom: 12px;
   flex: 0;
-  ${props => props.flex && css`
-    flex: ${props.flex};
-  `}
+  ${(props) =>
+    props.flex &&
+    css`
+      flex: ${props.flex};
+    `}
 
   &:last-of-type {
     margin-bottom: 0;
   }
-`
+`;
 const Wrapper = styled.div`
   // width: 100%;
   display: flex;
@@ -57,10 +65,12 @@ const Wrapper = styled.div`
   flex-shrink: 0;
   padding: 20px;
   color: ${colors.gray100};
-  background: ${colors.gray400};
-  border-radius: 10px;
+  background: ${(props) =>
+    props.dark ? colors.gray600 : colors.gray400};
+  border-radius: 4px;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
   margin-left: 12px;
+  overflow: hidden;
 
   &:first-of-type {
     margin-left: 0;
@@ -72,6 +82,37 @@ const Wrapper = styled.div`
     margin-left: 0;
   }
 `;
+const News = styled(Wrapper)`
+  padding: 0;
+  flex-direction: row;
+  align-items: center;
+
+  @media ${device.phone} {
+    padding: 0;
+  }
+`;
+const TitleBox = styled.div`
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  flex: 0;
+  color: ${colors.primaryText};
+  font-weight: 500;
+  background: ${colors.primary};
+  padding: 4px 12px;
+  border-radius: 2px;
+  white-space: nowrap;
+
+  svg {
+    width: 24px;
+    height: 24px;
+    transform: translateY(-1px);
+    margin-right: 4px;
+  }
+`;
+const ContentBox = styled.div`
+  flex: 1;
+`;
 
 const Button = styled.button`
   padding: 10px;
@@ -82,14 +123,34 @@ const Button = styled.button`
   border-radius: 4px;
   color: ${colors.white};
   font-size: 18px;
-`
+`;
 
 export const Home = () => {
   const { courseList, setCourseList } = useDataContext();
-  const handleClick = () => {
-    console.log('a');
-    GetLine();
-  }
+  const [news, setNews] = useState([]);
+  const [stop, setStop] = useState(false);
+
+  const handleClick = async () => {
+    const a = await GetRecord();
+    console.log(a);
+  };
+
+  const handleEnter = () => {
+    if (!stop) setStop(!stop);
+  };
+  const handleLeave = () => {
+    if (stop) setStop(!stop);
+  };
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      const record = await GetRecord();
+      setNews(record);
+    };
+    fetchNews();
+  }, []);
+  // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <Container>
       <Title>首頁</Title>
@@ -100,16 +161,26 @@ export const Home = () => {
           </Wrapper>
         </ContentRow>
         <ContentRow>
-          <Wrapper>
-            <Button onClick={handleClick}>Button</Button>
-          </Wrapper>
-        </ContentRow>
-        <ContentRow>
-          <Wrapper>ABCDEFG</Wrapper>
+          <News
+            onMouseEnter={handleEnter}
+            onMouseLeave={handleLeave}
+          >
+            <TitleBox>
+              <MdOutlineCampaign />
+              捷報
+            </TitleBox>
+            <ContentBox>
+              {news.length && <NewsTicker news={news} stop={stop} />}
+            </ContentBox>
+          </News>
         </ContentRow>
         <ContentRow flex={1}>
-          <Wrapper>ABCDEFG</Wrapper>
-          <Wrapper>ABCDEFG</Wrapper>
+          <Wrapper>
+            <Announce />
+          </Wrapper>
+          <Wrapper>
+            <Questions />
+          </Wrapper>
         </ContentRow>
         <ContentRow>
           <Wrapper>
