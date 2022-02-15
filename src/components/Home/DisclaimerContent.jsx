@@ -25,7 +25,7 @@ const Text = styled.li`
     margin-bottom: 0;
   }
 `;
-const Link = styled.a`
+const Link = styled.span`
   color: ${colors.blue};
   &:hover {
     text-decoration: underline;
