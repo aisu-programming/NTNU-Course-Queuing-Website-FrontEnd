@@ -13,7 +13,7 @@ const Title = styled.h3`
 `;
 const TextOrder = styled.ol`
   list-style: number;
-  margin-left: 20px;
+  padding-left: 20px;
   // list-style-position: inside;
 `
 const Text = styled.li`

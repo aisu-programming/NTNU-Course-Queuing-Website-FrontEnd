@@ -8,7 +8,8 @@ import {
   MiniDisclaimer,
   NewsTicker,
   Announce,
-  Questions
+  Questions,
+  Developers
 } from 'components/Home';
 import { GetLine, GetRecord } from 'api/utlis';
 
@@ -22,7 +23,7 @@ const Container = styled.section`
   flex-direction: column;
 
   @media ${device.phone} {
-    padding: 20px 0 0;
+    padding: 20px 10px 0;
   }
 `;
 const Title = styled.h1`
@@ -56,6 +57,10 @@ const ContentRow = styled.div`
   &:last-of-type {
     margin-bottom: 0;
   }
+
+  @media ${device.phone} {
+    flex-direction: column;
+  }
 `;
 const Wrapper = styled.div`
   // width: 100%;
@@ -77,9 +82,13 @@ const Wrapper = styled.div`
   }
 
   @media ${device.phone} {
-    padding: 20px;
+    padding: 20px 20px;
     border-radius: 2px;
+    margin-bottom: 12px;
     margin-left: 0;
+    &:last-of-type {
+      margin-bottom: 0;
+    }
   }
 `;
 const News = styled(Wrapper)`
@@ -184,9 +193,7 @@ export const Home = () => {
         </ContentRow>
         <ContentRow>
           <Wrapper>
-            <div>123</div>
-            <div>123</div>
-            <div>123</div>
+            <Developers />
           </Wrapper>
         </ContentRow>
       </Content>

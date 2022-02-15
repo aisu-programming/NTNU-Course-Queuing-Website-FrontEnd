@@ -316,7 +316,7 @@ export const Navigation = () => {
               />
               <NavWrapperPhoneRWD>
                 <ul>
-                  <NavOption>
+                  <NavOption onClick={autoHandleFold}>
                     <NavLink to='/'>
                       {({ isActive }) => (
                         <ButtonOption

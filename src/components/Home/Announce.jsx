@@ -20,6 +20,7 @@ const Content = styled.div`
 `;
 const NoAnnounce = styled.div`
   color: ${colors.gray200};
+  padding: 36px;
   margin: auto;
 `;
 
