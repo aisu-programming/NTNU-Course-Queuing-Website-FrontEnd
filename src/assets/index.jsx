@@ -1,0 +1,6 @@
+export { default as githubImg } from './github.png'
+export { default as instagramImg } from './instagram.png'
+export { default as aisuImg } from './aisu.jpg'
+export { default as jouImg } from './jou.jpg'
+export { default as dannyImg } from './potato.jpg'
+export { default as cactusImg } from './cactus.jpg'
