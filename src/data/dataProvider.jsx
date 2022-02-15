@@ -9,12 +9,15 @@ const DataContext = createContext();
 export const DataProvider = ({ children }) => {
   const [courseData, setCourseData] = useState([]);
   const [courseList, setCourseList] = useState([]);
+  const [courseTotal, setCourseTotal] = useState([]);
 
   const value = {
     courseData,
     setCourseData,
     courseList,
     setCourseList,
+    courseTotal,
+    setCourseTotal,
     //a,
     //setA,
   };
