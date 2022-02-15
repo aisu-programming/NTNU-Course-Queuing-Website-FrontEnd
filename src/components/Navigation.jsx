@@ -102,15 +102,14 @@ const OptionTitle = styled.div`
   font-size: 14px;
   padding: 4px 10px;
   margin-top: 16px;
-  &:first-of-type {
-    margin-top: 0;
-  }
 `;
 const OptionTitleRWD = styled(OptionTitle)`
   width: 100%;
-  padding: 4px 0;
+  padding: ${(props) =>
+    props.isFold ? '4px 0' : '4px 10px'};
   text-align: ${(props) =>
     props.isFold ? 'center' : 'left'};
+  white-space: nowrap;
 `;
 
 const FoldButtonRWD = styled.div`
@@ -236,6 +235,21 @@ export const Navigation = () => {
             >
               <MdDoubleArrow />
             </FoldButtonRWD>
+            <ul>
+              <NavOption>
+                <NavLink to='/'>
+                  {({ isActive }) => (
+                    <ButtonOption
+                      isRWD={fold}
+                      option={'首頁'}
+                      active={isActive}
+                    >
+                      <MdHome />
+                    </ButtonOption>
+                  )}
+                </NavLink>
+              </NavOption>
+            </ul>
             <OptionTitleRWD isFold={fold}>
               功能
             </OptionTitleRWD>
@@ -301,6 +315,21 @@ export const Navigation = () => {
                 onClick={handleFold}
               />
               <NavWrapperPhoneRWD>
+                <ul>
+                  <NavOption>
+                    <NavLink to='/'>
+                      {({ isActive }) => (
+                        <ButtonOption
+                          isRWD={fold}
+                          option={'首頁'}
+                          active={isActive}
+                        >
+                          <MdHome />
+                        </ButtonOption>
+                      )}
+                    </NavLink>
+                  </NavOption>
+                </ul>
                 <OptionTitleRWD isFold={fold}>
                   功能
                 </OptionTitleRWD>
