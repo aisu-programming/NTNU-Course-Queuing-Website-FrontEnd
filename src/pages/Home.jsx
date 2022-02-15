@@ -12,6 +12,7 @@ import {
   Developers
 } from 'components/Home';
 import { GetLine, GetRecord } from 'api/utlis';
+import { useMediaQuery } from 'react-responsive';
 
 const Container = styled.section`
   width: 100%;
@@ -118,23 +119,19 @@ const TitleBox = styled.div`
     transform: translateY(-1px);
     margin-right: 4px;
   }
+  @media ${device.phone} {
+    padding: 4px 8px;
+    svg {
+      margin-right: 0;
+    }
+  }
 `;
 const ContentBox = styled.div`
   flex: 1;
 `;
 
-const Button = styled.button`
-  padding: 10px;
-  cursor: pointer;
-  background: ${colors.gray500};
-  width: fit-content;
-  margin: 0 auto 20px;
-  border-radius: 4px;
-  color: ${colors.white};
-  font-size: 18px;
-`;
-
 export const Home = () => {
+  const isPhone = useMediaQuery({ maxWidth: size.phone });
   const { courseList, setCourseList } = useDataContext();
   const [news, setNews] = useState([]);
   const [stop, setStop] = useState(false);
@@ -176,7 +173,7 @@ export const Home = () => {
           >
             <TitleBox>
               <MdOutlineCampaign />
-              捷報
+              {!isPhone && '捷報'}
             </TitleBox>
             <ContentBox>
               {news.length && <NewsTicker news={news} stop={stop} />}
