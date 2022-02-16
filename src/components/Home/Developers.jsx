@@ -18,7 +18,7 @@ const userLink = {
   dannyGithub: 'https://github.com/danny-git1005',
   dannyInstagram:
     'https://www.instagram.com/ne5602ne5602n/',
-  cactusGithub: '',
+  cactusGithub: 'https://github.com/cactus8603',
   cactusInstagram: '',
 };
 
@@ -46,6 +46,13 @@ const Card = styled.div`
   color: ${colors.gray200};
   display: flex;
   padding: 20px;
+
+  @media ${device.phone} {
+    border-top: 2px solid ${colors.gray600}${colors.opacity80};
+    &:first-of-type {
+      border-top: none;
+    }
+  }
 `;
 const Avatar = styled.div`
   width: 150px;
@@ -82,20 +89,11 @@ const Detail = styled.div`
 const Name = styled.h4`
   color: ${colors.white};
   font-size: 18px;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 
   @media ${device.phone} {
     font-size: 16px;
-    margin-bottom: 4px;
-  }
-`;
-const Work = styled.h5`
-  color: ${colors.gray200};
-  margin-bottom: 32px;
-
-  @media ${device.phone} {
-    font-size: 14px;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
   }
 `;
 const Info = styled.h5`
@@ -106,9 +104,6 @@ const Info = styled.h5`
   @media ${device.phone} {
     font-size: 12px;
   }
-`;
-const Contact = styled.div`
-  display: flex;
 `;
 // Link Style
 const LinkImg = styled.a`
@@ -132,24 +127,84 @@ const LinkImg = styled.a`
     img {
       width: 24px;
       height: 24px;
-
     }
   }
 `;
+const Box = styled.div`
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 8px;
 
+  &:last-of-type {
+    margin-bottom: 0px;
+  }
+  @media ${device.tableSmall} {
+    flex-direction: column;
+  }
+`;
+const BoxColumn = styled(Box)`
+  flex-direction: column;
+`
+const BoxRow = styled(Box)`
+  flex-direction: row;
+`
+const Text = styled.h5`
+  color: ${colors.gray300};
+  font-size: 14px;
+  margin-right: 12px;
+  transform: translateY(2px);
+  flex-shrink: 0;
+
+  @media ${device.tableSmall} {
+    margin-right: 0;
+    margin-bottom: 4px;
+  }
+  @media ${device.phone} {
+    font-size: 12px;
+  }
+`;
+const SubText = styled.h5`
+  color: ${colors.gray200};
+  line-height: 1.2rem;
+
+  @media ${device.phone} {
+    font-size: 14px;
+  }
+`;
+const Work = ({ text }) => {
+  return (
+    <Box>
+      <Text>工作內容</Text>
+      <SubText>{text}</SubText>
+    </Box>
+  );
+};
+const Interest = ({ text }) => {
+  return (
+    <Box>
+      <Text>興趣</Text>
+      <SubText>{text}</SubText>
+    </Box>
+  );
+};
 const Link = ({ github, instagram }) => {
   return (
-    <>
-      <LinkImg href={github} target={'_blank'}>
-        <img
-          style={{ filter: 'invert(1)' }}
-          src={githubImg}
-        />
-      </LinkImg>
-      <LinkImg href={instagram} target={'_blank'}>
-        <img src={instagramImg} />
-      </LinkImg>
-    </>
+    <BoxColumn>
+      <Info>個人連結</Info>
+      <BoxRow>
+        <LinkImg href={github} target={'_blank'}>
+          <img
+            style={{ filter: 'invert(1)' }}
+            src={githubImg}
+          />
+        </LinkImg>
+        {!!instagram && (
+          <LinkImg href={instagram} target={'_blank'}>
+            <img src={instagramImg} />
+          </LinkImg>
+        )}
+      </BoxRow>
+    </BoxColumn>
   );
 };
 
@@ -161,9 +216,7 @@ const Developer = ({ name, work, avatar, children }) => {
       </Avatar>
       <Detail>
         <Name>{name}</Name>
-        <Work>{work}</Work>
-        <Info>個人連結</Info>
-        <Contact>{children}</Contact>
+        {children}
       </Detail>
     </Card>
   );
@@ -175,43 +228,47 @@ export const Developers = () => {
       <Title>開發者</Title>
       <Content>
         <Developer
-          name={'洪偉倫'}
-          work={'編寫網頁後端 架設伺服器'}
+          name={'洪偉倫 (冰塊)'}
           avatar={aisuImg}
         >
+          <Work text={'後端、資料庫、驗證碼辨識AI(深度學習)、選課機器人、網管'} />
+          <Interest text={'深度學習'} />
           <Link
             github={userLink.aisuGithub}
             instagram={userLink.aisuInstagram}
           />
         </Developer>
         <Developer
-          name={'曹家豪'}
-          work={'編寫網頁前端 UX/UI'}
+          name={'曹家豪 (啾啾)'}
           avatar={jouImg}
         >
+          <Work text={'前端、UI/UX'} />
+          <Interest text={'前端、UI/UX'} />
           <Link
             github={userLink.jouGithub}
             instagram={userLink.jouInstagram}
           />
         </Developer>
         <Developer
-          name={'李展緯'}
-          work={'資料串接'}
+          name={'李展緯 (薯叔)'}
           avatar={dannyImg}
         >
+          <Work text={'資料串接'} />
+          <Interest text={'資料分析'} />
           <Link
             github={userLink.dannyGithub}
             instagram={userLink.dannyInstagram}
           />
         </Developer>
         <Developer
-          name={'劉紹楷'}
-          work={'文案撰寫'}
+          name={'劉紹楷 (凱克特斯)'}
           avatar={cactusImg}
         >
+          <Work text={'撰寫免責聲明'} />
+          <Interest text={'挖礦'} />
           <Link
-            github={userLink.aisuGithub}
-            instagram={userLink.aisuInstagram}
+            github={userLink.cactusGithub}
+            instagram={''}
           />
         </Developer>
       </Content>

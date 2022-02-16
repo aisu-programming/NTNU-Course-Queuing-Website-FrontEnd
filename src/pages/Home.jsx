@@ -128,6 +128,7 @@ const TitleBox = styled.div`
 `;
 const ContentBox = styled.div`
   flex: 1;
+  text-align: center;
 `;
 
 export const Home = () => {
@@ -135,11 +136,6 @@ export const Home = () => {
   const { courseList, setCourseList } = useDataContext();
   const [news, setNews] = useState([]);
   const [stop, setStop] = useState(false);
-
-  const handleClick = async () => {
-    const a = await GetRecord();
-    console.log(a);
-  };
 
   const handleEnter = () => {
     if (!stop) setStop(!stop);
@@ -176,6 +172,7 @@ export const Home = () => {
               {!isPhone && '捷報'}
             </TitleBox>
             <ContentBox>
+              {!news.length && '嗨，目前沒有任何捷報 OuO~'}
               {news.length && <NewsTicker news={news} stop={stop} />}
             </ContentBox>
           </News>

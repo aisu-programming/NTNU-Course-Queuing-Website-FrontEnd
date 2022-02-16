@@ -94,16 +94,12 @@ export const Questions = () => {
       <Title>問與答</Title>
       <Content>
         <ToggleQA
-          question={'AI 蘇真的是 AI 嗎?'}
-          answer={'是的他是'}
+          question={'這個網頁會癱瘓學校系統嗎?'}
+          answer={'不會 >.O'}
         />
         <ToggleQA
-          question={'網站是駭入學校系統嗎?'}
-          answer={'你為什麼不看免責聲明'}
-        />
-        <ToggleQA
-          question={'海夢是誰?'}
-          answer={'AI 蘇的老婆'}
+          question={'我大概要多久才能搶到我要的課?'}
+          answer={'大概跟你坐在電腦前刷到課一樣久'}
         />
       </Content>
     </>

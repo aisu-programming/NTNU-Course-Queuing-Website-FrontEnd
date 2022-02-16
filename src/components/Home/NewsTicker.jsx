@@ -30,19 +30,25 @@ export const NewsTicker = ({ news, stop }) => {
 
   const User = ({ index }) => {
     const i = index % news.length;
-
     return (
-      <News>
-        {`恭喜! `}
-        <span>{studentId[i]}</span>
-        {` 同學~ 於 `}
-        <span>{time[i]}</span>
-        {` 搶到了 `}
-        <span>
-          {courseId[i]} {courseName[i]}
-        </span>
-        {` !`}
-      </News>
+      <>
+        {!news && (
+          <News> 目前還沒有人搶到課程噢~ </News>
+        )}
+        {!!news && (
+          <News>
+            {`恭喜! `}
+            <span>{studentId[i]}</span>
+            {` 同學~ 於 `}
+            <span>{time[i]}</span>
+            {` 搶到了 `}
+            <span>
+              {courseId[i]} {courseName[i]}
+            </span>
+            {` !`}
+          </News>
+        )}
+      </>
     );
   };
 
