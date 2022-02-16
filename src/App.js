@@ -1,5 +1,10 @@
 import React, { useEffect } from 'react';
-import { Navigate, useRoutes } from 'react-router-dom';
+import {
+  Navigate,
+  Routes,
+  Route,
+  Outlet,
+} from 'react-router-dom';
 import './App.css';
 import { colors, size } from 'styles';
 import styled from 'styled-components';
@@ -15,6 +20,7 @@ import { Navigation } from 'components';
 import { useDataContext } from 'data';
 import { useMediaQuery } from 'react-responsive';
 import { useCookies } from 'react-cookie';
+import { ToastContainer } from 'react-toastify';
 
 const BodyContainer = styled.div`
   width: 100%;
@@ -41,53 +47,19 @@ const RightWrapper = styled.div`
   }};
 `;
 
+const PrivateOutlet = ({ to = '/login', reverse = false }) => {
+  const { isLogin } = useDataContext();
+  if (reverse) {
+    return !isLogin ? <Outlet /> : <Navigate to={to} />;
+  }
+  return isLogin ? <Outlet /> : <Navigate to={to} />;
+};
+
 const App = () => {
   const { setIsLogin } = useDataContext();
   const isTable = useMediaQuery({ maxWidth: size.table });
   const isPhone = useMediaQuery({ maxWidth: size.phone });
   const [cookies] = useCookies(['jwt']);
-
-  const element = useRoutes([
-    {
-      path: '/',
-      element: <Home />,
-    },
-    {
-      path: '/login',
-      element: <Login />,
-    },
-    {
-      path: '/search',
-      element: <Search />,
-    },
-    {
-      path: '/disclaimer',
-      element: <Disclaimer />,
-    },
-    {
-      path: '/rushlist',
-      element: <RushList />,
-      children: [
-        {
-          path: '',
-          element: <Navigate to='/rushlist/wait' />,
-        },
-        {
-          path: 'wait',
-          element: <CardBox />,
-        },
-        { path: 'done', element: <CardBox /> },
-        {
-          path: '*',
-          element: <Navigate to='/rushlist/wait' />,
-        },
-      ],
-    },
-    {
-      path: '*',
-      element: <Navigate to='/' />,
-    },
-  ]);
 
   useEffect(() => {
     setIsLogin(!!cookies.jwt);
@@ -98,7 +70,36 @@ const App = () => {
     <BodyContainer isRWD={isPhone}>
       <Navigation />
       <RightWrapper isTable={isTable} isPhone={isPhone}>
-        {element}
+        <ToastContainer />
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route
+            path='/login'
+            element={<PrivateOutlet to={'/'} reverse={true} />}
+          >
+            <Route path='' element={<Login />} />
+          </Route>
+          <Route path='/search' element={<Search />} />
+          <Route path='/disclaimer' element={<Disclaimer />} />
+          <Route
+            path='/rushlist'
+            element={<PrivateOutlet to={'/'} />}
+          >
+            <Route path='' element={<RushList />}>
+              <Route
+                path=''
+                element={<Navigate to='/rushlist/wait' />}
+              />
+              <Route path='wait' element={<CardBox />} />
+              <Route path='done' element={<CardBox />} />
+              <Route
+                path='*'
+                element={<Navigate to='/rushlist/wait' />}
+              />
+            </Route>
+          </Route>
+          <Route path='*' element={<Navigate to='/' />} />
+        </Routes>
       </RightWrapper>
     </BodyContainer>
   );

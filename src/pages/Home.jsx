@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useDataContext } from 'data';
 import { colors, device, size } from 'styles';
 import styled, { css } from 'styled-components';
 import { MdOutlineCampaign } from 'react-icons/md';
@@ -9,9 +7,9 @@ import {
   NewsTicker,
   Announce,
   Questions,
-  Developers
+  Developers,
 } from 'components/Home';
-import { GetLine, GetRecord } from 'api/utlis';
+import { GetRecord } from 'api/utlis';
 import { useMediaQuery } from 'react-responsive';
 
 const Container = styled.section`
@@ -133,7 +131,6 @@ const ContentBox = styled.div`
 
 export const Home = () => {
   const isPhone = useMediaQuery({ maxWidth: size.phone });
-  const { courseList, setCourseList } = useDataContext();
   const [news, setNews] = useState([]);
   const [stop, setStop] = useState(false);
 
@@ -173,7 +170,9 @@ export const Home = () => {
             </TitleBox>
             <ContentBox>
               {!news.length && '嗨，目前沒有任何捷報 OuO~'}
-              {news.length && <NewsTicker news={news} stop={stop} />}
+              {!!news.length && (
+                <NewsTicker news={news} stop={stop} />
+              )}
             </ContentBox>
           </News>
         </ContentRow>

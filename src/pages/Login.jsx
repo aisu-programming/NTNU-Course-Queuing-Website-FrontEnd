@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import balloon from '../assets/login-balloon.svg';
 import cat_1 from '../assets/login-cat-1.svg';
 import { colors, size, device } from 'styles';
@@ -10,7 +10,7 @@ import {
   MdOutlineCheckBoxOutlineBlank,
   MdOutlineCheckBox,
 } from 'react-icons/md';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { GetList } from 'api';
@@ -118,11 +118,7 @@ const SubTitle = styled.div`
 `;
 
 const Button = styled.div`
-  background: linear-gradient(
-    45deg,
-    #f6d365 0%,
-    #fda085 100%
-  );
+  background: linear-gradient(45deg, #f6d365 0%, #fda085 100%);
   width: 60%;
   margin-top: 8px;
   height: fit-content;
@@ -250,7 +246,8 @@ const Link = styled.span`
 `;
 
 export const Login = () => {
-  const { isLogin, setIsLogin, setCourseData } = useDataContext();
+  const { isLogin, setIsLogin, setCourseData } =
+    useDataContext();
   const [loading, setLoading] = useState(false);
   const [studentId, setStudentId] = useState('');
   const [password, setPassword] = useState('');
@@ -264,29 +261,26 @@ export const Login = () => {
   const isPhone = useMediaQuery({ maxWidth: size.phone });
 
   const toggleToast = () => {
-    toast.dark('🍖 登入成功！ OuO (等待自動跳轉)', {
+    toast.dark('🍖 登入成功！ OuO (將自動跳轉)', {
       position: 'top-center',
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
+      autoClose: 1500,
     });
   };
   const handleSubmit = async () => {
+    if (isLogin) return;
+
     if (loading) return;
 
-    if (!readCheck) {
-      setErrorMsg('請閱讀注意事項和免責聲明，並勾選');
-      return;
-    }
     if (!studentId) {
       setErrorMsg('請輸入帳號');
       return;
     }
     if (!password) {
       setErrorMsg('請輸入密碼');
+      return;
+    }
+    if (!readCheck) {
+      setErrorMsg('請閱讀注意事項和免責聲明，並勾選');
       return;
     }
 
@@ -308,14 +302,13 @@ export const Login = () => {
     }
 
     // 登入成功
-    await toggleToast();
+    toggleToast();
     setLoginMsg('祝您使用愉快 :)');
     setErrorMsg('');
     const fetchCourseData = await GetList();
     setCourseData(fetchCourseData);
+    await timeout(0.5);
     setIsLogin(true);
-    await timeout(2);
-    navigate('/search');
   };
 
   const handleReadCheck = () => {
@@ -324,12 +317,11 @@ export const Login = () => {
 
   useEffect(() => {
     setLoginMsg('登入');
-  }, [])
+  }, []);
 
   return (
     <>
       <Container>
-        <ToastContainer />
         {!isTableSmall && (
           <LeftWrapper>
             <ImgBox src={balloon} />
@@ -344,9 +336,7 @@ export const Login = () => {
               <Input
                 type='text'
                 value={studentId}
-                onChange={(e) =>
-                  setStudentId(e.target.value)
-                }
+                onChange={(e) => setStudentId(e.target.value)}
               />
             </InputBox>
             <InputBox style={{ marginBottom: '12px' }}>
@@ -354,37 +344,27 @@ export const Login = () => {
               <Input
                 type='password'
                 value={password}
-                onChange={(e) =>
-                  setPassword(e.target.value)
-                }
+                onChange={(e) => setPassword(e.target.value)}
               />
             </InputBox>
             <CheckBox onClick={handleReadCheck}>
-              {!readCheck && (
-                <MdOutlineCheckBoxOutlineBlank />
-              )}
+              {!readCheck && <MdOutlineCheckBoxOutlineBlank />}
               {readCheck && <MdOutlineCheckBox />}
               我已閱讀作者的
               <NavLink to='/disclaimer'>
                 <Link>免責聲明</Link>
               </NavLink>
             </CheckBox>
-            {/* <button onClick={handleQuick}>一按鍵登入</button> */}
             {!loading && (
               <ErrorMessage>{errorMsg}</ErrorMessage>
             )}
-            <Button
-              onClick={handleSubmit}
-              isLoading={loading}
-            >
+            <Button onClick={handleSubmit} isLoading={loading}>
               <PuffLoader
                 color={colors.primaryText}
                 size={24}
                 loading={loading}
               />
-              {!loading && <ButtonText>
-                {loginMsg}
-              </ButtonText>}
+              {!loading && <ButtonText>{loginMsg}</ButtonText>}
             </Button>
             {loading && (
               <Hint>

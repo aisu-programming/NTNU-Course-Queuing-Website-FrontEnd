@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { colors, size } from 'styles';
 import { ButtonOption } from 'components';
@@ -12,8 +12,8 @@ import {
 } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
-import { logo, logoTiny } from 'assets'
-import { useCookies } from 'react-cookie';
+import { logo, logoTiny } from 'assets';
+import { useDataContext } from 'data';
 
 const LayOut = styled.div`
   position: fixed;
@@ -105,7 +105,7 @@ const LogoTitle = styled.div`
 `;
 const LogoImg = styled.img`
   object-fit: contain;
-`
+`;
 
 const OptionTitle = styled.div`
   color: ${colors.gray300};
@@ -152,13 +152,10 @@ const NavOption = styled.li`
 `;
 
 export const Navigation = () => {
+  const { isLogin } = useDataContext();
   const isTable = useMediaQuery({ maxWidth: size.table });
   const isPhone = useMediaQuery({ maxWidth: size.phone });
   const [fold, setFold] = useState(true);
-  const [cookies, setCookie, removeCookie] = useCookies([
-    'jwt',
-  ]);
-  const isLogin = !!cookies.jwt;
 
   const handleFold = () => {
     setFold(!fold);
@@ -173,6 +170,7 @@ export const Navigation = () => {
   } else {
     document.body.style.overflowY = 'scroll';
   }
+
   return (
     <>
       {!isTable && (
@@ -247,12 +245,8 @@ export const Navigation = () => {
           {!fold && <LayOut onClick={handleFold}></LayOut>}
           <NavWrapperRWD isFold={fold}>
             <LogoBoxRWD>
-              {fold && (
-                <LogoImg src={logoTiny} />
-              )}
-              {!fold && (
-                <LogoImg src={logo} />
-              )}
+              {fold && <LogoImg src={logoTiny} />}
+              {!fold && <LogoImg src={logo} />}
             </LogoBoxRWD>
             <FoldButtonRWD
               onClick={handleFold}
