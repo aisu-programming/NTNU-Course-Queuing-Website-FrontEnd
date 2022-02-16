@@ -24,6 +24,7 @@
     "react-toastify": "^8.1.1",
     "react-transition-group": "^4.4.2",
     "simplebar-react": "^2.3.6",
+    "uuid": "^8.3.2",
     "web-vitals": "^2.1.0"
   },
   "scripts": {
