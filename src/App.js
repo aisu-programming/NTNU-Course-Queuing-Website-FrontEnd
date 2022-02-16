@@ -5,7 +5,7 @@ import { colors, size } from 'styles';
 import styled from 'styled-components';
 import {
   Home,
-  LoginV2,
+  Login,
   Search,
   RushList,
   CardBox,
@@ -55,7 +55,7 @@ const App = () => {
     },
     {
       path: '/login',
-      element: <LoginV2 />,
+      element: <Login />,
     },
     {
       path: '/search',

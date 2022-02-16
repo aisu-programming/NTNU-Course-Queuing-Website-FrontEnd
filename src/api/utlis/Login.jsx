@@ -1,7 +1,7 @@
 import { PostApi } from 'api';
 import { config } from './config';
 
-export const Login = async (data) => {
+export const LoginApi = async (data) => {
   return await PostApi(data, config.loginUrl).then(
     (res) => {
       if (res.message === 'Success.') {

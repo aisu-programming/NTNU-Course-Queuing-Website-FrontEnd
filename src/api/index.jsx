@@ -2,7 +2,7 @@ export { PostApi } from './Post';
 export { GetApi } from './Get';
 export {
   search,
-  Login,
+  LoginApi,
   GetList,
   FixList,
   getSearchOption,

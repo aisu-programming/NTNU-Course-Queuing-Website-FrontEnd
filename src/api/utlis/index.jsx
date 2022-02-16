@@ -1,4 +1,4 @@
-export { Login } from './Login'
+export { LoginApi } from './Login'
 export { search, getSearchOption } from './Search'
 export { GetList } from './List'
 export { FixList } from './List'
