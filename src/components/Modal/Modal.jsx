@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { colors, size, device } from 'styles';
 import Modal from 'react-modal';
-import { MdClose } from "react-icons/md";
+import { MdClose } from 'react-icons/md';
 import { useMediaQuery } from 'react-responsive';
 
 const customStyles = (width) => {
@@ -27,9 +27,9 @@ const customStyles = (width) => {
       border: 'none',
       backgroundColor: `${colors.gray400}`,
       zIndex: 11,
-    }
-  }
-}
+    },
+  };
+};
 
 const Header = styled.div`
   width: 100%;
@@ -80,7 +80,7 @@ const CloseButton = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-`
+`;
 const Button = styled.div`
   background: ${colors.primary};
   width: fit-content;
@@ -105,14 +105,20 @@ const Button = styled.div`
   }
 `;
 
-export const CustomModal = ({ isOpen, handleIsOpen, title, children }) => {
+export const CustomModal = ({
+  isOpen,
+  handleIsOpen,
+  title,
+  children,
+  handleConfirm,
+}) => {
   const isTable = useMediaQuery({ maxWidth: size.table });
   const isPhone = useMediaQuery({ maxWidth: size.phone });
   const isStyleRWD = () => {
     if (isPhone) return customStyles(0);
     if (isTable) return customStyles(60);
     return customStyles(120);
-  }
+  };
   const bodyScroll = document.body.style.overflow;
   if (isOpen && bodyScroll !== 'hidden') {
     document.body.style.overflowY = 'hidden';
@@ -123,6 +129,7 @@ export const CustomModal = ({ isOpen, handleIsOpen, title, children }) => {
     <>
       <Modal
         isOpen={isOpen}
+        onAfterClose={handleConfirm}
         onRequestClose={handleIsOpen}
         style={isStyleRWD()}
         shouldCloseOnOverlayClick={true}

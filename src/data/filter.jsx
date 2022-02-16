@@ -177,14 +177,40 @@ export const place = [
   { value: 1, label: '其他' },
 ];
 
-
 export const domain = [
   { value: 100, label: '全選' },
-  { value: 1 , label:'語言與文學' },
-  { value: 2 , label:'藝術與美感' },
-  { value: 3 , label:'哲學思維與道德推理' },
-  { value: 4 , label:'公民素養與社會探究' },
-  { value: 5 , label:'歷史與文化' },
-  { value: 6 , label:'數學與邏輯思維' },
-  { value: 7 , label:'科學與生命' },
-]
+  { value: 1, label: '語言與文學' },
+  { value: 2, label: '藝術與美感' },
+  { value: 3, label: '哲學思維與道德推理' },
+  { value: 4, label: '公民素養與社會探究' },
+  { value: 5, label: '歷史與文化' },
+  { value: 6, label: '數學與邏輯思維' },
+  { value: 7, label: '科學與生命' },
+  { value: 8, label: '第二外語' },
+  { value: 9, label: '生活技能' },
+  { value: 10, label: '自主學習' },
+];
+
+export const Domains = {
+  '': 0,
+  '00UG': 1,
+  '01UG': 2,
+  '02UG': 3,
+  '03UG': 4,
+  '04UG': 5,
+  '05UG': 6,
+  '06UG': 7,
+  '07UG': 8,
+  '08UG': 9,
+  '09UG': 10,
+  '語言與文學': 1,
+  '藝術與美感': 2,
+  '哲學思維與道德推理': 3,
+  '公民素養與社會探究': 4,
+  '歷史與文化': 5,
+  '數學與邏輯思維': 6,
+  '科學與生命': 7,
+  '第二外語': 8,
+  '生活技能': 9,
+  '自主學習': 10,
+};

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { colors } from '../styles';
+import { colors, size } from 'styles';
 import { ButtonOption } from 'components';
 import {
   MdHome,
@@ -12,7 +12,8 @@ import {
 } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
-import { size } from 'styles';
+import { logo, logoTiny } from 'assets'
+import { useCookies } from 'react-cookie';
 
 const LayOut = styled.div`
   position: fixed;
@@ -43,6 +44,12 @@ const NavWrapperRWD = styled(NavWrapper)`
     props.isFold ? '60px' : '240px'};
   padding: 20px 10px;
   transition: 0.3s;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
 `;
 
 const NavBar = styled.nav`
@@ -82,7 +89,7 @@ const HamburgerIcon = styled.div`
 
 const LogoBox = styled.div`
   height: 80px;
-  background: #202020;
+  // background: #202020;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -96,6 +103,9 @@ const LogoTitle = styled.div`
   font-size: 24px;
   color: ${colors.white};
 `;
+const LogoImg = styled.img`
+  object-fit: contain;
+`
 
 const OptionTitle = styled.div`
   color: ${colors.gray300};
@@ -145,6 +155,10 @@ export const Navigation = () => {
   const isTable = useMediaQuery({ maxWidth: size.table });
   const isPhone = useMediaQuery({ maxWidth: size.phone });
   const [fold, setFold] = useState(true);
+  const [cookies, setCookie, removeCookie] = useCookies([
+    'jwt',
+  ]);
+  const isLogin = !!cookies.jwt;
 
   const handleFold = () => {
     setFold(!fold);
@@ -164,7 +178,7 @@ export const Navigation = () => {
       {!isTable && (
         <NavWrapper>
           <LogoBox>
-            <LogoTitle>師大選課系統</LogoTitle>
+            <LogoImg src={logo} />
           </LogoBox>
           <ul>
             <NavOption>
@@ -194,33 +208,37 @@ export const Navigation = () => {
                 )}
               </NavLink>
             </NavOption>
-            <NavOption>
-              <NavLink to='/login'>
-                {({ isActive }) => (
-                  <ButtonOption
-                    option={'登入'}
-                    active={isActive}
-                  >
-                    <MdPerson />
-                  </ButtonOption>
-                )}
-              </NavLink>
-            </NavOption>
+            {!isLogin && (
+              <NavOption>
+                <NavLink to='/login'>
+                  {({ isActive }) => (
+                    <ButtonOption
+                      option={'登入'}
+                      active={isActive}
+                    >
+                      <MdPerson />
+                    </ButtonOption>
+                  )}
+                </NavLink>
+              </NavOption>
+            )}
           </ul>
           <OptionTitle>學生</OptionTitle>
           <ul>
-            <NavOption>
-              <NavLink to='/rushlist'>
-                {({ isActive }) => (
-                  <ButtonOption
-                    option={'搶課清單'}
-                    active={isActive}
-                  >
-                    <MdViewModule />
-                  </ButtonOption>
-                )}
-              </NavLink>
-            </NavOption>
+            {isLogin && (
+              <NavOption>
+                <NavLink to='/rushlist'>
+                  {({ isActive }) => (
+                    <ButtonOption
+                      option={'搶課清單'}
+                      active={isActive}
+                    >
+                      <MdViewModule />
+                    </ButtonOption>
+                  )}
+                </NavLink>
+              </NavOption>
+            )}
           </ul>
         </NavWrapper>
       )}
@@ -228,7 +246,14 @@ export const Navigation = () => {
         <>
           {!fold && <LayOut onClick={handleFold}></LayOut>}
           <NavWrapperRWD isFold={fold}>
-            <LogoBoxRWD></LogoBoxRWD>
+            <LogoBoxRWD>
+              {fold && (
+                <LogoImg src={logoTiny} />
+              )}
+              {!fold && (
+                <LogoImg src={logo} />
+              )}
+            </LogoBoxRWD>
             <FoldButtonRWD
               onClick={handleFold}
               isFold={fold}
@@ -267,37 +292,41 @@ export const Navigation = () => {
                   )}
                 </NavLink>
               </NavOption>
-              <NavOption onClick={autoHandleFold}>
-                <NavLink to='/login'>
-                  {({ isActive }) => (
-                    <ButtonOption
-                      isRWD={fold}
-                      option={'登入'}
-                      active={isActive}
-                    >
-                      <MdPerson />
-                    </ButtonOption>
-                  )}
-                </NavLink>
-              </NavOption>
+              {!isLogin && (
+                <NavOption onClick={autoHandleFold}>
+                  <NavLink to='/login'>
+                    {({ isActive }) => (
+                      <ButtonOption
+                        isRWD={fold}
+                        option={'登入'}
+                        active={isActive}
+                      >
+                        <MdPerson />
+                      </ButtonOption>
+                    )}
+                  </NavLink>
+                </NavOption>
+              )}
             </ul>
             <OptionTitleRWD isFold={fold}>
               學生
             </OptionTitleRWD>
             <ul>
-              <NavOption onClick={autoHandleFold}>
-                <NavLink to='/rushlist'>
-                  {({ isActive }) => (
-                    <ButtonOption
-                      isRWD={fold}
-                      option={'搶課清單'}
-                      active={isActive}
-                    >
-                      <MdViewModule />
-                    </ButtonOption>
-                  )}
-                </NavLink>
-              </NavOption>
+              {isLogin && (
+                <NavOption onClick={autoHandleFold}>
+                  <NavLink to='/rushlist'>
+                    {({ isActive }) => (
+                      <ButtonOption
+                        isRWD={fold}
+                        option={'搶課清單'}
+                        active={isActive}
+                      >
+                        <MdViewModule />
+                      </ButtonOption>
+                    )}
+                  </NavLink>
+                </NavOption>
+              )}
             </ul>
           </NavWrapperRWD>
         </>
@@ -307,7 +336,9 @@ export const Navigation = () => {
           <HamburgerIcon onClick={handleFold}>
             <MdMenu />
           </HamburgerIcon>
-          <LogoBoxRWD></LogoBoxRWD>
+          <LogoBoxRWD>
+            <LogoImg src={logo} />
+          </LogoBoxRWD>
           {!fold && (
             <>
               <LayOut
@@ -347,37 +378,41 @@ export const Navigation = () => {
                       )}
                     </NavLink>
                   </NavOption>
-                  <NavOption onClick={autoHandleFold}>
-                    <NavLink to='/login'>
-                      {({ isActive }) => (
-                        <ButtonOption
-                          isRWD={fold}
-                          option={'登入'}
-                          active={isActive}
-                        >
-                          <MdPerson />
-                        </ButtonOption>
-                      )}
-                    </NavLink>
-                  </NavOption>
+                  {!isLogin && (
+                    <NavOption onClick={autoHandleFold}>
+                      <NavLink to='/login'>
+                        {({ isActive }) => (
+                          <ButtonOption
+                            isRWD={fold}
+                            option={'登入'}
+                            active={isActive}
+                          >
+                            <MdPerson />
+                          </ButtonOption>
+                        )}
+                      </NavLink>
+                    </NavOption>
+                  )}
                 </ul>
                 <OptionTitleRWD isFold={fold}>
                   學生
                 </OptionTitleRWD>
                 <ul>
-                  <NavOption onClick={autoHandleFold}>
-                    <NavLink to='/rushlist'>
-                      {({ isActive }) => (
-                        <ButtonOption
-                          isRWD={fold}
-                          option={'搶課清單'}
-                          active={isActive}
-                        >
-                          <MdViewModule />
-                        </ButtonOption>
-                      )}
-                    </NavLink>
-                  </NavOption>
+                  {isLogin && (
+                    <NavOption onClick={autoHandleFold}>
+                      <NavLink to='/rushlist'>
+                        {({ isActive }) => (
+                          <ButtonOption
+                            isRWD={fold}
+                            option={'搶課清單'}
+                            active={isActive}
+                          >
+                            <MdViewModule />
+                          </ButtonOption>
+                        )}
+                      </NavLink>
+                    </NavOption>
+                  )}
                 </ul>
               </NavWrapperPhoneRWD>
             </>

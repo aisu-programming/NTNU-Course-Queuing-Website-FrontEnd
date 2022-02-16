@@ -12,7 +12,7 @@ import {
 } from 'react-icons/md';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import { GetList } from 'api';
 import { useDataContext } from 'data';
 
@@ -241,6 +241,12 @@ const Hint = styled.h5`
   font-size: 12px;
   text-align: center;
 `;
+const Link = styled.span`
+  color: ${colors.blue};
+  &:hover {
+    text-decoration: underline;
+  }
+`
 
 export const LoginV2 = () => {
   const { courseData, setCourseData } = useDataContext();
@@ -318,7 +324,7 @@ export const LoginV2 = () => {
             <Title>所以你要登入了嗎</Title>
             <SubTitle>所以我說你為什麼不登入</SubTitle>
             <InputBox>
-              <InputTitle>帳號</InputTitle>
+              <InputTitle>學號</InputTitle>
               <Input
                 type='text'
                 value={studentId}
@@ -342,7 +348,7 @@ export const LoginV2 = () => {
                 <MdOutlineCheckBoxOutlineBlank />
               )}
               {readCheck && <MdOutlineCheckBox />}
-              我已閱讀注意事項 & 作者免責聲明
+              我已閱讀作者的<NavLink to='/disclaimer'><Link>免責聲明</Link></NavLink>
             </CheckBox>
             {!loading && (
               <ErrorMessage>{errorMsg}</ErrorMessage>
@@ -359,7 +365,7 @@ export const LoginV2 = () => {
               {!loading && <ButtonText>登入</ButtonText>}
             </Button>
             {loading && (
-              <Hint>{'打錯帳號密碼會讀取較久噢 >.O'}</Hint>
+              <Hint>{'初次登入、更新密碼、密碼錯誤... 會讀取較久噢 >.O'}</Hint>
             )}
           </LoginBox>
           {!isPhone && <Cat1 src={cat_1} />}

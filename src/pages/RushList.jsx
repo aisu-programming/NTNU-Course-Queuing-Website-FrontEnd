@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { colors, device } from 'styles';
+import { colors, device, size } from 'styles';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useDataContext } from 'data';
 import { FixList, GetList } from 'api';
+import { useMediaQuery } from 'react-responsive';
+import { line } from 'assets'
+import { config } from 'api/utlis/config'
 
 const Container = styled.section`
   flex: 1;
@@ -148,10 +151,46 @@ const SaveButton = styled.div`
     `}
 `;
 
+const LineButton = styled.a`
+  background: ${colors.success300};
+  height: fit-content;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  transform: translateY(1px);
+
+  position: absolute;
+  right: 32px;
+
+  img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    margin-right: 12px;
+  }
+
+  @media ${device.phone} {
+    padding: 6px 12px;
+    right: 0px;
+
+    img {
+      margin-right: 4px;
+    }
+  }
+`
+const ButtonText = styled.h4`
+  color: ${colors.gray700};
+  font-weight: 500;
+  letter-spacing: 1px;
+`
+
 export const RushList = () => {
+  const isPhone = useMediaQuery({ maxWidth: size.phone });
+
   const {
     courseData,
-    courseList,
+    courseTotal,
     setCourseList,
     setCourseData,
   } = useDataContext();
@@ -159,15 +198,23 @@ export const RushList = () => {
 
   const handleSave = () => {
     if (hasChange) {
-      FixList(courseData, courseList);
+      const patchData = async () => {
+        await FixList(courseData, courseTotal);
+        const data = await GetList();
+        setCourseData(data);
+      }
+      patchData();
       setCourseList([]);
     }
   };
 
-  GetList(setCourseData);
   useEffect(() => {
-    console.log(courseData);
-  }, [courseData]);
+    const fetchData = async () => {
+      const data = await GetList();
+      setCourseData(data);
+    }
+    fetchData();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Container>
@@ -187,13 +234,21 @@ export const RushList = () => {
                 <Button isActive={isActive}>已完成</Button>
               )}
             </NavLink>
+            <LineButton href={config.lineRobot} >
+              <img src={line} />
+              <ButtonText>
+                {isPhone ? '通知' : '綁定通知'}
+              </ButtonText>
+            </LineButton>
           </NavOptions>
           <ChildWrapper>
-            <Outlet
-              context={{
-                Change: [hasChange, setHasChange],
-              }}
-            />
+            {!!courseData && (
+              <Outlet
+                context={{
+                  Change: [hasChange, setHasChange],
+                }}
+              />
+            )}
           </ChildWrapper>
           <Footer>
             <SaveButton
