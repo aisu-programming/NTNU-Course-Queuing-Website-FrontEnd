@@ -1,5 +1,5 @@
 export { Login } from './Login'
-export { search } from './Search'
+export { search, getSearchOption } from './Search'
 export { GetList } from './List'
 export { FixList } from './List'
 export { GetLine } from './line'

@@ -5,6 +5,6 @@ export const GetLine = async () =>{
 
     return await GetApi(config.lineUrl)
     .then(res => {
-        console.log(res)
+        // console.log(res)
     })
 }

@@ -1,58 +1,52 @@
 import { GetApi } from 'api/Get';
 import { PatchApi } from 'api/Patch';
 import { config } from './config';
+import { Domains } from 'data';
 
-export const GetList = async ( setCourseData ) => {
+export const GetList = async () => {
   return await GetApi(config.listUrl).then((res) => {
-    // return res.data.orders;
-    setCourseData(res.data.orders);
-    console.log(res.data.orders);
+    return res.data.orders;
   });
 };
-const action = { active: 0, pause: 1, delete: 2 };
+const action = { activate: 0, pause: 1, delete: 2 };
 export const FixList = async (originData, alterData) => {
-  const newData = alterData.filter(
-    (item) => !item.isOreder
-  ); //  我加入的
-  const changeData = alterData.filter(
-    (item) => item.isOreder
-  ); //  我原本有的
-  const changeStatus = changeData.map((item) => {
-    originData.map((OD) => {
-      if (OD.courseNo === item.courseNo) {
-        if (OD.status !== item.status) {
-          return item;
-        }
-      }
+  const newData = alterData
+    .filter((item) => item.hasOwnProperty('isOrdered'))
+    .map((item) => {
+      const { department, courseNo, status, domain } = item;
+      const isGU = department === '通識';
+      const data = {
+        courseNo: courseNo,
+        action: action[status],
+        domain: Domains[isGU ? domain : ""],
+      };
+      return data;
     });
-  });
-
-  const cs = changeStatus.map((item) => {
-    const { courseNo, domains, status } = item;
-    const data = {
-      courseNo: courseNo,
-      action: action[status],
-      domain: domains,
-    };
-    return data;
-  });
-
-  const nd = newData.map((item) => {
-    const { courseNo, domains, status } = item;
-    const data = {
-      courseNo: courseNo,
-      action: action[status],
-      domain: domains,
-    };
-    return data;
-  });
-
-  const fd = [...cs, ...nd];
-  const finalData = { changes: fd };
-  console.log(finalData);
-  return await PatchApi(finalData, config.listUrl).then(
+  const oldData = alterData.filter(
+    (item) => !item.hasOwnProperty('isOrdered')
+  );
+  const changeData = oldData
+    .filter((item) => {
+      const findData = originData.find((i) => {
+        return i.courseNo === item.courseNo;
+      });
+      if (findData.status !== item.status) return true;
+      if (findData.domain !== item.domain) return true;
+      return false;
+    })
+    .map((item) => {
+      const { courseNo, status, domain } = item;
+      const data = {
+        courseNo: courseNo,
+        action: action[status],
+        domain: Domains[domain],
+      };
+      return data;
+    });
+  const changes = { changes: [...newData, ...changeData] };
+  return await PatchApi(changes, config.listUrl).then(
     (res) => {
-      console.log(res);
+      // console.log(res);
     }
   );
 };

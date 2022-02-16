@@ -1,4 +1,4 @@
-import { PostApi } from 'api';
+import { PostApi, GetApi } from 'api';
 import { config } from './config';
 import { key } from 'data';
 
@@ -27,6 +27,7 @@ export const search = async (data) => {
 
   let tbinString = '000' + timeBs.join('') + '00';
   let dbinString = '0000000' + deptBs.join('') + '0000';
+  let domainBinary = new Array(10).fill('0');
 
   const base64_encode = (data) => {
     let array = [],
@@ -49,10 +50,10 @@ export const search = async (data) => {
   const classdata = {
     courseNo: '',
     courseName: '',
-    department: dept,
+    departments: dept,
     teacher: '',
-    time: 'H/////////////8=',
-    place: 7,
+    times: 'H/////////////8=',
+    places: 7,
     domains: 0,
     precise: false,
   };
@@ -69,21 +70,37 @@ export const search = async (data) => {
     classdata.teacher = data.filter.teacher.toString();
   }
   if (data.filter.time.length !== 0) {
-    classdata.time = time;
+    classdata.times = time;
   }
   if (data.filter.department === 1) {
-    classdata.domain = data.filter.domain
+    if (data.filter.domains === 100) {
+      classdata.domains = 2047;
+    } else {
+      domainBinary[data.filter.domains - 1] = '1';
+      classdata.domains = parseInt(
+        domainBinary.join(''),
+        2
+      );
+    }
   }
   if (data.filter.place) {
-    classdata.place = data.filter.place;
+    classdata.places = data.filter.place;
   }
   if (data.filter.precise) {
     classdata.precise = true;
   }
-  console.log(classdata);
+
   return await PostApi(classdata, config.searchUrl).then(
     (res) => {
       return res.data.courses;
     }
   );
 };
+
+export const getSearchOption = async () => {
+  return await GetApi(config.courseUrl).then(
+    (res) => {
+      return res.data.sequence;
+    }
+  );
+}
