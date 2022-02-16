@@ -11,8 +11,8 @@ import {
 import { TimeSelector } from 'components/TimeSelector';
 import { format } from 'date-fns';
 import zh_tw from 'date-fns/locale/zh_tw';
-import { department, place , domain } from 'data';
-import { search } from 'api';
+import { department, place, domain } from 'data';
+import { search, getSearchOption } from 'api';
 
 const SearchContainer = styled.section`
   width: 100%;
@@ -279,6 +279,7 @@ export const Search = () => {
   const [otherSchedule, setOtherSchedule] = useState(false);
   const [isPrecise, setIsPrecise] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [options, setOption] = useState([]);
   const [classData, setClassData] = useState([]);
 
   // console.log(filter);
@@ -324,6 +325,21 @@ export const Search = () => {
     handleFilter({ value: formatSchedule }, 'time');
   }, [schedule]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getSearchOption();
+      const departmentOptions = data.map((item) => {
+        const departmentName = department.find((i) => {
+          return i.id === item;
+        });
+        const list = { value: item, label: departmentName.text };
+        return list;
+      });
+      setOption(departmentOptions);
+    };
+    fetchData();
+  }, []);
+
   //處理資料傳輸
   // let classData = [];
   const Submit = async () => {
@@ -333,7 +349,6 @@ export const Search = () => {
       isPrecise,
     };
     await search(data).then((res) => {
-      console.log(res);
       setClassData(res);
     });
   };
@@ -366,21 +381,23 @@ export const Search = () => {
               <SearchTitle>課程系所 / 學程</SearchTitle>
               <DropdownV2
                 name='department'
-                options={departmentOptions}
+                options={!!options.length ? options : departmentOptions}
                 handleValue={handleFilter}
               />
             </SearchBox>
           </RowBox>
-          <RowBox>
-            <SearchBox>
-              <SearchTitle>通識領域</SearchTitle>
-              <DropdownV2
-                name='department'
-                options={domain}
-                handleValue={handleFilter}
-              />
-            </SearchBox>
-          </RowBox>
+          {filter.department === 1 && (
+            <RowBox>
+              <SearchBox>
+                <SearchTitle>通識領域</SearchTitle>
+                <DropdownV2
+                  name='domains'
+                  options={domain}
+                  handleValue={handleFilter}
+                />
+              </SearchBox>
+            </RowBox>
+          )}
           <RowBox>
             <SearchBox width={3}>
               <SearchTitle>教師名稱</SearchTitle>
