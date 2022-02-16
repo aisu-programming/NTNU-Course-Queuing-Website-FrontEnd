@@ -6,6 +6,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { CookiesProvider } from 'react-cookie';
+import { DataProvider } from 'data';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -13,7 +14,9 @@ ReactDOM.render(
       <ResetStyle />
       <GlobalStyle />
       <CookiesProvider>
-        <App />
+        <DataProvider>
+          <App />
+        </DataProvider>
       </CookiesProvider>
     </Router>
   </React.StrictMode>,

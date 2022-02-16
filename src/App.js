@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 import './App.css';
 import { colors, size } from 'styles';
@@ -9,10 +9,10 @@ import {
   Search,
   RushList,
   CardBox,
-  Disclaimer
+  Disclaimer,
 } from 'pages';
 import { Navigation } from 'components';
-import { DataProvider } from 'data';
+import { useDataContext } from 'data';
 import { useMediaQuery } from 'react-responsive';
 import { useCookies } from 'react-cookie';
 
@@ -42,12 +42,11 @@ const RightWrapper = styled.div`
 `;
 
 const App = () => {
+  const { setIsLogin } = useDataContext();
   const isTable = useMediaQuery({ maxWidth: size.table });
   const isPhone = useMediaQuery({ maxWidth: size.phone });
-  const [cookies, setCookie, removeCookie] = useCookies([
-    'jwt',
-  ]);
-  // console.log(cookies);
+  const [cookies] = useCookies(['jwt']);
+
   const element = useRoutes([
     {
       path: '/',
@@ -89,15 +88,19 @@ const App = () => {
       element: <Navigate to='/' />,
     },
   ]);
+
+  useEffect(() => {
+    setIsLogin(!!cookies.jwt);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <DataProvider>
-      <BodyContainer isRWD={isPhone}>
-        <Navigation />
-        <RightWrapper isTable={isTable} isPhone={isPhone}>
-          {element}
-        </RightWrapper>
-      </BodyContainer>
-    </DataProvider>
+    <BodyContainer isRWD={isPhone}>
+      <Navigation />
+      <RightWrapper isTable={isTable} isPhone={isPhone}>
+        {element}
+      </RightWrapper>
+    </BodyContainer>
   );
 };
 
