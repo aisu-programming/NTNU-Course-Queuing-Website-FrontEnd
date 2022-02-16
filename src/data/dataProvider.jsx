@@ -7,11 +7,14 @@ import React, {
 const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
+  const [isLogin, setIsLogin] = useState(false);
   const [courseData, setCourseData] = useState([]);
   const [courseList, setCourseList] = useState([]);
   const [courseTotal, setCourseTotal] = useState([]);
 
   const value = {
+    isLogin,
+    setIsLogin,
     courseData,
     setCourseData,
     courseList,
