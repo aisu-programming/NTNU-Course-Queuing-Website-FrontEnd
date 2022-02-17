@@ -195,26 +195,21 @@ export const RushList = () => {
     setCourseData,
   } = useDataContext();
   const [hasChange, setHasChange] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const handleSave = () => {
     if (hasChange) {
       const patchData = async () => {
-        await FixList(courseData, courseTotal);
-        const data = await GetList();
+        setLoading(true);
+        setCourseData([]);
+        const data = await FixList(courseData, courseTotal);
         setCourseData(data);
+        setLoading(false);
       }
       patchData();
       setCourseList([]);
     }
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await GetList();
-      setCourseData(data);
-    }
-    fetchData();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Container>
@@ -246,6 +241,7 @@ export const RushList = () => {
               <Outlet
                 context={{
                   Change: [hasChange, setHasChange],
+                  Loading: [loading, setLoading],
                 }}
               />
             )}

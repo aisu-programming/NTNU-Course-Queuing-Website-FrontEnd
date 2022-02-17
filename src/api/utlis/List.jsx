@@ -9,6 +9,7 @@ export const GetList = async () => {
   });
 };
 const action = { activate: 0, pause: 1, delete: 2 };
+
 export const FixList = async (originData, alterData) => {
   const newData = alterData
     .filter((item) => item.hasOwnProperty('isOrdered'))
@@ -44,9 +45,10 @@ export const FixList = async (originData, alterData) => {
       return data;
     });
   const changes = { changes: [...newData, ...changeData] };
+
   return await PatchApi(changes, config.listUrl).then(
     (res) => {
-      // console.log(res);
+      return res.data.orders;
     }
   );
 };

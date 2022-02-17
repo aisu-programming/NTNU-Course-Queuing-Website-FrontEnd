@@ -17,6 +17,10 @@ import { IconButton } from 'components';
 import { useDataContext, domain as Domain } from 'data';
 import { CustomModal } from 'components/Modal';
 import { v4 as uuidv4 } from 'uuid';
+import Skeleton, {
+  SkeletonTheme,
+} from 'react-loading-skeleton';
+import { GetList } from 'api';
 
 const StateColor = {
   activate400: `${colors.active400}`,
@@ -38,16 +42,10 @@ const StateColor = {
 
 const Cards = styled.ul`
   display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(300px, 1fr)
-  );
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
   @media ${device.phone} {
-    grid-template-columns: repeat(
-      auto-fill,
-      minmax(100%, 1fr)
-    );
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
   }
 `;
 // Card
@@ -58,8 +56,7 @@ const Container = styled.div`
 const Header = styled.div`
   display: flex;
   padding: 8px 12px;
-  font-weight: ${(props) =>
-    props.isWhite ? '400' : '500'};
+  font-weight: ${(props) => (props.isWhite ? '400' : '500')};
   color: ${(props) => props.isWhite && colors.white};
   background: ${(props) =>
     StateColor[props.status + (400 - props.isChange)]};
@@ -180,11 +177,7 @@ const ModalRadioText = styled.div`
   margin-left: 12px;
 `;
 
-const RadioBox = ({
-  selected,
-  setSelected,
-  text,
-}) => {
+const RadioBox = ({ selected, setSelected, text }) => {
   const isSelect = selected === text;
   const handleSelected = (e) => {
     setSelected(e.currentTarget.dataset.value);
@@ -342,15 +335,14 @@ const Card = ({ item }) => {
         </Content>
         {status !== 'successful' && (
           <Footer status={status} isChange={isChange()}>
-            {status === 'pause' &&
-              item.department === '通識' && (
-                <IconButton
-                  onClick={handleIsOpen}
-                  text={'變更領域'}
-                >
-                  <MdLoop />
-                </IconButton>
-              )}
+            {status !== 'delete' && item.department === '通識' && (
+              <IconButton
+                onClick={handleIsOpen}
+                text={'變更領域'}
+              >
+                <MdLoop />
+              </IconButton>
+            )}
             {status !== 'activate' && (
               <IconButton
                 onClick={() => handleAction('activate')}
@@ -387,9 +379,7 @@ const Card = ({ item }) => {
           title='設定領域'
         >
           <ModalContent>
-            <ModalTitle>
-              {`請設定此課程的通識領域`}
-            </ModalTitle>
+            <ModalTitle>{`請設定此課程的通識領域`}</ModalTitle>
             <ModalWrapper>
               <ModalKey>課程序號</ModalKey>
               <ModalValue>{courseNo}</ModalValue>
@@ -417,8 +407,10 @@ const Card = ({ item }) => {
 };
 
 export const CardBox = () => {
-  const { Change } = useOutletContext();
+  const { Change, Loading } = useOutletContext();
   const setHasChange = Change[1];
+  const [loading, setLoading] = Loading;
+
   const {
     courseData,
     courseList,
@@ -455,6 +447,16 @@ export const CardBox = () => {
   }, []);
 
   useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const data = await GetList();
+      setCourseData(data);
+      setLoading(false);
+    };
+    fetchData();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
     setCourseTotal([...courseList, ...courseData]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseData, courseList]);
@@ -484,16 +486,27 @@ export const CardBox = () => {
     });
   return (
     <>
-      {path === 'wait' && !waitCards.length && (
-        <Empty>{`這裡沒有任何課程噢 >uO`}</Empty>
-      )}
-      {path === 'done' && !doneCards.length && (
-        <Empty>{`這裡沒有任何課程噢 >uO`}</Empty>
-      )}
       <Cards>
-        {path === 'wait' && waitCards}
-        {path === 'done' && doneCards}
+        {!loading && path === 'wait' && waitCards}
+        {!loading && path === 'done' && doneCards}
+        {loading && (
+          <SkeletonTheme
+            baseColor={colors.gray500}
+            highlightColor={colors.gray400}
+            duration={1.2}
+          >
+            {[...Array(6)].map((_) => {
+              return <Skeleton key={uuidv4()} height={200} />;
+            })}
+          </SkeletonTheme>
+        )}
       </Cards>
+      {!loading && path === 'wait' && !waitCards.length && (
+        <Empty>{`這裡沒有任何課程噢 >uO`}</Empty>
+      )}
+      {!loading && path === 'done' && !doneCards.length && (
+        <Empty>{`這裡沒有任何課程噢 >uO`}</Empty>
+      )}
     </>
   );
 };
