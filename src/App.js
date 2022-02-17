@@ -48,11 +48,12 @@ const RightWrapper = styled.div`
 `;
 
 const PrivateOutlet = ({ to = '/login', reverse = false }) => {
-  const { isLogin } = useDataContext();
+  const [cookies] = useCookies(['jwt']);
+
   if (reverse) {
-    return !isLogin ? <Outlet /> : <Navigate to={to} />;
+    return !cookies.jwt ? <Outlet /> : <Navigate to={to} />;
   }
-  return isLogin ? <Outlet /> : <Navigate to={to} />;
+  return !!cookies.jwt ? <Outlet /> : <Navigate to={to} />;
 };
 
 const App = () => {
