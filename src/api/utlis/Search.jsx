@@ -4,7 +4,7 @@ import { key } from 'data';
 
 export const search = async (data) => {
   let timeBs = new Array(85).fill('0');
-  let deptBs = new Array(168).fill('0');
+  let deptBs = new Array(169).fill('0');
 
   var Time, day, classtime, bitloc;
   for (let i in data.filter.time) {
