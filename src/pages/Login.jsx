@@ -12,7 +12,7 @@ import {
 } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { NavLink } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import { GetList } from 'api';
 import { useDataContext } from 'data';
 import { timeout } from 'utils';
@@ -258,6 +258,7 @@ export const Login = () => {
     maxWidth: size.tableSmall,
   });
   const isPhone = useMediaQuery({ maxWidth: size.phone });
+  const navigate = useNavigate();
 
   const toggleToast = () => {
     toast.dark('🍖 登入成功！ OuO (將自動跳轉)', {
@@ -306,8 +307,9 @@ export const Login = () => {
     setErrorMsg('');
     const fetchCourseData = await GetList();
     setCourseData(fetchCourseData);
-    await timeout(0.5);
+    await timeout(1);
     setIsLogin(true);
+    navigate('/search');
   };
 
   const handleReadCheck = () => {
