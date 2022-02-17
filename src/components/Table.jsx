@@ -1,8 +1,4 @@
-import React, {
-  useState,
-  Fragment,
-  useEffect,
-} from 'react';
+import React, { Fragment, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { colors, size, device } from 'styles';
 import {
@@ -22,6 +18,12 @@ import { columns } from 'components/TableData';
 import { useMediaQuery } from 'react-responsive';
 import { IconButton } from 'components';
 import { useDataContext } from 'data';
+import Skeleton, {
+  SkeletonTheme,
+} from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import { v4 as uuidv4 } from 'uuid';
+import { scroller } from 'react-scroll';
 
 const Styles = styled.div`
   display: block;
@@ -262,13 +264,23 @@ const PageText = styled.div`
   background: ${colors.gray500};
 `;
 
+const generateSkeleton = (isTable) => {
+  const count = isTable ? 3 : 6;
+  return (
+    <tr key={uuidv4()}>
+      {[...Array(count)].map((_) => (
+        <td key={uuidv4()}>
+          <Skeleton />
+        </td>
+      ))}
+      <td></td>
+    </tr>
+  );
+};
+
 const ExpandRow = ({ row }) => {
-  const {
-    courseData,
-    setCourseData,
-    courseList,
-    setCourseList,
-  } = useDataContext();
+  const { courseData, courseList, setCourseList } =
+    useDataContext();
   const isTable = useMediaQuery({
     maxWidth: size.table,
   });
@@ -346,25 +358,28 @@ const ExpandRow = ({ row }) => {
   );
 };
 
-const resetScrollInsideTable = (indexTable) => {
-  document.getElementsByClassName('rt-tbody')[
-    indexTable
-  ].scrollTop = 0;
+const resetScrollInsideTable = () => {
+  scroller.scrollTo('top', {
+    duration: 800,
+    delay: 0,
+    smooth: 'easeOutQuint',
+    containerId: 'rt-body',
+  });
+  scroller.scrollTo('table-top', {
+    duration: 800,
+    delay: 0,
+    smooth: 'easeOutQuint',
+    offset: -120,
+  });
 };
 
-export const Table = ({ columns, data }) => {
+export const Table = ({ columns, data, loading }) => {
   const isTable = useMediaQuery({
     maxWidth: size.table,
   });
-  const isPhone = useMediaQuery({ maxWidth: size.phone });
   const checkSize = () => {
     if (isTable) {
-      return [
-        'teacher',
-        'department',
-        'credit',
-        'isOrdered',
-      ];
+      return ['teacher', 'department', 'credit', 'isOrdered'];
     }
     return ['isOrdered'];
   };
@@ -382,8 +397,7 @@ export const Table = ({ columns, data }) => {
     gotoPage,
     nextPage,
     previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize },
+    state: { pageIndex },
     prepareRow,
     visibleColumns,
     setHiddenColumns,
@@ -401,18 +415,16 @@ export const Table = ({ columns, data }) => {
   );
   useEffect(() => {
     setHiddenColumns(checkSize());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isTable]);
   // Render the UI for your table
 
   return (
     <>
-      <table {...getTableProps()}>
+      <table name='top' {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup, i) => (
-            <tr
-              key={i}
-              {...headerGroup.getHeaderGroupProps()}
-            >
+            <tr key={i} {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
                 <th
                   {...column.getHeaderProps({
@@ -430,18 +442,27 @@ export const Table = ({ columns, data }) => {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
+          {loading && (
+            <SkeletonTheme
+              baseColor={colors.gray500}
+              highlightColor={colors.gray400}
+              duration={1.2}
+            >
+              {[...Array(12)].map((_) => {
+                return generateSkeleton(isTable);
+              })}
+            </SkeletonTheme>
+          )}
           {page.map((row, i) => {
             prepareRow(row);
             const isOdd = i % 2 == 1;
-            const buildRowCell = row.cells.map(
-              (cell, i) => {
-                return (
-                  <td {...cell.getCellProps()}>
-                    {cell.render('Cell')}
-                  </td>
-                );
-              }
-            );
+            const buildRowCell = row.cells.map((cell, i) => {
+              return (
+                <td {...cell.getCellProps()}>
+                  {cell.render('Cell')}
+                </td>
+              );
+            });
             return (
               <Fragment key={i}>
                 {isOdd ? (
@@ -481,13 +502,21 @@ export const Table = ({ columns, data }) => {
       {!!data.length && (
         <PageRow>
           <PageButton
-            onClick={() => gotoPage(0)}
+            onClick={() => {
+              resetScrollInsideTable(0);
+              gotoPage(0);
+              return;
+            }}
             disabled={!canPreviousPage}
           >
             <MdFastRewind />
           </PageButton>
           <PageButton
-            onClick={() => previousPage()}
+            onClick={() => {
+              resetScrollInsideTable(0);
+              previousPage();
+              return;
+            }}
             disabled={!canPreviousPage}
           >
             <MdSkipPrevious />
@@ -495,14 +524,19 @@ export const Table = ({ columns, data }) => {
           <PageButton
             onClick={() => {
               resetScrollInsideTable(0);
-              return nextPage();
+              nextPage();
+              return;
             }}
             disabled={!canNextPage}
           >
             <MdSkipNext />
           </PageButton>
           <PageButton
-            onClick={() => gotoPage(pageCount - 1)}
+            onClick={() => {
+              resetScrollInsideTable(0);
+              gotoPage(pageCount - 1);
+              return;
+            }}
             disabled={!canNextPage}
           >
             <MdFastForward />
@@ -518,15 +552,15 @@ export const Table = ({ columns, data }) => {
   );
 };
 
-export const TableContainer = ({ data }) => {
+export const TableContainer = ({ data, loading }) => {
   const noData = () => {
     if (!data.length)
       return <Empty>抱歉，找不到任何課程噢 OuO</Empty>;
   };
   return (
-    <Styles className='rt-tbody'>
-      <Table columns={columns} data={data} />
-      {noData()}
+    <Styles name='table-top' id='rt-body' className='rt-tbody'>
+      <Table columns={columns} data={data} loading={loading} />
+      {!loading && noData()}
     </Styles>
   );
 };

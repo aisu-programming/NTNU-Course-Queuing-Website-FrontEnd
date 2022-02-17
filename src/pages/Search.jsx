@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { colors, device } from 'styles';
 import { DropdownV2 } from 'components/Dropdown';
 import { TableContainer } from 'components';
@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 import zh_tw from 'date-fns/locale/zh_tw';
 import { department, place, domain } from 'data';
 import { search, getSearchOption } from 'api';
+import { PuffLoader } from 'react-spinners';
 
 const SearchContainer = styled.section`
   width: 100%;
@@ -170,16 +171,15 @@ const BoxTitle = styled.h3`
   }
 `;
 const Button = styled.div`
-  background: linear-gradient(
-    45deg,
-    #f6d365 0%,
-    #fda085 100%
-  );
+  background: linear-gradient(45deg, #f6d365 0%, #fda085 100%);
   width: 100%;
   height: fit-content;
   margin-top: 8px;
   padding: 10px 20px;
   border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   letter-spacing: 4px;
   text-align: center;
@@ -192,6 +192,16 @@ const Button = styled.div`
   &:active {
     filter: brightness(0.7);
   }
+
+  ${(props) =>
+    props.isLoading &&
+    css`
+      cursor: default;
+      filter: brightness(0.6) contrast(0.8);
+      &:hover {
+        filter: brightness(0.6) contrast(0.8);
+      }
+    `}
 
   @media ${device.phone} {
     margin-top: auto;
@@ -266,9 +276,7 @@ const CellBox = styled.div`
     height: 20px;
     &:hover {
       background: ${(props) =>
-        props.otherSchedule
-          ? colors.primary
-          : colors.gray500};
+        props.otherSchedule ? colors.primary : colors.gray500};
     }
   }
 `;
@@ -279,6 +287,7 @@ export const Search = () => {
   const [otherSchedule, setOtherSchedule] = useState(false);
   const [isPrecise, setIsPrecise] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [options, setOption] = useState([]);
   const [classData, setClassData] = useState([]);
 
@@ -332,7 +341,10 @@ export const Search = () => {
         const departmentName = department.find((i) => {
           return i.id === item;
         });
-        const list = { value: item, label: departmentName.text };
+        const list = {
+          value: item,
+          label: departmentName.text,
+        };
         return list;
       });
       setOption(departmentOptions);
@@ -341,16 +353,18 @@ export const Search = () => {
   }, []);
 
   //處理資料傳輸
-  // let classData = [];
-  const Submit = async () => {
+  const handleSubmit = async () => {
+    if (loading) return;
     const data = {
       filter,
       otherSchedule,
       isPrecise,
     };
-    await search(data).then((res) => {
-      setClassData(res);
-    });
+    setClassData([]);
+    setLoading(true);
+    const fetchData = await search(data);
+    setClassData(fetchData);
+    setLoading(false);
   };
 
   return (
@@ -381,7 +395,9 @@ export const Search = () => {
               <SearchTitle>課程系所 / 學程</SearchTitle>
               <DropdownV2
                 name='department'
-                options={!!options.length ? options : departmentOptions}
+                options={
+                  !!options.length ? options : departmentOptions
+                }
                 handleValue={handleFilter}
               />
             </SearchBox>
@@ -456,13 +472,23 @@ export const Search = () => {
               />
             </SearchBox>
             <SearchBox width={1}>
-              <Button onClick={Submit}>查詢</Button>
+              <Button
+                isLoading={loading}
+                onClick={handleSubmit}
+              >
+                <PuffLoader
+                  color={colors.primaryText}
+                  size={16}
+                  loading={loading}
+                />
+                {!loading && '查詢'}
+              </Button>
             </SearchBox>
           </RowBox>
         </LeftWrapper>
         <RightWrapper>
           <BoxTitle>課程列表</BoxTitle>
-          <TableContainer data={classData} />
+          <TableContainer loading={loading} data={classData} />
         </RightWrapper>
       </ContentContainer>
     </SearchContainer>
