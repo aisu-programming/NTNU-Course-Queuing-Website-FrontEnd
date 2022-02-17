@@ -12,7 +12,7 @@ import {
 } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { GetList } from 'api';
 import { useDataContext } from 'data';
 import { timeout } from 'utils';
@@ -254,7 +254,6 @@ export const Login = () => {
   const [loginMsg, setLoginMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [readCheck, setReadCheck] = useState(false);
-  const navigate = useNavigate();
   const isTableSmall = useMediaQuery({
     maxWidth: size.tableSmall,
   });
