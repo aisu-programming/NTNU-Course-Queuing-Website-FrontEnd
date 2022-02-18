@@ -78,12 +78,27 @@ const HamburgerIcon = styled.div`
   background: ${colors.gray500};
   border-radius: 4px;
   cursor: pointer;
+  position: relative;
 
   svg {
     width: 32px;
     height: 32px;
     color: ${colors.white};
   }
+  ${(props) => props.alert && `
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      right: 2px;
+      bottom: 4px;
+      width: 14px;
+      height: 14px;
+      background: ${colors.danger};
+      border: 3px solid ${colors.gray500};
+      border-radius: 50%;
+    }
+  `}
 `;
 
 const LogoBox = styled.div`
@@ -98,10 +113,6 @@ const LogoBoxRWD = styled(LogoBox)`
   height: 40px;
 `;
 
-const LogoTitle = styled.div`
-  font-size: 24px;
-  color: ${colors.white};
-`;
 const LogoImg = styled.img`
   object-fit: contain;
 `;
@@ -358,7 +369,7 @@ export const Navigation = () => {
       )}
       {isPhone && (
         <NavBar>
-          <HamburgerIcon onClick={handleFold}>
+          <HamburgerIcon alert={hasAlert} onClick={handleFold}>
             <MdMenu />
           </HamburgerIcon>
           {/* <LogoBoxRWD>
