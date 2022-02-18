@@ -177,6 +177,19 @@ export const place = [
   { value: 1, label: '其他' },
 ];
 
+export const domain_109 = [
+  { value: 100, label: '全選' },
+  { value: 1, label: '人文藝術' },
+  { value: 2, label: '社會科學' },
+  { value: 3, label: '自然科學' },
+  { value: 4, label: '邏輯運算' },
+  { value: 5, label: '學院共同課程' },
+  { value: 6, label: '跨域專業探索課程' },
+  { value: 7, label: '大學入門' },
+  { value: 8, label: '專題探究' },
+  { value: 9, label: 'MOOCs' },
+]
+
 export const domain = [
   { value: 100, label: '全選' },
   { value: 1, label: '語言與文學' },
@@ -213,4 +226,22 @@ export const Domains = {
   '第二外語': 8,
   '生活技能': 9,
   '自主學習': 10,
+  'A1UG': 1,
+  'A2UG': 2,
+  'A3UG': 3,
+  'A4UG': 4,
+  'B1UG': 5,
+  'B2UG': 6,
+  'B3UG': 7,
+  'C1UG': 8,
+  'C2UG': 9,
+  '人文藝術': 1,
+  '社會科學': 2,
+  '自然科學': 3,
+  '邏輯運算': 4,
+  '學院共同課程': 5,
+  '跨域專業探索課程': 6,
+  '大學入門': 7,
+  '專題探究': 8,
+  'MOOCs': 9,
 };
