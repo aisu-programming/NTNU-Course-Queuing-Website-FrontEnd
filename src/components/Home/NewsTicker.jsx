@@ -23,7 +23,12 @@ export const NewsTicker = ({ news, stop }) => {
 
   const courseId = news.map((item) => item.courseNo);
   const courseName = news.map((item) => item.chineseName);
-  const studentId = news.map((item) => item.student_id);
+  const studentId = news.map((item) => {
+    const year = item.student_id.slice(0, 3);
+    const dept = `***`;
+    const id = item.student_id.slice(6, 9);
+    return `${year}${dept}${id}`;
+  });
   const time = news.map((item) =>
     moment(item.succeedTime).format('MM/D HH:m')
   );
@@ -32,9 +37,7 @@ export const NewsTicker = ({ news, stop }) => {
     const i = index % news.length;
     return (
       <>
-        {!news && (
-          <News> 目前還沒有人搶到課程噢~ </News>
-        )}
+        {!news && <News> 目前還沒有人搶到課程噢~ </News>}
         {!!news && (
           <News>
             {`恭喜! `}
