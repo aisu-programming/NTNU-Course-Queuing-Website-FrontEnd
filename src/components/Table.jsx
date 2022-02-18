@@ -23,6 +23,7 @@ import Skeleton, {
 } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { v4 as uuidv4 } from 'uuid';
+import { convertDomains } from 'utils';
 import { scroller } from 'react-scroll';
 
 const Styles = styled.div`
@@ -309,6 +310,7 @@ const ExpandRow = ({ row }) => {
     const addCourse = {
       ...row.original,
       status: 'pause',
+      domain: convertDomains(row.original.domains)[0],
     };
     const newCourseList = [...courseList, addCourse];
     setCourseList(newCourseList);
@@ -455,7 +457,7 @@ export const Table = ({ columns, data, loading }) => {
           )}
           {page.map((row, i) => {
             prepareRow(row);
-            const isOdd = i % 2 == 1;
+            const isOdd = i % 2 === 1;
             const buildRowCell = row.cells.map((cell, i) => {
               return (
                 <td {...cell.getCellProps()}>
