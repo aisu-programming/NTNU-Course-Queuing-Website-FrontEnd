@@ -58,29 +58,29 @@ export const search = async (data) => {
     precise: false,
   };
 
-  if (data.filter.id) {
+  if (!!data.filter.id) {
     classdata.courseNo = data.filter.id.toString();
   }
-
-  if (data.filter.name) {
+  if (!!data.filter.name) {
     classdata.courseName = data.filter.name.toString();
   }
-
-  if (data.filter.teacher) {
+  if (!!data.filter.teacher) {
     classdata.teacher = data.filter.teacher.toString();
   }
   if (data.filter.time.length !== 0) {
     classdata.times = time;
   }
   if (data.filter.department === 1) {
+    if (!data.filter.domains) {
+      classdata.domains = 1023;
+    }
     if (data.filter.domains === 100) {
-      classdata.domains = 2047;
-    } else {
+      classdata.domains = 1023;
+    }
+
+    if (!!data.filter.domains && data.filter.domains !== 100) {
       domainBinary[data.filter.domains - 1] = '1';
-      classdata.domains = parseInt(
-        domainBinary.join(''),
-        2
-      );
+      classdata.domains = parseInt(domainBinary.join(''), 2);
     }
   }
   if (data.filter.place) {
@@ -89,7 +89,7 @@ export const search = async (data) => {
   if (data.filter.precise) {
     classdata.precise = true;
   }
-
+  console.log(classdata);
   return await PostApi(classdata, config.searchUrl).then(
     (res) => {
       return res.data.courses;
@@ -98,9 +98,7 @@ export const search = async (data) => {
 };
 
 export const getSearchOption = async () => {
-  return await GetApi(config.courseUrl).then(
-    (res) => {
-      return res.data.sequence;
-    }
-  );
-}
+  return await GetApi(config.courseUrl).then((res) => {
+    return res.data.sequence;
+  });
+};
