@@ -19,6 +19,7 @@ import { LogoutApi } from 'api';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { timeout } from 'utils';
+import { useCookies } from 'react-cookie';
 
 const LayOut = styled.div`
   position: fixed;
@@ -200,6 +201,7 @@ export const Navigation = () => {
   const isTable = useMediaQuery({ maxWidth: size.table });
   const isPhone = useMediaQuery({ maxWidth: size.phone });
   const [fold, setFold] = useState(true);
+  const [cookies, setCookie, removeCookie] = useCookies('jwt');
   const navigate = useNavigate();
 
   const handleFold = () => {
@@ -216,9 +218,9 @@ export const Navigation = () => {
   };
   const handleLogout = () => {
     const fetchData = async () => {
-      await LogoutApi();
       setIsLogin(false);
       toggleToast();
+      removeCookie('jwt', {path:'/'});
       await timeout(1);
       navigate('/');
     }
