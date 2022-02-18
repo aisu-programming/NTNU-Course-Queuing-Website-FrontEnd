@@ -5,7 +5,7 @@ export const LoginApi = async (data) => {
   return await PostApi(data, config.loginUrl).then(
     (res) => {
       if (res.message === 'Success.') {
-        return '';
+        return res
       }
       if (res.message === 'Student id not exist.') {
         return '學號不存在';
