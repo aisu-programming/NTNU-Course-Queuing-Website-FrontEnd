@@ -246,7 +246,7 @@ const Link = styled.span`
 `;
 
 export const Login = () => {
-  const { isLogin, setIsLogin, setCourseData } =
+  const { isLogin, setGrade, setIsLogin, setCourseData } =
     useDataContext();
   const [loading, setLoading] = useState(false);
   const [studentId, setStudentId] = useState('');
@@ -291,17 +291,19 @@ export const Login = () => {
 
     setLoading(true);
     const fetchLoginData = await LoginApi(data);
+    const fetchMessage = fetchLoginData.message;
     setLoading(false);
 
-    const isSuccess = !fetchLoginData; // 空字串代表登入成功
+    const isSuccess = fetchMessage === 'Success.'; // 空字串代表登入成功
 
     // 登入失敗
     if (!isSuccess) {
-      setErrorMsg(`＊${fetchLoginData}`);
+      setErrorMsg(`＊${fetchMessage}`);
       return;
     }
 
     // 登入成功
+    setGrade(fetchLoginData.data.year);
     toggleToast();
     setLoginMsg('祝您使用愉快 :)');
     setErrorMsg('');
@@ -311,7 +313,6 @@ export const Login = () => {
     setIsLogin(true);
     navigate('/search');
   };
-
   const handleReadCheck = () => {
     setReadCheck(!readCheck);
   };

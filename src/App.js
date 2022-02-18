@@ -49,7 +49,7 @@ const RightWrapper = styled.div`
 `;
 
 const PrivateOutlet = ({ to = '/login', reverse = false }) => {
-  const [cookies] = useCookies(['jwt']);
+  const [cookies] = useCookies();
 
   if (reverse) {
     return !cookies.jwt ? <Outlet /> : <Navigate to={to} />;
@@ -58,15 +58,18 @@ const PrivateOutlet = ({ to = '/login', reverse = false }) => {
 };
 
 const App = () => {
-  const { courseList, setCourseList, setIsLogin } = useDataContext();
+  const { courseList, setGrade, setCourseList, setIsLogin } =
+    useDataContext();
   const isTable = useMediaQuery({ maxWidth: size.table });
   const isPhone = useMediaQuery({ maxWidth: size.phone });
-  const [cookies] = useCookies(['jwt']);
+  const [cookies] = useCookies();
   const location = useLocation();
   const path = location.pathname;
-
   useEffect(() => {
     setIsLogin(!!cookies.jwt);
+    if (!!cookies.year) {
+      setGrade(parseInt(cookies.year));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

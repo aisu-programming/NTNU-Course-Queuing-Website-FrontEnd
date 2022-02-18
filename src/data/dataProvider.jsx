@@ -8,6 +8,7 @@ const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
   const [isLogin, setIsLogin] = useState(false);
+  const [grade, setGrade] = useState(200);
   const [hasAlert, setHasAlert] = useState();
   const [courseData, setCourseData] = useState([]);
   const [courseList, setCourseList] = useState([]);
@@ -16,6 +17,8 @@ export const DataProvider = ({ children }) => {
   const value = {
     isLogin,
     setIsLogin,
+    grade,
+    setGrade,
     hasAlert,
     setHasAlert,
     courseData,
