@@ -89,7 +89,7 @@ export const search = async (data) => {
   if (data.filter.precise) {
     classdata.precise = true;
   }
-  console.log(classdata);
+
   return await PostApi(classdata, config.searchUrl).then(
     (res) => {
       return res.data.courses;

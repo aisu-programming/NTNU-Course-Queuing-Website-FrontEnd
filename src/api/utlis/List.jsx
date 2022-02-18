@@ -45,7 +45,6 @@ export const FixList = async (originData, alterData) => {
       return data;
     });
   const changes = { changes: [...newData, ...changeData] };
-
   return await PatchApi(changes, config.listUrl).then(
     (res) => {
       return res.data.orders;
