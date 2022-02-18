@@ -3,6 +3,7 @@ export { GetApi } from './Get';
 export {
   search,
   LoginApi,
+  LogoutApi,
   GetList,
   FixList,
   getSearchOption,
