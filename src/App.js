@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   Outlet,
+  useLocation,
 } from 'react-router-dom';
 import './App.css';
 import { colors, size } from 'styles';
@@ -57,15 +58,22 @@ const PrivateOutlet = ({ to = '/login', reverse = false }) => {
 };
 
 const App = () => {
-  const { setIsLogin } = useDataContext();
+  const { courseList, setCourseList, setIsLogin } = useDataContext();
   const isTable = useMediaQuery({ maxWidth: size.table });
   const isPhone = useMediaQuery({ maxWidth: size.phone });
   const [cookies] = useCookies(['jwt']);
+  const location = useLocation();
+  const path = location.pathname;
 
   useEffect(() => {
     setIsLogin(!!cookies.jwt);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    setCourseList([...courseList]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [path]);
 
   return (
     <BodyContainer isRWD={isPhone}>
