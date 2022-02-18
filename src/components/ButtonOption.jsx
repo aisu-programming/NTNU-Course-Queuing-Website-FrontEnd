@@ -85,13 +85,14 @@ export const ButtonOption = ({
   option,
   active,
   children,
+  onClick,
 }) => {
   const { hasAlert } = useDataContext();
 
   return (
     <>
       {!isRWD && (
-        <Option isActive={active}>
+        <Option isActive={active} onClick={onClick}>
           {children}
           <Text>{option}</Text>
           {alert && !!hasAlert && (
@@ -102,7 +103,7 @@ export const ButtonOption = ({
         </Option>
       )}
       {isRWD && (
-        <OptionRWD isActive={active}>{children}</OptionRWD>
+        <OptionRWD isActive={active} onClick={onClick}>{children}</OptionRWD>
       )}
     </>
   );

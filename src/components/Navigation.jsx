@@ -9,11 +9,16 @@ import {
   MdViewModule,
   MdDoubleArrow,
   MdMenu,
+  MdLogout,
 } from 'react-icons/md';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import { logo, logoTiny } from 'assets';
 import { useDataContext } from 'data';
+import { LogoutApi } from 'api';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { timeout } from 'utils';
 
 const LayOut = styled.div`
   position: fixed;
@@ -85,7 +90,9 @@ const HamburgerIcon = styled.div`
     height: 32px;
     color: ${colors.white};
   }
-  ${(props) => props.alert && `
+  ${(props) =>
+    props.alert &&
+    `
     &::before {
       content: '';
       display: block;
@@ -182,20 +189,38 @@ export const Navigation = () => {
   const {
     isLogin,
     hasAlert,
-    setHasAlert,
     courseList,
     courseData,
     courseTotal,
+    setIsLogin,
+    setHasAlert,
   } = useDataContext();
   const isTable = useMediaQuery({ maxWidth: size.table });
   const isPhone = useMediaQuery({ maxWidth: size.phone });
   const [fold, setFold] = useState(true);
+  const navigate = useNavigate();
 
   const handleFold = () => {
     setFold(!fold);
   };
   const autoHandleFold = () => {
     if (!fold) setFold(!fold);
+  };
+  const toggleToast = () => {
+    toast.dark('☕ 登出成功！ 謝謝您的使用 OuO!', {
+      position: 'top-center',
+      autoClose: 1500,
+    });
+  };
+  const handleLogout = () => {
+    const fetchData = async () => {
+      await LogoutApi();
+      setIsLogin(false);
+      toggleToast();
+      await timeout(1);
+      navigate('/');
+    }
+    fetchData();
   };
 
   const bodyScroll = document.body.style.overflow;
@@ -269,8 +294,8 @@ export const Navigation = () => {
             )}
           </ul>
           <OptionTitle>學生</OptionTitle>
-          <ul>
-            {isLogin && (
+          {isLogin && (
+            <ul>
               <NavOption>
                 <NavLink to='/rushlist'>
                   {({ isActive }) => (
@@ -284,8 +309,16 @@ export const Navigation = () => {
                   )}
                 </NavLink>
               </NavOption>
-            )}
-          </ul>
+              <NavOption>
+                <ButtonOption
+                  onClick={handleLogout}
+                  option={'登出'}
+                >
+                  <MdLogout />
+                </ButtonOption>
+              </NavOption>
+            </ul>
+          )}
         </NavWrapper>
       )}
       {isTable && !isPhone && (
@@ -346,8 +379,8 @@ export const Navigation = () => {
               )}
             </ul>
             <OptionTitleRWD isFold={fold}>學生</OptionTitleRWD>
-            <ul>
-              {isLogin && (
+            {isLogin && (
+              <ul>
                 <NavOption onClick={autoHandleFold}>
                   <NavLink to='/rushlist'>
                     {({ isActive }) => (
@@ -362,8 +395,17 @@ export const Navigation = () => {
                     )}
                   </NavLink>
                 </NavOption>
-              )}
-            </ul>
+                <NavOption onClick={autoHandleFold}>
+                  <ButtonOption
+                    isRWD={fold}
+                    onClick={handleLogout}
+                    option={'登出'}
+                  >
+                    <MdLogout />
+                  </ButtonOption>
+                </NavOption>
+              </ul>
+            )}
           </NavWrapperRWD>
         </>
       )}
@@ -430,8 +472,8 @@ export const Navigation = () => {
                 <OptionTitleRWD isFold={fold}>
                   學生
                 </OptionTitleRWD>
-                <ul>
-                  {isLogin && (
+                {isLogin && (
+                  <ul>
                     <NavOption onClick={autoHandleFold}>
                       <NavLink to='/rushlist'>
                         {({ isActive }) => (
@@ -446,8 +488,17 @@ export const Navigation = () => {
                         )}
                       </NavLink>
                     </NavOption>
-                  )}
-                </ul>
+                    <NavOption onClick={autoHandleFold}>
+                      <ButtonOption
+                        isRWD={fold}
+                        onClick={handleLogout}
+                        option={'登出'}
+                      >
+                        <MdLogout />
+                      </ButtonOption>
+                    </NavOption>
+                  </ul>
+                )}
               </NavWrapperPhoneRWD>
             </>
           )}
