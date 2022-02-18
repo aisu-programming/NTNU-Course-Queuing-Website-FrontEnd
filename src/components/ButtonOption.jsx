@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { colors } from '../styles';
 import { useDataContext } from 'data';
 
@@ -37,6 +37,12 @@ const Option = styled.div`
     margin-right: 10px;
     flex-shrink: 0;
   }
+
+  ${props => props.isDanger && css`
+    &:hover {
+      background: ${colors.danger}${colors.opacity30};
+    }
+  `}
 `;
 const OptionRWD = styled(Option)`
   padding: 8px;
@@ -81,6 +87,7 @@ const AlertCount = styled.h5`
 
 export const ButtonOption = ({
   isRWD,
+  isDanger,
   alert,
   option,
   active,
@@ -92,7 +99,7 @@ export const ButtonOption = ({
   return (
     <>
       {!isRWD && (
-        <Option isActive={active} onClick={onClick}>
+        <Option isActive={active} isDanger={isDanger} onClick={onClick}>
           {children}
           <Text>{option}</Text>
           {alert && !!hasAlert && (
@@ -103,7 +110,7 @@ export const ButtonOption = ({
         </Option>
       )}
       {isRWD && (
-        <OptionRWD isActive={active} onClick={onClick}>{children}</OptionRWD>
+        <OptionRWD isActive={active} isDanger={isDanger} onClick={onClick}>{children}</OptionRWD>
       )}
     </>
   );

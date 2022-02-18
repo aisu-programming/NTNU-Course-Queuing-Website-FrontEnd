@@ -39,6 +39,8 @@ const NavWrapper = styled.nav`
   max-width: 240px;
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
   padding: 20px;
   background: ${colors.background};
   box-shadow: 4px 0px 4px rgba(0, 0, 0, 0.4);
@@ -140,7 +142,7 @@ const OptionTitleRWD = styled(OptionTitle)`
 const FoldButtonRWD = styled.div`
   position: absolute;
   right: -18px;
-  transform: translateY(-36px);
+  transform: translateY(44px);
   width: 32px;
   height: 32px;
   background: ${colors.black}${colors.opacity60};
@@ -309,8 +311,13 @@ export const Navigation = () => {
                   )}
                 </NavLink>
               </NavOption>
+            </ul>
+          )}
+          {isLogin && (
+            <ul style={{marginTop: 'auto'}}>
               <NavOption>
                 <ButtonOption
+                  isDanger
                   onClick={handleLogout}
                   option={'登出'}
                 >
@@ -395,10 +402,15 @@ export const Navigation = () => {
                     )}
                   </NavLink>
                 </NavOption>
+              </ul>
+            )}
+            {isLogin && (
+              <ul style={{marginTop: 'auto'}}>
                 <NavOption onClick={autoHandleFold}>
                   <ButtonOption
                     isRWD={fold}
                     onClick={handleLogout}
+                    isDanger
                     option={'登出'}
                   >
                     <MdLogout />
@@ -488,9 +500,14 @@ export const Navigation = () => {
                         )}
                       </NavLink>
                     </NavOption>
+                  </ul>
+                )}
+                {isLogin && (
+                  <ul style={{marginTop: 'auto'}}>
                     <NavOption onClick={autoHandleFold}>
                       <ButtonOption
                         isRWD={fold}
+                        isDanger
                         onClick={handleLogout}
                         option={'登出'}
                       >
