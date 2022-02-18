@@ -332,9 +332,9 @@ export const Navigation = () => {
           <HamburgerIcon onClick={handleFold}>
             <MdMenu />
           </HamburgerIcon>
-          <LogoBoxRWD>
+          {/* <LogoBoxRWD>
             <LogoImg src={logo} />
-          </LogoBoxRWD>
+          </LogoBoxRWD> */}
           {!fold && (
             <>
               <LayOut
