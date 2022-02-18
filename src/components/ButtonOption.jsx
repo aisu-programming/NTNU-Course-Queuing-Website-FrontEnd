@@ -79,48 +79,14 @@ const AlertCount = styled.h5`
   transform: translateY(1px);
 `;
 
-export const changeCourseCount = (originData, alterData) => {
-  const newData = alterData.filter((item) =>
-    item.hasOwnProperty('isOrdered')
-  );
-  const oldData = alterData.filter(
-    (item) => !item.hasOwnProperty('isOrdered')
-  );
-  const changeData = oldData.filter((item) => {
-    const findData = originData.find((i) => {
-      return i.courseNo === item.courseNo;
-    });
-    if (findData.status !== item.status) return true;
-    if (findData.domain !== item.domain) return true;
-    return false;
-  });
-  const changes = [...newData, ...changeData];
-  return changes.length;
-};
-
 export const ButtonOption = ({
   isRWD,
-  hasAlert,
+  alert,
   option,
   active,
   children,
 }) => {
-  const {
-    courseData,
-    courseList,
-    courseTotal
-  } = useDataContext();
-  const [count, setCount] = useState();
-
-  useEffect(() => {
-    const changes = changeCourseCount(courseData, [...courseList, ...courseData]);
-    setCount(changes);
-  }, [courseList, courseTotal]);
-
-  useEffect(() => {
-    const changes = changeCourseCount(courseData, courseTotal);
-    setCount(changes);
-  }, [courseTotal]);
+  const { hasAlert } = useDataContext();
 
   return (
     <>
@@ -128,9 +94,9 @@ export const ButtonOption = ({
         <Option isActive={active}>
           {children}
           <Text>{option}</Text>
-          {hasAlert && !!count && (
+          {alert && !!hasAlert && (
             <Alert>
-              <AlertCount>{count}</AlertCount>
+              <AlertCount>{hasAlert}</AlertCount>
             </Alert>
           )}
         </Option>

@@ -40,8 +40,7 @@ const NavWrapper = styled.nav`
   z-index: 2;
 `;
 const NavWrapperRWD = styled(NavWrapper)`
-  max-width: ${(props) =>
-    props.isFold ? '60px' : '240px'};
+  max-width: ${(props) => (props.isFold ? '60px' : '240px')};
   padding: 20px 10px;
   transition: 0.3s;
 
@@ -115,10 +114,8 @@ const OptionTitle = styled.div`
 `;
 const OptionTitleRWD = styled(OptionTitle)`
   width: 100%;
-  padding: ${(props) =>
-    props.isFold ? '4px 0' : '4px 10px'};
-  text-align: ${(props) =>
-    props.isFold ? 'center' : 'left'};
+  padding: ${(props) => (props.isFold ? '4px 0' : '4px 10px')};
+  text-align: ${(props) => (props.isFold ? 'center' : 'left')};
   white-space: nowrap;
 `;
 
@@ -151,8 +148,34 @@ const NavOption = styled.li`
   }
 `;
 
+const changeCourseCount = (originData, alterData) => {
+  const newData = alterData.filter((item) =>
+    item.hasOwnProperty('isOrdered')
+  );
+  const oldData = alterData.filter(
+    (item) => !item.hasOwnProperty('isOrdered')
+  );
+  const changeData = oldData.filter((item) => {
+    const findData = originData.find((i) => {
+      return i.courseNo === item.courseNo;
+    });
+    if (findData.status !== item.status) return true;
+    if (findData.domain !== item.domain) return true;
+    return false;
+  });
+  const changes = [...newData, ...changeData];
+  return changes.length;
+};
+
 export const Navigation = () => {
-  const { isLogin } = useDataContext();
+  const {
+    isLogin,
+    hasAlert,
+    setHasAlert,
+    courseList,
+    courseData,
+    courseTotal,
+  } = useDataContext();
   const isTable = useMediaQuery({ maxWidth: size.table });
   const isPhone = useMediaQuery({ maxWidth: size.phone });
   const [fold, setFold] = useState(true);
@@ -170,6 +193,19 @@ export const Navigation = () => {
   } else {
     document.body.style.overflowY = 'scroll';
   }
+
+  useEffect(() => {
+    const changes = changeCourseCount(courseData, [
+      ...courseList,
+      ...courseData,
+    ]);
+    setHasAlert(changes);
+  }, [courseList, courseTotal]);
+
+  useEffect(() => {
+    const changes = changeCourseCount(courseData, courseTotal);
+    setHasAlert(changes);
+  }, [courseTotal]);
 
   return (
     <>
@@ -228,7 +264,7 @@ export const Navigation = () => {
                 <NavLink to='/rushlist'>
                   {({ isActive }) => (
                     <ButtonOption
-                      hasAlert
+                      alert
                       option={'搶課清單'}
                       active={isActive}
                     >
@@ -249,10 +285,7 @@ export const Navigation = () => {
               {fold && <LogoImg src={logoTiny} />}
               {!fold && <LogoImg src={logo} />}
             </LogoBoxRWD>
-            <FoldButtonRWD
-              onClick={handleFold}
-              isFold={fold}
-            >
+            <FoldButtonRWD onClick={handleFold} isFold={fold}>
               <MdDoubleArrow />
             </FoldButtonRWD>
             <ul>
@@ -270,9 +303,7 @@ export const Navigation = () => {
                 </NavLink>
               </NavOption>
             </ul>
-            <OptionTitleRWD isFold={fold}>
-              功能
-            </OptionTitleRWD>
+            <OptionTitleRWD isFold={fold}>功能</OptionTitleRWD>
             <ul>
               <NavOption onClick={autoHandleFold}>
                 <NavLink to='/search'>
@@ -303,9 +334,7 @@ export const Navigation = () => {
                 </NavOption>
               )}
             </ul>
-            <OptionTitleRWD isFold={fold}>
-              學生
-            </OptionTitleRWD>
+            <OptionTitleRWD isFold={fold}>學生</OptionTitleRWD>
             <ul>
               {isLogin && (
                 <NavOption onClick={autoHandleFold}>
@@ -313,7 +342,7 @@ export const Navigation = () => {
                     {({ isActive }) => (
                       <ButtonOption
                         isRWD={fold}
-                        hasAlert
+                        alert
                         option={'搶課清單'}
                         active={isActive}
                       >
@@ -337,10 +366,7 @@ export const Navigation = () => {
           </LogoBoxRWD> */}
           {!fold && (
             <>
-              <LayOut
-                isPhone={isPhone}
-                onClick={handleFold}
-              />
+              <LayOut isPhone={isPhone} onClick={handleFold} />
               <NavWrapperPhoneRWD>
                 <ul>
                   <NavOption onClick={autoHandleFold}>
@@ -399,7 +425,7 @@ export const Navigation = () => {
                       <NavLink to='/rushlist'>
                         {({ isActive }) => (
                           <ButtonOption
-                            hasAlert
+                            alert
                             isRWD={fold}
                             option={'搶課清單'}
                             active={isActive}
