@@ -15,10 +15,8 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import { logo, logoTiny } from 'assets';
 import { useDataContext } from 'data';
-import { LogoutApi } from 'api';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { timeout } from 'utils';
 import { useCookies } from 'react-cookie';
 
 const LayOut = styled.div`
@@ -201,7 +199,7 @@ export const Navigation = () => {
   const isTable = useMediaQuery({ maxWidth: size.table });
   const isPhone = useMediaQuery({ maxWidth: size.phone });
   const [fold, setFold] = useState(true);
-  const [cookies, setCookie, removeCookie] = useCookies('jwt');
+  const [cookies, setCookie, removeCookie] = useCookies();
   const navigate = useNavigate();
 
   const handleFold = () => {
@@ -221,7 +219,7 @@ export const Navigation = () => {
       setIsLogin(false);
       toggleToast();
       removeCookie('jwt', {path:'/'});
-      await timeout(1);
+      removeCookie('year', {path:'/'});
       navigate('/');
     }
     fetchData();
