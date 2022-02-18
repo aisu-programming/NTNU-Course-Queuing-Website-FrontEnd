@@ -11,9 +11,10 @@ import {
 import { TimeSelector } from 'components/TimeSelector';
 import { format } from 'date-fns';
 import zh_tw from 'date-fns/locale/zh_tw';
-import { department, place, domain } from 'data';
+import { department, place, domain, domain_109 } from 'data';
 import { search, getSearchOption } from 'api';
 import { PuffLoader } from 'react-spinners';
+import { useDataContext } from 'data';
 
 const SearchContainer = styled.section`
   width: 100%;
@@ -282,6 +283,7 @@ const CellBox = styled.div`
 `;
 
 export const Search = () => {
+  const { grade } = useDataContext();
   const [filter, setFilter] = useState([]);
   const [schedule, setSchedule] = useState([]);
   const [otherSchedule, setOtherSchedule] = useState(false);
@@ -294,6 +296,7 @@ export const Search = () => {
   // console.log(filter);
   // 判斷有無的布林區
   const hasSchedule = !!schedule.length || otherSchedule;
+  const gradeGuData = grade >= 109 ? domain_109 : domain;
 
   // 整理系所/學程的選項
   const departmentOptions = department.map((item) => {
@@ -408,7 +411,7 @@ export const Search = () => {
                 <SearchTitle>通識領域</SearchTitle>
                 <DropdownV2
                   name='domains'
-                  options={domain}
+                  options={gradeGuData}
                   handleValue={handleFilter}
                 />
               </SearchBox>

@@ -14,7 +14,11 @@ import {
   MdRadioButtonChecked,
 } from 'react-icons/md';
 import { IconButton } from 'components';
-import { useDataContext, domain as Domain } from 'data';
+import {
+  useDataContext,
+  domain as Domain,
+  domain_109 as Domain_109,
+} from 'data';
 import { CustomModal } from 'components/Modal';
 import { v4 as uuidv4 } from 'uuid';
 import Skeleton, {
@@ -196,11 +200,8 @@ const RadioBox = ({ selected, setSelected, text }) => {
 };
 
 const Card = ({ item }) => {
-  const {
-    courseData,
-    courseTotal,
-    setCourseTotal,
-  } = useDataContext();
+  const { grade, courseData, courseTotal, setCourseTotal } =
+    useDataContext();
   const {
     status,
     courseNo,
@@ -217,14 +218,19 @@ const Card = ({ item }) => {
   const isGU = department === '通識';
   const getDomainName = () => {
     if (!isGU) return 0;
-    const binaryDomain = domains
-      .toString(2)
-      .padStart(10, '0')
-      .split('');
+    const dataBase = grade >= 109 ? Domain_109 : Domain;
+    const generateBinary = () => {
+      const binary = domains
+        .toString(2)
+        .padStart(10, '0')
+        .split('');
+      return binary
+    }
+    const binaryDomain = generateBinary();
     const domainName = binaryDomain
       .map((item, index) => {
         if (item === '0') return '';
-        return Domain[index + 1];
+        return dataBase[index + 1];
       })
       .filter((item) => {
         return !!item;

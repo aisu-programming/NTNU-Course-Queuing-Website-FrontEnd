@@ -280,6 +280,7 @@ const generateSkeleton = (isTable) => {
 };
 
 const ExpandRow = ({ row }) => {
+  const { grade } = useDataContext();
   const { courseData, courseList, setCourseList } =
     useDataContext();
   const isTable = useMediaQuery({
@@ -310,7 +311,7 @@ const ExpandRow = ({ row }) => {
     const addCourse = {
       ...row.original,
       status: 'pause',
-      domain: convertDomains(row.original.domains)[0],
+      domain: convertDomains(row.original.domains, grade)[0],
     };
     const newCourseList = [...courseList, addCourse];
     setCourseList(newCourseList);
