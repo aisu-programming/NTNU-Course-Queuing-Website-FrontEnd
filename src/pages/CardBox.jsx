@@ -198,9 +198,7 @@ const RadioBox = ({ selected, setSelected, text }) => {
 const Card = ({ item }) => {
   const {
     courseData,
-    courseList,
     courseTotal,
-    setCourseList,
     setCourseTotal,
   } = useDataContext();
   const {

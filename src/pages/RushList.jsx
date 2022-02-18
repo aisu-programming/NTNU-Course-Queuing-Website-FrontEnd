@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { colors, device, size } from 'styles';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useDataContext } from 'data';
-import { FixList, GetList } from 'api';
+import { FixList } from 'api';
 import { useMediaQuery } from 'react-responsive';
 import { line } from 'assets'
 import { config } from 'api/utlis/config'
@@ -230,7 +230,7 @@ export const RushList = () => {
               )}
             </NavLink>
             <LineButton href={config.lineRobot} >
-              <img src={line} />
+              <img src={line} alt={'line'}/>
               <ButtonText>
                 {isPhone ? '通知' : '綁定通知'}
               </ButtonText>

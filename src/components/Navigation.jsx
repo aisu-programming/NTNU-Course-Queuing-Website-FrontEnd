@@ -228,6 +228,7 @@ export const Navigation = () => {
                 <NavLink to='/rushlist'>
                   {({ isActive }) => (
                     <ButtonOption
+                      hasAlert
                       option={'搶課清單'}
                       active={isActive}
                     >
@@ -312,6 +313,7 @@ export const Navigation = () => {
                     {({ isActive }) => (
                       <ButtonOption
                         isRWD={fold}
+                        hasAlert
                         option={'搶課清單'}
                         active={isActive}
                       >
@@ -397,6 +399,7 @@ export const Navigation = () => {
                       <NavLink to='/rushlist'>
                         {({ isActive }) => (
                           <ButtonOption
+                            hasAlert
                             isRWD={fold}
                             option={'搶課清單'}
                             active={isActive}

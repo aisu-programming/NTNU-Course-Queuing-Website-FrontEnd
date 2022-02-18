@@ -11,6 +11,7 @@ import {
 } from 'components/Home';
 import { GetRecord } from 'api/utlis';
 import { useMediaQuery } from 'react-responsive';
+import { useDataContext } from 'data';
 
 const Container = styled.section`
   width: 100%;
@@ -130,6 +131,7 @@ const ContentBox = styled.div`
 `;
 
 export const Home = () => {
+  const { courseList, setCourseList } = useDataContext();
   const isPhone = useMediaQuery({ maxWidth: size.phone });
   const [news, setNews] = useState([]);
   const [stop, setStop] = useState(false);
@@ -146,9 +148,10 @@ export const Home = () => {
       const record = await GetRecord();
       setNews(record);
     };
+    setCourseList([...courseList]);
     fetchNews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Container>
