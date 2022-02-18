@@ -30,7 +30,7 @@ export const NewsTicker = ({ news, stop }) => {
     return `${year}${dept}${id}`;
   });
   const time = news.map((item) =>
-    moment(item.succeedTime).format('MM/D HH:m')
+    moment(item.succeedTime).format('MM/DD HH:mm')
   );
 
   const User = ({ index }) => {
