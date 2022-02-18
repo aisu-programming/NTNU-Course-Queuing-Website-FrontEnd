@@ -44,7 +44,7 @@ export const NewsTicker = ({ news, stop }) => {
             <span>{studentId[i]}</span>
             {` 同學~ 於 `}
             <span>{time[i]}</span>
-            {` 搶到了 `}
+            {` 刷到了 `}
             <span>
               {courseId[i]} {courseName[i]}
             </span>
