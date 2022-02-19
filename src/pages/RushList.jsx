@@ -10,7 +10,7 @@ import { config } from 'api/utlis/config'
 
 const Container = styled.section`
   flex: 1;
-  min-height: 100vh;
+  min-height: calc(100vh - 60px);
   background: ${colors.gray500};
   padding: 40px;
   display: flex;
