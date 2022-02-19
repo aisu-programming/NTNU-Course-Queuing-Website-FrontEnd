@@ -64,6 +64,7 @@ const ChildWrapper = styled(Wrapper)`
   @media ${device.phone} {
     border-radius: 2px;
     padding: 20px 10px;
+    // flex: 0 0 50%;
   }
 `;
 
