@@ -118,6 +118,14 @@ const Desc = styled.h4`
     }
   }
 `;
+const Reason = styled.span`
+  font-size: 14px;
+  color: ${colors.danger};
+  margin-left: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`
 const Text = styled.div`
   margin-left: 12px;
   &:first-of-type {
@@ -204,6 +212,7 @@ const Card = ({ item }) => {
     useDataContext();
   const {
     status,
+    pauseReason,
     courseNo,
     chineseName,
     department,
@@ -224,8 +233,8 @@ const Card = ({ item }) => {
         .toString(2)
         .padStart(10, '0')
         .split('');
-      return binary
-    }
+      return binary;
+    };
     const binaryDomain = generateBinary();
     const domainName = binaryDomain
       .map((item, index) => {
@@ -336,6 +345,18 @@ const Card = ({ item }) => {
               })()}
             </Desc>
           </TextBox>
+          <TextBox style={{ gridColumn: '1/3' }}>
+            <Title>狀態:</Title>
+            <Desc>
+              {(() => {
+                const statusName = {activate: '刷課中...', pause: '暫停' , delete: '刪除'};
+                return `${statusName[status]}`
+              })()}
+              {status === 'pause' && !!pauseReason && (
+                <Reason>{`(${pauseReason})`}</Reason>
+              )}
+            </Desc>
+          </TextBox>
         </Content>
         {status !== 'successful' && (
           <Footer status={status} isChange={isChange()}>
@@ -350,7 +371,7 @@ const Card = ({ item }) => {
             {status !== 'activate' && (
               <IconButton
                 onClick={() => handleAction('activate')}
-                text={'搶'}
+                text={'刷'}
               >
                 <MdOutlineThumbUpAlt />
               </IconButton>
