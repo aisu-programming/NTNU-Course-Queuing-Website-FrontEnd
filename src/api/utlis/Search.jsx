@@ -59,7 +59,12 @@ export const search = async (data) => {
   };
 
   if (!!data.filter.id) {
-    classdata.courseNo = data.filter.id.toString();
+    if (data.filter.id.toString().length === 4) {
+      classdata.courseNo = data.filter.id.toString();
+    }
+    else {
+      classdata.courseNo = '0000';
+    }
   }
   if (!!data.filter.name) {
     classdata.courseName = data.filter.name.toString();
