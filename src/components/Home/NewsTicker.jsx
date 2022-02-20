@@ -25,8 +25,8 @@ export const NewsTicker = ({ news, stop }) => {
   const courseName = news.map((item) => item.chineseName);
   const studentId = news.map((item) => {
     const year = item.student_id.slice(0, 3);
-    const dept = `***`;
-    const id = item.student_id.slice(6, 9);
+    const dept = item.student_id.slice(3, 6);
+    const id = `***`;
     return `${year}${dept}${id}`;
   });
   const time = news.map((item) =>
