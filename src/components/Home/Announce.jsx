@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { colors } from 'styles';
-import { MdCircle } from 'react-icons/md';
+import { MdCircle, MdStar } from 'react-icons/md';
 
 const Title = styled.h3`
   color: ${colors.white};
@@ -28,6 +28,10 @@ const NoAnnounce = styled.div`
 const AnnounceBox = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 20px;
+  &:last-of-type {
+    margin-bottom: none;
+  }
 `;
 const AnnounceTitle = styled.h4`
   color: ${(props) =>
@@ -54,7 +58,7 @@ const AnnounceIcon = styled.span`
     height: 12px;
     margin-right: 4px;
   }
-`
+`;
 
 export const Announce = () => {
   const hasAnnounce = true;
@@ -69,6 +73,17 @@ export const Announce = () => {
         )}
         {hasAnnounce && (
           <>
+            <AnnounceBox>
+              <AnnounceTitle isTop>
+                賀ヽ(✿ﾟ▽ﾟ)ノ<AnnounceDate>02/22 09:10</AnnounceDate>
+              </AnnounceTitle>
+              <AnnounceText>
+                <AnnounceIcon>
+                  <MdStar />
+                </AnnounceIcon>
+                幫同學們成功刷到 100 堂課啦
+              </AnnounceText>
+            </AnnounceBox>
             <AnnounceBox>
               <AnnounceTitle isTop>
                 緊急維修

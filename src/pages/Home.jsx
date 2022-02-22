@@ -12,6 +12,7 @@ import {
 import { GetRecord } from 'api/utlis';
 import { useMediaQuery } from 'react-responsive';
 import { useDataContext } from 'data';
+import Confetti from 'react-confetti';
 
 const Container = styled.section`
   width: 100%;
@@ -155,6 +156,7 @@ export const Home = () => {
 
   return (
     <Container>
+      <Confetti recycle={false}/>
       <Title>首頁</Title>
       <Content>
         <ContentRow>
