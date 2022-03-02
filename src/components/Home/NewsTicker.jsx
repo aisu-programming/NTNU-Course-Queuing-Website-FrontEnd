@@ -37,7 +37,9 @@ export const NewsTicker = ({ news, stop }) => {
     const i = index % news.length;
     return (
       <>
-        {!news && <News> 目前還沒有人搶到課程噢~ </News>}
+        {!news && (
+          <News> 目前還沒有人刷到課程噢~ </News>
+        )}
         {!!news && (
           <News>
             {`恭喜! `}

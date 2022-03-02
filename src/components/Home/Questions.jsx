@@ -91,15 +91,39 @@ const ToggleQA = ({ question, answer }) => {
 export const Questions = () => {
   return (
     <>
-      <Title>問與答</Title>
+      <Title>FAQ</Title>
       <Content>
         <ToggleQA
-          question={'這個網頁會癱瘓學校系統嗎?'}
-          answer={'不會 >.O'}
+          question={'我能如何保護我的帳密？'}
+          answer=  {'建議在刷到你要的課後馬上更改校方帳密'}
         />
         <ToggleQA
-          question={'我大概要多久才能搶到我要的課?'}
-          answer={'大概跟你坐在電腦前刷到課一樣久'}
+          question={'若我擔心校務行政系統上的個資會外洩？'}
+          answer=  {'建議不要使用本網站，以避免疑慮猜忌'}
+        />
+        <ToggleQA
+          question={'開發者會刪除我的登入資訊嗎？'}
+          answer=  {'選課時間結束後會全數刪除'}
+        />
+        <ToggleQA
+          question={'這個網站的服務方式和流程是？'}
+          answer=  {'開發者帳號偵測空位、並用你的帳號選課'}
+        />
+        <ToggleQA
+          question={'為甚麼這個網頁不會癱瘓學校系統？'}
+          answer=  {'因為我們把對學校伺服器的負擔壓到最低'}
+        />
+        <ToggleQA
+          question={'我大概要等多久才能拿到我要的課？'}
+          answer=  {'若沒錯過空位，大約跟你手動刷課一樣久'}
+        />
+        <ToggleQA
+          question={'若我手動刷課，會是我搶到還是網站？'}
+          answer=  {'你會搶到，因為網站偵測的速度非常慢'}
+        />
+        <ToggleQA
+          question={'每個使用者的可登記數量上限是？'}
+          answer=  {'為維護使用者間的公平，僅可登記 10 堂'}
         />
       </Content>
     </>

@@ -291,10 +291,10 @@ export const Login = () => {
 
     setLoading(true);
     const fetchLoginData = await LoginApi(data);
-    const fetchMessage = fetchLoginData.message;
+    const fetchMessage = fetchLoginData;
     setLoading(false);
 
-    const isSuccess = fetchMessage === 'Success.'; // 空字串代表登入成功
+    const isSuccess = fetchLoginData.message === 'Success.'; // 空字串代表登入成功
 
     // 登入失敗
     if (!isSuccess) {

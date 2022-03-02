@@ -193,6 +193,7 @@ export const Navigation = () => {
     courseList,
     courseData,
     courseTotal,
+    setGrade,
     setIsLogin,
     setHasAlert,
   } = useDataContext();
@@ -220,6 +221,7 @@ export const Navigation = () => {
       toggleToast();
       removeCookie('jwt', {path:'/'});
       removeCookie('year', {path:'/'});
+      setGrade(200);
       navigate('/');
     }
     fetchData();
@@ -426,9 +428,8 @@ export const Navigation = () => {
           <HamburgerIcon alert={hasAlert} onClick={handleFold}>
             <MdMenu />
           </HamburgerIcon>
-          {/* <LogoBoxRWD>
-            <LogoImg src={logo} />
-          </LogoBoxRWD> */}
+          <LogoBoxRWD>
+          </LogoBoxRWD>
           {!fold && (
             <>
               <LayOut isPhone={isPhone} onClick={handleFold} />

@@ -1,9 +1,9 @@
 export const config = {
-  loginUrl: 'http://ntnu.site:5000/auth/session',
-  courseUrl: 'http://ntnu.site:5000/course',
-  searchUrl: 'http://ntnu.site:5000/course/search',
-  listUrl: 'http://ntnu.site:5000/order',
-  achieveUrl: 'http://ntnu.site:5000/order/achievement',
-  lineUrl: 'http://ntnu.site:5000/line',
-  lineRobot: 'https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1654657483&scope=openid&state=random&redirect_uri=http://ntnu.site:5000/line/callback'
+  loginUrl: 'https://ntnu.site/api/auth/session',
+  courseUrl: 'https://ntnu.site/api/course',
+  searchUrl: 'https://ntnu.site/api/course/search',
+  listUrl: 'https://ntnu.site/api/order',
+  achieveUrl: 'https://ntnu.site/api/order/achievement',
+  lineUrl: 'https://ntnu.site/api/line',
+  lineRobot: 'https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1656899574&scope=openid&state=random&prompt=consent&bot_prompt=aggressive&redirect_uri=https://ntnu.site/api/line/callback'
 };

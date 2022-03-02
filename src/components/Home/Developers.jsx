@@ -231,7 +231,7 @@ export const Developers = () => {
           name={'洪偉倫 (冰塊)'}
           avatar={aisuImg}
         >
-          <Work text={'後端、資料庫、驗證碼辨識AI(深度學習)、選課機器人、網管'} />
+          <Work text={'後端、資料庫、驗證碼辨識 AI (深度學習)、刷課機器人、網管'} />
           <Interest text={'深度學習'} />
           <Link
             github={userLink.aisuGithub}

@@ -176,6 +176,8 @@ const LineButton = styled.a`
     right: 0px;
 
     img {
+      width: 16px;
+      height: 16px;
       margin-right: 4px;
     }
   }
@@ -184,6 +186,10 @@ const ButtonText = styled.h4`
   color: ${colors.gray700};
   font-weight: 500;
   letter-spacing: 1px;
+
+  @media ${device.phone} {
+    font-size: 14px;
+  }
 `
 
 export const RushList = () => {
@@ -230,12 +236,12 @@ export const RushList = () => {
                 <Button isActive={isActive}>已完成</Button>
               )}
             </NavLink>
-            <LineButton href={config.lineRobot} >
-              <img src={line} alt={'line'}/>
-              <ButtonText>
-                {isPhone ? '通知' : '綁定通知'}
-              </ButtonText>
-            </LineButton>
+              <LineButton href={config.lineRobot} >
+                <img src={line} />
+                <ButtonText>
+                  {isPhone ? '通知' : '綁定通知'}
+                </ButtonText>
+              </LineButton>
           </NavOptions>
           <ChildWrapper>
             {!!courseData && (

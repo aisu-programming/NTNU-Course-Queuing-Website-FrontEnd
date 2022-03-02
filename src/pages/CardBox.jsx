@@ -349,7 +349,7 @@ const Card = ({ item }) => {
             <Title>狀態:</Title>
             <Desc>
               {(() => {
-                const statusName = {activate: '刷課中...', pause: '暫停' , delete: '刪除'};
+                const statusName = {activate: '刷課中...', pause: '暫停' , delete: '按下儲存即刪除'};
                 return `${statusName[status]}`
               })()}
               {status === 'pause' && !!pauseReason && (

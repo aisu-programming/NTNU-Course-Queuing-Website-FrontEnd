@@ -3,10 +3,10 @@ export const PostApi = async (props, url) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Credentials': true,
+      // 'Access-Control-Allow-Credentials': true,
     },
-    mode: 'cors',
-    credentials: 'include',
+    // mode: 'cors',
+    // credentials: 'include',
     body: JSON.stringify(props),
   })
     .then((response) => response.json())
